@@ -102,9 +102,9 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_lxmlib_OBJECTS = AMath.$(OBJEXT) ATimeSpace.$(OBJEXT) \
-	daemon.$(OBJEXT) GLog.$(OBJEXT) IOServiceKepp.$(OBJEXT) \
+	daemon.$(OBJEXT) GLog.$(OBJEXT) IOServiceKeep.$(OBJEXT) \
 	MessageQueue.$(OBJEXT) NTPClient.$(OBJEXT) tcpasio.$(OBJEXT) \
-	lxmlib.$(OBJEXT)
+	udpasio.$(OBJEXT) lxmlib.$(OBJEXT)
 lxmlib_OBJECTS = $(am_lxmlib_OBJECTS)
 am__DEPENDENCIES_1 =
 lxmlib_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -270,8 +270,8 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-lxmlib_SOURCES = AMath.cpp ATimeSpace.cpp daemon.cpp GLog.cpp IOServiceKepp.cpp \
-                MessageQueue.cpp NTPClient.cpp tcpasio.cpp \
+lxmlib_SOURCES = AMath.cpp ATimeSpace.cpp daemon.cpp GLog.cpp IOServiceKeep.cpp \
+                MessageQueue.cpp NTPClient.cpp tcpasio.cpp udpasio.cpp \
                 lxmlib.cpp
 
 lxmlib_LDFLAGS = -L/usr/local/lib
@@ -366,12 +366,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/AMath.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ATimeSpace.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GLog.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/IOServiceKepp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/IOServiceKeep.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/MessageQueue.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NTPClient.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/daemon.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lxmlib.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tcpasio.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/udpasio.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

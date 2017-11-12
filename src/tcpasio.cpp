@@ -15,7 +15,7 @@ TcpCPtr maketcp_client() {// 工厂函数, 创建TcpCPtr
 
 TCPClient::TCPClient()
 	: sock_(keep_.get_service()) {
-	rcvbyte_ = 0;
+	bytercv_ = 0;
 	bufrcv_.reset(new char[TCP_PACK_SIZE]);
 	usebuf_ = false;
 }
@@ -106,7 +106,7 @@ void TCPClient::RegisterWrite(const CBSlot& slot) {
 }
 
 int TCPClient::Lookup(char* first) {
-	int n = usebuf_ ? crcrcv_.size() : rcvbyte_;
+	int n = usebuf_ ? crcrcv_.size() : bytercv_;
 	if (!(first && n)) return -1;
 	*first = usebuf_ ? crcrcv_[0] : bufrcv_[0];
 	return n;
@@ -115,7 +115,7 @@ int TCPClient::Lookup(char* first) {
 int TCPClient::Lookup(const char* flag, const int len, const int from) {
 	if (!flag || len <= 0 || from < 0) return -1;
 
-	int n = usebuf_ ? (crcrcv_.size() - len) : (rcvbyte_ - len);
+	int n = usebuf_ ? (crcrcv_.size() - len) : (bytercv_ - len);
 	int i(-1), j, pos;
 
 	if (usebuf_) {
@@ -145,7 +145,7 @@ int TCPClient::Read(char* buff, const int len, const int from) {
 		if (i) crcrcv_.erase_begin(i);
 	}
 	else {
-		int n = rcvbyte_ < n0 ? (rcvbyte_ - from) : len;
+		int n = bytercv_ < n0 ? (bytercv_ - from) : len;
 		if (n > 0) memcpy(buff, bufrcv_.get() + from, n);
 		i = n > 0 ? n : 0;
 	}
@@ -213,6 +213,7 @@ void TCPClient::start_write() {
 				placeholders::error, placeholders::bytes_transferred));
 	}
 }
+
 //////////////////////////////////////////////////////////////////////////////
 /*---------------- TCPServer: 服务器 ----------------*/
 TcpSPtr maketcp_server() {// 工厂函数, 创建TcpSPtr

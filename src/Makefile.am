@@ -1,6 +1,6 @@
 bin_PROGRAMS=lxmlib
-lxmlib_SOURCES= AMath.cpp ATimeSpace.cpp daemon.cpp GLog.cpp IOServiceKepp.cpp \
-                MessageQueue.cpp NTPClient.cpp tcpasio.cpp \
+lxmlib_SOURCES= AMath.cpp ATimeSpace.cpp daemon.cpp GLog.cpp IOServiceKeep.cpp \
+                MessageQueue.cpp NTPClient.cpp tcpasio.cpp udpasio.cpp \
                 lxmlib.cpp
 
 lxmlib_LDFLAGS = -L/usr/local/lib

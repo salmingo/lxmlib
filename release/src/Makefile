@@ -102,9 +102,9 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_lxmlib_OBJECTS = AMath.$(OBJEXT) ATimeSpace.$(OBJEXT) \
-	daemon.$(OBJEXT) GLog.$(OBJEXT) IOServiceKepp.$(OBJEXT) \
+	daemon.$(OBJEXT) GLog.$(OBJEXT) IOServiceKeep.$(OBJEXT) \
 	MessageQueue.$(OBJEXT) NTPClient.$(OBJEXT) tcpasio.$(OBJEXT) \
-	lxmlib.$(OBJEXT)
+	udpasio.$(OBJEXT) lxmlib.$(OBJEXT)
 lxmlib_OBJECTS = $(am_lxmlib_OBJECTS)
 am__DEPENDENCIES_1 =
 lxmlib_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -270,8 +270,8 @@ target_vendor = apple
 top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ../..
-lxmlib_SOURCES = AMath.cpp ATimeSpace.cpp daemon.cpp GLog.cpp IOServiceKepp.cpp \
-                MessageQueue.cpp NTPClient.cpp tcpasio.cpp \
+lxmlib_SOURCES = AMath.cpp ATimeSpace.cpp daemon.cpp GLog.cpp IOServiceKeep.cpp \
+                MessageQueue.cpp NTPClient.cpp tcpasio.cpp udpasio.cpp \
                 lxmlib.cpp
 
 lxmlib_LDFLAGS = -L/usr/local/lib
@@ -366,12 +366,13 @@ distclean-compile:
 include ./$(DEPDIR)/AMath.Po
 include ./$(DEPDIR)/ATimeSpace.Po
 include ./$(DEPDIR)/GLog.Po
-include ./$(DEPDIR)/IOServiceKepp.Po
+include ./$(DEPDIR)/IOServiceKeep.Po
 include ./$(DEPDIR)/MessageQueue.Po
 include ./$(DEPDIR)/NTPClient.Po
 include ./$(DEPDIR)/daemon.Po
 include ./$(DEPDIR)/lxmlib.Po
 include ./$(DEPDIR)/tcpasio.Po
+include ./$(DEPDIR)/udpasio.Po
 
 .cpp.o:
 	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

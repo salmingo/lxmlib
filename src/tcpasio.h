@@ -55,7 +55,7 @@ protected:
 	CallbackFunc  cbsnd_;	//< send回调函数
 
 	bool usebuf_;	//< 启用循环缓冲区
-	int rcvbyte_;	//< 已接收信息长度
+	int bytercv_;	//< 已接收信息长度
 	carray bufrcv_;	//< 单条接收缓冲区
 	crcbuff crcrcv_;		//< 循环接收缓冲区
 	crcbuff crcsnd_;		//< 循环发送缓冲区
@@ -198,9 +198,9 @@ public:
 
 public:
 	// 数据类型
-	// 声明tcp_server的回调函数
+	// 声明TCPServer的回调函数
 	typedef boost::signals2::signal<void (const TcpCPtr&, const long)> CallbackFunc;
-	// 基于boost::signals2声明tcp_server回调函数插槽类型
+	// 基于boost::signals2声明TCPServer回调函数插槽类型
 	typedef CallbackFunc::slot_type CBSlot;
 
 protected:

@@ -135,10 +135,9 @@ int TCPClient::Lookup(const char* flag, const int len, const int from) {
 int TCPClient::Read(char* buff, const int len, const int from) {
 	if (!buff || len <= 0 || from < 0) return 0;
 
+	mutex_lock lck(mtxrcv_);
 	int n0(from + len), i(0), j;
-
 	if (usebuf_) {
-		mutex_lock lck(mtxrcv_);
 		int n(crcrcv_.size());
 		if (n > n0) n = n0;
 		for (j = from; j < n; ++i, ++j) buff[i] = crcrcv_[j];
@@ -155,9 +154,9 @@ int TCPClient::Read(char* buff, const int len, const int from) {
 int TCPClient::Write(const char* buff, const int len) {
 	if (!buff || len <= 0) return 0;
 
+	mutex_lock lck(mtxsnd_);
 	int n;
 	if (usebuf_) {
-		mutex_lock lck(mtxsnd_);
 		int n0(crcsnd_.size()), i;
 		if ((n = crcsnd_.capacity() - n0) > len) n = len;
 		for (i = 0; i < n; ++i) crcsnd_.push_back(buff[i]);
@@ -199,18 +198,17 @@ void TCPClient::handle_write(const error_code& ec, int n) {
 void TCPClient::start_read() {
 	if (sock_.is_open()) {
 		sock_.async_read_some(buffer(bufrcv_.get(), TCP_PACK_SIZE),
-							boost::bind(&TCPClient::handle_read, this,
-							placeholders::error, placeholders::bytes_transferred));
+				boost::bind(&TCPClient::handle_read, this,
+						placeholders::error, placeholders::bytes_transferred));
 	}
 }
 
 void TCPClient::start_write() {
-	int len(crcsnd_.size());
-	if (len > TCP_PACK_SIZE) len = TCP_PACK_SIZE;
-	if (len) {
-		sock_.async_write_some(buffer(crcsnd_.linearize(), len),
+	int n(crcsnd_.size());
+	if (n) {
+		sock_.async_write_some(buffer(crcsnd_.linearize(), n),
 				boost::bind(&TCPClient::handle_write, this,
-				placeholders::error, placeholders::bytes_transferred));
+						placeholders::error, placeholders::bytes_transferred));
 	}
 }
 

@@ -98,7 +98,9 @@ void ProjectReverse(double A0, double D0, double ksi, double eta, double &A, dou
 /*------------------------------- 部分球坐标转换 -------------------------------*/
 ///////////////////////////////////////////////////////////////////////////////
 /*-------------------------------- 部分矩阵转换 --------------------------------*/
-// 计算两个实数矩阵的乘积
+/*
+ * @note 矩阵乘积
+ */
 void MatRealMult(int M, int L, int N, double A[], double B[], double RM[]) {
 	double z, *q0, *p, *q;
 	int i, j, k;
@@ -115,6 +117,9 @@ void MatRealMult(int M, int L, int N, double A[], double B[], double RM[]) {
 	free(q0);
 }
 
+/*
+ * @note 转置矩阵
+ */
 void MatTrans(int M, int N, double A[], double B[]) {
 	int i, j;
 	double *p, *q;
@@ -124,6 +129,9 @@ void MatTrans(int M, int N, double A[], double B[]) {
 	}
 }
 
+/*
+ * @note 逆矩阵
+ */
 int MatInvert(int N, double A[]) {
 	int lc;
 	int *le, *lep;
@@ -163,8 +171,7 @@ int MatInvert(int N, double A[]) {
 			return -1;
 		}
 
-		*lep = lc;
-		++lep;
+		*lep++ = lc;
 		if(lc != j) {
 			for(k = 0, p = A + N * j, q = A + N * lc; k < N; ++k, ++p, ++q) {
 				t = *p;
@@ -225,8 +232,8 @@ int MatInvert(int N, double A[]) {
 		}
 	}
 
-	free(le); le = NULL;
-	free(q0); q0 = NULL;
+	free(le);
+	free(q0);
 	return 0;
 }
 
@@ -336,7 +343,7 @@ void SwapEndian(void* array, int nelement, int ncell)
 void spline(int n, double x[], double y[], double c1, double cn, double c[])
 {
 	int i;
-	double p, qn, sig, un;
+	double p, qn, sig, un, t1, t2;
 	double* u = (double*) calloc(n, sizeof(double));
 	double limit = 0.99 * AMAX;
 	if (c1 > limit) {
@@ -348,10 +355,10 @@ void spline(int n, double x[], double y[], double c1, double cn, double c[])
 		u[0] = (3 / (x[1] - x[0])) * (y[1] - y[0]) / (y[1] - y[0] - c1);
 	}
 	for (i = 1; i < n - 1; ++i) {
-		sig = (x[i] - x[i - 1]) / (x[i + 1] - x[i - 1]);
+		sig = (t1 = x[i] - x[i - 1]) / (t2 = x[i + 1] - x[i - 1]);
 		p = sig * c[i - 1] + 2;
 		c[i] = (sig - 1) / p;
-		u[i]=(6.*((y[i+1]-y[i])/(x[i+1]-x[i])-(y[i]-y[i-1])/(x[i]-x[i-1]))/(x[i+1]-x[i-1])-sig*u[i-1])/p;
+		u[i]=(6.*((y[i+1]-y[i])/(x[i+1]-x[i])-(y[i]-y[i-1])/t1)/t2-sig*u[i-1])/p;
 	}
 	if (cn > limit) {
 		qn = 0;

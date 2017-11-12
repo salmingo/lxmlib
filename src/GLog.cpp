@@ -9,6 +9,8 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <string>
+#include <boost/filesystem/path.hpp>
+#include <boost/format.hpp>
 #include "GLog.h"
 #include "globaldef.h"
 
@@ -37,13 +39,15 @@ bool GLog::valid_file(ptime &t) {
 	}
 
 	if (fd_ == NULL) {
-		char pathname[200];
-
 		if (access(gLogDir, F_OK)) mkdir(gLogDir, 0755);	// 创建目录
-		sprintf(pathname, "%s/%s%s.log",
-				gLogDir, gLogPrefix, to_iso_string(date).c_str());
-		fd_ = fopen(pathname, "a+");
-		fprintf(fd_, "%s\n", string(79, '-').c_str());
+		if (!access(gLogDir, W_OK | X_OK)) {
+			boost::filesystem::path path = gLogDir;
+			boost::format fmt("%s%s.log");
+			fmt % gLogPrefix % to_iso_string(date);
+			path.append(fmt.str());
+			fd_ = fopen(path.string().c_str(), "a+");
+			fprintf(fd_, "%s\n", string(79, '-').c_str());
+		}
 	}
 
 	return (fd_ != NULL);

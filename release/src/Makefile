@@ -104,7 +104,7 @@ PROGRAMS = $(bin_PROGRAMS)
 am_lxmlib_OBJECTS = AMath.$(OBJEXT) ATimeSpace.$(OBJEXT) \
 	daemon.$(OBJEXT) GLog.$(OBJEXT) IOServiceKeep.$(OBJEXT) \
 	MessageQueue.$(OBJEXT) NTPClient.$(OBJEXT) tcpasio.$(OBJEXT) \
-	udpasio.$(OBJEXT) lxmlib.$(OBJEXT)
+	udpasio.$(OBJEXT) SerialComm.$(OBJEXT) lxmlib.$(OBJEXT)
 lxmlib_OBJECTS = $(am_lxmlib_OBJECTS)
 am__DEPENDENCIES_1 =
 lxmlib_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -271,11 +271,11 @@ top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ../..
 lxmlib_SOURCES = AMath.cpp ATimeSpace.cpp daemon.cpp GLog.cpp IOServiceKeep.cpp \
-                MessageQueue.cpp NTPClient.cpp tcpasio.cpp udpasio.cpp \
+                MessageQueue.cpp NTPClient.cpp tcpasio.cpp udpasio.cpp SerialComm.cpp \
                 lxmlib.cpp
 
 lxmlib_LDFLAGS = -L/usr/local/lib
-BOOST_LIBS = -lboost_system-mt -lboost_thread-mt
+BOOST_LIBS = -lboost_system-mt -lboost_thread-mt -lboost_filesystem-mt
 lxmlib_LDADD = ${BOOST_LIBS} -lm -lpthread
 all: all-am
 
@@ -369,6 +369,7 @@ include ./$(DEPDIR)/GLog.Po
 include ./$(DEPDIR)/IOServiceKeep.Po
 include ./$(DEPDIR)/MessageQueue.Po
 include ./$(DEPDIR)/NTPClient.Po
+include ./$(DEPDIR)/SerialComm.Po
 include ./$(DEPDIR)/daemon.Po
 include ./$(DEPDIR)/lxmlib.Po
 include ./$(DEPDIR)/tcpasio.Po

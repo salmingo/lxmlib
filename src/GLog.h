@@ -54,9 +54,11 @@ public:
 	void Write(const LOG_TYPE type, const char* where, const char* format, ...);
 
 protected:
-	/* 声明数据类型 */
+	/* 数据类型 */
 	typedef boost::unique_lock<boost::mutex> mutex_lock; //< 基于boost::mutex的互斥锁
-	/* 声明成员变量 */
+
+protected:
+	/* 成员变量 */
 	boost::mutex mtx_;	//< 互斥区
 	int  day_;			//< UTC日期
 	FILE *fd_;			//< 日志文件描述符

@@ -1,5 +1,7 @@
 /*!
  * @file parameter.h 使用XML文件格式管理配置参数
+ * @note
+ * 在lxmlib中, 相关代码用作示例
  */
 
 #ifndef PARAMETER_H_

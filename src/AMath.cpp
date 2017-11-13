@@ -38,44 +38,67 @@ void Cart2Sphere(double x, double y, double z, double& r, double& alpha, double&
 	beta  = atan2(z, sqrt(x * x + y * y));
 }
 
-void RotateForward(double alpha0, double beta0, double alpha, double beta, double& fai, double& theta)
-{
-	double r = 1.0;
-	double x1, y1, z1;	// 原坐标系投影位置
-	double x2, y2, z2;	// 新坐标系投影位置
-
-	// 在原坐标系的球坐标转换为直角坐标
-	Sphere2Cart(r, alpha, beta, x1, y1, z1);
-	/*! 对直角坐标做旋转变换. 定义矢量V=(alpha0, beta0)
-	 * 主动视角, 旋转矢量V
-	 * 先绕Z轴逆时针旋转: -alpha0, 将矢量V旋转至XZ平面
-	 * 再绕Y轴逆时针旋转: -(PI90 - beta0), 将矢量V旋转至与Z轴重合
-	 **/
-	 x2 = sin(beta0) * cos(alpha0) * x1 + sin(beta0) * sin(alpha0) * y1 - cos(beta0) * z1;
-	 y2 = -sin(alpha0) * x1 + cos(alpha0) * y1;
-	 z2 = cos(beta0) * cos(alpha0) * x1 + cos(beta0) * sin(alpha0) * y1 + sin(beta0) * z1;
-	// 将旋转变换后的直角坐标转换为球坐标, 即以(alpha0, beta0)为极轴的新球坐标系中的位置
-	Cart2Sphere(x2, y2, z2, r, fai, theta);
+void RotX(double fai, double &x, double &y, double &z) {
+	double y1, z1;
+	double cf(cos(fai)), sf(sin(fai));
+	y1 =  cf * y + sf * z;
+	z1 = -sf * y + cf * z;
+	y = y1;
+	z = z1;
 }
 
-void RotateReverse(double alpha0, double beta0, double fai, double theta, double& alpha, double& beta)
+void RotY(double fai, double &x, double &y, double &z) {
+	double x1, z1;
+	double cf(cos(fai)), sf(sin(fai));
+	x1 = cf * x - sf * z;
+	z1 = sf * x + cf * z;
+	x = x1;
+	z = z1;
+}
+
+void RotZ(double fai, double &x, double &y, double &z) {
+	double x1, y1;
+	double cf(cos(fai)), sf(sin(fai));
+	x1 =  cf * x + sf * y;
+	y1 = -sf * x + cf * y;
+	x = x1;
+	y = y1;
+}
+
+void RotateForward(double A0, double D0, double A, double D, double& xi, double& eta)
 {
 	double r = 1.0;
-	double x1, y1, z1;
-	double x2, y2, z2;
+	double x, y, z;	// 直角坐标位置
+
+	// 在原坐标系的球坐标转换为直角坐标
+	Sphere2Cart(r, A, D, x, y, z);
+	/*! 对直角坐标做旋转变换. 定义矢量V=(alpha0, beta0)
+	 * 被动视角, 旋转矢量V
+	 * 先绕Z轴逆时针旋转: alpha0, 将矢量V旋转至XZ平面
+	 * 再绕Y轴逆时针旋转: (PI90 - beta0), 将矢量V旋转至与Z轴重合
+	 **/
+	RotZ(A0, x, y, z);
+	RotY(API * 0.5 - D0, x, y, z);
+	// 将旋转变换后的直角坐标转换为球坐标, 即以(alpha0, beta0)为极轴的新球坐标系中的位置
+	Cart2Sphere(x, y, z, r, xi, eta);
+}
+
+void RotateReverse(double A0, double D0, double xi, double eta, double& A, double& D)
+{
+	double r = 1.0;
+	double x, y, z;
 
 	// 在新坐标系的球坐标转换为直角坐标
-	Sphere2Cart(r, fai, theta, x1, y1, z1);
+	Sphere2Cart(r, xi, eta, x, y, z);
 	/*! 对直角坐标做旋转变换.  定义矢量V=(alpha0, beta0)
-	 * 主动旋转, 旋转矢量V
-	 * 先绕Y轴逆时针旋转: PI90 - beta0
-	 * 再绕Z轴逆时针旋转: alpha0
+	 * 被动旋转, 旋转矢量V
+	 * 先绕Y轴逆时针旋转: -(PI90 - beta0)
+	 * 再绕Z轴逆时针旋转: -alpha0
 	 **/
-	x2 = cos(alpha0) * sin(beta0) * x1 - sin(alpha0) * y1 + cos(alpha0) * cos(beta0) * z1;
-	y2 = sin(alpha0) * sin(beta0) * x1 + cos(alpha0) * y1 + sin(alpha0) * cos(beta0) * z1;
-	z2 = -cos(beta0) * x1 + sin(beta0) * z1;
+	RotY(-API * 0.5 + D0, x, y, z);
+	RotZ(-A0, x, y, z);
 	// 将旋转变换后的直角坐标转换为球坐标
-	Cart2Sphere(x2, y2, z2, r, alpha, beta);
+	Cart2Sphere(x, y, z, r, A, D);
 }
 
 // 球坐标投影到平面坐标

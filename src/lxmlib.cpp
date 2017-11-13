@@ -12,10 +12,13 @@
 #include <string>
 #include <boost/asio.hpp>
 #include "GLog.h"
-#include "globaldef.h"
+//#include "globaldef.h"
+#include "ADefine.h"
+#include "AMath.h"
 
 using std::vector;
 using std::string;
+using namespace AstroUtil;
 
 GLog _gLog(stdout);
 
@@ -26,7 +29,8 @@ int main(int argc, char **argv) {
 
 ///////////////////////////////////////////////////////////////////////////////
 /// 功能测试区
-///////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////
 
 	ios.run();
 

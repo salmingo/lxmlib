@@ -53,27 +53,46 @@ extern void Sphere2Cart(double r, double alpha, double beta, double& x, double& 
  **/
 extern void Cart2Sphere(double x, double y, double z, double& r, double& alpha, double& beta);
 /*!
- * \fn void RotateForward(double alpha0, double beta0, double& alpha, double& beta)
- * \brief (alpha, beta)在以(alpha0, beta0)为极轴的球坐标系内的位置. 默认为右手坐标系.
- * \param[in] alpha0  新极轴的alpha坐标, 量纲: 弧度
- * \param[in] beta0   新极轴的beta坐标,  量纲: 弧度
- * \param[in] alpha   在原坐标系内的位置, 量纲: 弧度
- * \param[in] beta    在原坐标系内的位置, 量纲: 弧度
- * \param     fai     在新坐标系中的位置, 量纲: 弧度
- * \param     theta   在新坐标系中的位置, 量纲: 弧度
- **/
-extern void RotateForward(double alpha0, double beta0, double alpha, double beta, double& fai, double& theta);
+ * @brief 计算矢量(X,Y,Z)绕X轴逆时针旋转角度fai后的新矢量
+ * @param fai 旋转角, 量纲: 弧度
+ * @param y   Y坐标
+ * @param z   Z坐标
+ */
+extern void RotX(double fai, double &x, double &y, double &z);
 /*!
- * \fn void RotateReverse(double alpha0, double beta0, double& alpha, double& beta)
- * \brief 将在以(alpha0, beta0)为极轴的球坐标系内的位置(alpha, beta), 还原为原始球坐标位置. 默认为右手坐标系.
- * \param[in] alpha0  新极轴的alpha坐标, 量纲: 弧度
- * \param[in] beta0   新极轴的beta坐标, 量纲: 弧度
- * \param[in] fai     在新坐标系中的位置, 量纲: 弧度
- * \param[in] theta   在新坐标系中的位置, 量纲: 弧度
- * \param     alpha   在原坐标系内的位置, 量纲: 弧度
- * \param     beta    在原坐标系内的位置, 量纲: 弧度
+ * @brief 计算矢量(X,Y,Z)绕Y轴逆时针旋转角度fai后的新矢量
+ * @param fai 旋转角, 量纲: 弧度
+ * @param x   X坐标
+ * @param z   Z坐标
+ */
+extern void RotY(double fai, double &x, double &y, double &z);
+/*!
+ * @brief 计算矢量(X,Y,Z)绕Z轴逆时针旋转角度fai后的新矢量
+ * @param fai 旋转角, 量纲: 弧度
+ * @param x   X坐标
+ * @param y   Y坐标
+ */
+extern void RotZ(double fai, double &x, double &y, double &z);
+/*!
+ * \brief (A, D)在以(A0, D0)为极轴的球坐标系内的位置
+ * \param[in] A0    新极轴的alpha坐标, 量纲: 弧度
+ * \param[in] D0    新极轴的beta坐标,  量纲: 弧度
+ * \param[in] A     在原坐标系内的位置, 量纲: 弧度
+ * \param[in] D     在原坐标系内的位置, 量纲: 弧度
+ * \param     xi    在新坐标系中的位置, 量纲: 弧度
+ * \param     eta   在新坐标系中的位置, 量纲: 弧度
  **/
-extern void RotateReverse(double alpha0, double beta0, double fai, double theta, double& alpha, double& beta);
+extern void RotateForward(double A0, double D0, double A, double D, double& xi, double& eta);
+/*!
+ * \brief 将在以(A0, bD0)为极轴的球坐标系内的位置(xi, eta), 还原为原始球坐标位置
+ * \param[in] A0   新极轴的alpha坐标, 量纲: 弧度
+ * \param[in] D0   新极轴的beta坐标, 量纲: 弧度
+ * \param[in] xi   在新坐标系中的位置, 量纲: 弧度
+ * \param[in] eta  在新坐标系中的位置, 量纲: 弧度
+ * \param     A    在原坐标系内的位置, 量纲: 弧度
+ * \param     D    在原坐标系内的位置, 量纲: 弧度
+ **/
+extern void RotateReverse(double A0, double D0, double xi, double eta, double& A, double& D);
 /*!
  * \fn void ProjectForward(double A0, double D0, double A, double D, double &ksi, double &eta)
  * \brief 球坐标投影到平面坐标

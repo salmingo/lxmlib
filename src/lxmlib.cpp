@@ -72,8 +72,10 @@ int main(int argc, char **argv) {
 			if (rot < rotmin) rotmin = rot;
 			if (rot > rotmax) rotmax = rot;
 			filename.replace_extension(extfit);
-			printf("%9.5f %9.5f %s\n", ra * R2D, dec * R2D, filename.c_str());
-			fprintf(rslt, "%9.5f %9.5f %s\n", ra * R2D, dec * R2D, filename.c_str());
+			printf("%9.5f %9.5f %s %5.1f %5.1f\n", ra * R2D, dec * R2D, filename.c_str(),
+					rot * R2D, wcstnx.GetParam()->rotation.y * R2D);
+			fprintf(rslt, "%9.5f %9.5f %s %5.1f %5.1f\n", ra * R2D, dec * R2D, filename.c_str(),
+					rot * R2D, wcstnx.GetParam()->rotation.y * R2D);
 		}
 	}
 	if (n) free(namelist);

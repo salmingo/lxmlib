@@ -72,7 +72,7 @@ void RotateForward(double A0, double D0, double A, double D, double& xi, double&
 
 	// 在原坐标系的球坐标转换为直角坐标
 	Sphere2Cart(r, A, D, x, y, z);
-	/*! 对直角坐标做旋转变换. 定义矢量V=(alpha0, beta0)
+	/* 对直角坐标做旋转变换. 定义矢量V=(alpha0, beta0)
 	 * 被动视角, 旋转矢量V
 	 * 先绕Z轴逆时针旋转: alpha0, 将矢量V旋转至XZ平面
 	 * 再绕Y轴逆时针旋转: (PI90 - beta0), 将矢量V旋转至与Z轴重合
@@ -90,7 +90,7 @@ void RotateReverse(double A0, double D0, double xi, double eta, double& A, doubl
 
 	// 在新坐标系的球坐标转换为直角坐标
 	Sphere2Cart(r, xi, eta, x, y, z);
-	/*! 对直角坐标做旋转变换.  定义矢量V=(alpha0, beta0)
+	/* 对直角坐标做旋转变换.  定义矢量V=(alpha0, beta0)
 	 * 被动旋转, 旋转矢量V
 	 * 先绕Y轴逆时针旋转: -(PI90 - beta0)
 	 * 再绕Z轴逆时针旋转: -alpha0

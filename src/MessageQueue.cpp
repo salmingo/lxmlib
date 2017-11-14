@@ -66,6 +66,14 @@ void MessageQueue::Stop() {
 	if (mq_.unique()) mq_.reset();
 }
 
+void MessageQueue::interrupt_thread(threadptr& thrd) {
+	if (thrd.unique()) {
+		thrd->interrupt();
+		thrd->join();
+		thrd.reset();
+	}
+}
+
 void MessageQueue::thread_message() {
 	MSG_UNIT msg;
 	message_queue::size_type szrcv;

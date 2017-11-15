@@ -21,15 +21,6 @@ WCSTNX.o: ../../src/WCSTNX.cpp \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/string.h \
   /usr/include/string.h /usr/include/sys/_types/_rsize_t.h \
   /usr/include/sys/_types/_errno_t.h /usr/include/strings.h \
-  ../../src/ADefine.h \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/math.h \
-  /usr/include/math.h \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/type_traits \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/cstddef \
-  /Library/Developer/CommandLineTools/usr/lib/clang/9.0.0/include/stddef.h \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/__nullptr \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/limits \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/__undef_min_max \
   ../../src/fits_handler.h \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/vector \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/iosfwd \
@@ -47,6 +38,10 @@ WCSTNX.o: ../../src/WCSTNX.cpp \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/__bit_reference \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/algorithm \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/initializer_list \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/cstddef \
+  /Library/Developer/CommandLineTools/usr/lib/clang/9.0.0/include/stddef.h \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/__nullptr \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/type_traits \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/cstring \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/utility \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/__tuple \
@@ -79,6 +74,8 @@ WCSTNX.o: ../../src/WCSTNX.cpp \
   /usr/include/sys/_types/_dev_t.h /usr/include/sys/_types/_mode_t.h \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/cstdint \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/new \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/limits \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/__undef_min_max \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/iterator \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/__functional_base \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/__functional_base_03 \
@@ -126,7 +123,10 @@ WCSTNX.o: ../../src/WCSTNX.cpp \
   /usr/include/sys/_pthread/_pthread_t.h \
   /usr/include/sys/_pthread/_pthread_key_t.h \
   /usr/include/sys/_types/_fsblkcnt_t.h \
-  /usr/include/sys/_types/_fsfilcnt_t.h ../../src/WCSTNX.h
+  /usr/include/sys/_types/_fsfilcnt_t.h ../../src/WCSTNX.h \
+  ../../src/ADefine.h \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/math.h \
+  /usr/include/math.h
 
 /Library/Developer/CommandLineTools/usr/include/c++/v1/stdio.h:
 
@@ -200,24 +200,6 @@ WCSTNX.o: ../../src/WCSTNX.cpp \
 
 /usr/include/strings.h:
 
-../../src/ADefine.h:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/math.h:
-
-/usr/include/math.h:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/type_traits:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/cstddef:
-
-/Library/Developer/CommandLineTools/usr/lib/clang/9.0.0/include/stddef.h:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/__nullptr:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/limits:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/__undef_min_max:
-
 ../../src/fits_handler.h:
 
 /Library/Developer/CommandLineTools/usr/include/c++/v1/vector:
@@ -263,6 +245,14 @@ WCSTNX.o: ../../src/WCSTNX.cpp \
 /Library/Developer/CommandLineTools/usr/include/c++/v1/algorithm:
 
 /Library/Developer/CommandLineTools/usr/include/c++/v1/initializer_list:
+
+/Library/Developer/CommandLineTools/usr/include/c++/v1/cstddef:
+
+/Library/Developer/CommandLineTools/usr/lib/clang/9.0.0/include/stddef.h:
+
+/Library/Developer/CommandLineTools/usr/include/c++/v1/__nullptr:
+
+/Library/Developer/CommandLineTools/usr/include/c++/v1/type_traits:
 
 /Library/Developer/CommandLineTools/usr/include/c++/v1/cstring:
 
@@ -357,6 +347,10 @@ WCSTNX.o: ../../src/WCSTNX.cpp \
 /Library/Developer/CommandLineTools/usr/include/c++/v1/cstdint:
 
 /Library/Developer/CommandLineTools/usr/include/c++/v1/new:
+
+/Library/Developer/CommandLineTools/usr/include/c++/v1/limits:
+
+/Library/Developer/CommandLineTools/usr/include/c++/v1/__undef_min_max:
 
 /Library/Developer/CommandLineTools/usr/include/c++/v1/iterator:
 
@@ -479,3 +473,9 @@ WCSTNX.o: ../../src/WCSTNX.cpp \
 /usr/include/sys/_types/_fsfilcnt_t.h:
 
 ../../src/WCSTNX.h:
+
+../../src/ADefine.h:
+
+/Library/Developer/CommandLineTools/usr/include/c++/v1/math.h:
+
+/usr/include/math.h:

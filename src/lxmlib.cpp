@@ -35,83 +35,24 @@ int main(int argc, char **argv) {
 
 ///////////////////////////////////////////////////////////////////////////////
 // 功能测试区
-	if (argc < 3) {
-		printf("Usage:\n\t lxmlib path_of_acc path_of_fits\n");
-//		printf("Usage:\n\t lxmlib path_of_acc x y\n");
-		return -1;
-	}
-	string fileacc  = argv[1];
-	string filefits = argv[2];
-//	double x = atof(argv[2]);
-//	double y = atof(argv[3]);
-//	double ra, dec;
-	WCSTNX wcstnx;
-	if (!wcstnx.LoadText(fileacc.c_str())) {
-		printf("failed to load calibration file\n");
-		return -2;
-	}
-	_gLog.Write("writting file<%s>", filefits.c_str());
-	if (wcstnx.WriteImage(filefits.c_str())) {
-		printf("failed to write fits file\n");
-		return -3;
-	}
-	_gLog.Write("complete");
-
-//	wcstnx.XY2WCS(x, y, ra, dec);
-//	printf("%7.2f %7.2f ==> %9.5f %9.5f\n", x, y, ra * R2D, dec * R2D);
-
-/*
 	if (argc < 4) {
-		printf("Usage:\n\t lxmlib filepath x y\n");
+//		printf("Usage:\n\t lxmlib path_of_acc path_of_fits\n");
+//		printf("Usage:\n\t lxmlib path_of_acc x y\n");
+		printf("Usage:\n\t lxmlib path_of_fits x y\n");
 		return -1;
 	}
-	namespace fs = boost::filesystem;
-	fs::path pathroot = argv[1];
+//	string fileacc  = argv[1];
+	string filefits = argv[1];
 	double x = atof(argv[2]);
 	double y = atof(argv[3]);
 	double ra, dec;
-	double rotmin(AMAX), rotmax(-AMAX), rot;
-	fs::path filepath, filename;
-	fs::path extacc(".acc");
-	fs::path extfit(".fit");
-	int n;
-	struct dirent **namelist;
 	WCSTNX wcstnx;
-	FILE *rslt = fopen("result.txt", "w");
-	if (!rslt) {
-		_gLog.Write("failed to create result.txt");
-		return -2;
+	if (wcstnx.LoadImage(filefits.c_str()))
+		printf("failed to load WCS from file\n");
+	else {
+		wcstnx.XY2WCS(x, y, ra, dec);
+		printf("%7.2f %7.2f ==> %9.5f %9.5f\n", x, y, ra * R2D, dec * R2D);
 	}
-
-	n = scandir(pathroot.c_str(), &namelist, filter_dir, alphasort);
-	for (int i = 0; i < n; ++i) {
-		filename = namelist[i]->d_name;
-		free(namelist[i]);
-		if (filename.extension().compare(extacc)) continue;
-		filepath = pathroot;
-		filepath /= filename;
-		if (!wcstnx.LoadText(filepath.c_str())) {
-			_gLog.Write(LOG_FAULT, NULL, "failed to load parameters from %s", filepath.c_str());
-		}
-		else if (!wcstnx.XY2WCS(x, y, ra, dec)) {
-			rot = wcstnx.GetParam()->rotation.x;
-			if (rot < rotmin) rotmin = rot;
-			if (rot > rotmax) rotmax = rot;
-			filename.replace_extension(extfit);
-			printf("%9.5f %9.5f %s %5.1f %5.1f\n", ra * R2D, dec * R2D, filename.c_str(),
-					rot * R2D, wcstnx.GetParam()->rotation.y * R2D);
-			fprintf(rslt, "%9.5f %9.5f %s %5.1f %5.1f\n", ra * R2D, dec * R2D, filename.c_str(),
-					rot * R2D, wcstnx.GetParam()->rotation.y * R2D);
-		}
-	}
-	if (n) free(namelist);
-	if (n) {
-		printf("Rotation Minimum = %.1f\n", rotmin * R2D);
-		printf("Rotation Maximum = %.1f\n", rotmax * R2D);
-	}
-
-	fclose(rslt);
-*/
 //////////////////////////////////////////////////////////////////////////////
 
 	ios.run();

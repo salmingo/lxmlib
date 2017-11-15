@@ -113,10 +113,8 @@ void ProjectForward(double A0, double D0, double A, double D, double &ksi, doubl
 void ProjectReverse(double A0, double D0, double ksi, double eta, double &A, double &D)
 {
 	double fract = cos(D0) - eta * sin(D0);
-	A = A0 + atan2(ksi, fract);
-	D = atan(((eta * cos(D0) + sin(D0)) * cos(A - A0)) / fract);
-	if(A < 0) A += A2PI;
-	else if(A >= A2PI) A -= A2PI;
+	A = reduce(A0 + atan2(ksi, fract), A2PI);
+	D = atan2(((eta * cos(D0) + sin(D0)) * cos(A - A0)), fract);
 }
 /*------------------------------- 部分球坐标转换 -------------------------------*/
 ///////////////////////////////////////////////////////////////////////////////

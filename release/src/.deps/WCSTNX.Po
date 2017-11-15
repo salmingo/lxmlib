@@ -21,63 +21,7 @@ WCSTNX.o: ../../src/WCSTNX.cpp \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/string.h \
   /usr/include/string.h /usr/include/sys/_types/_rsize_t.h \
   /usr/include/sys/_types/_errno_t.h /usr/include/strings.h \
-  /usr/local/include/longnam.h /usr/local/include/fitsio.h \
-  /usr/include/sys/types.h /usr/include/sys/appleapiopts.h \
-  /usr/include/machine/endian.h /usr/include/i386/endian.h \
-  /usr/include/sys/_endian.h /usr/include/libkern/_OSByteOrder.h \
-  /usr/include/libkern/i386/_OSByteOrder.h \
-  /usr/include/sys/_types/_u_char.h /usr/include/sys/_types/_u_short.h \
-  /usr/include/sys/_types/_u_int.h /usr/include/sys/_types/_caddr_t.h \
-  /usr/include/sys/_types/_dev_t.h /usr/include/sys/_types/_blkcnt_t.h \
-  /usr/include/sys/_types/_blksize_t.h /usr/include/sys/_types/_gid_t.h \
-  /usr/include/sys/_types/_in_addr_t.h \
-  /usr/include/sys/_types/_in_port_t.h /usr/include/sys/_types/_ino_t.h \
-  /usr/include/sys/_types/_ino64_t.h /usr/include/sys/_types/_key_t.h \
-  /usr/include/sys/_types/_mode_t.h /usr/include/sys/_types/_nlink_t.h \
-  /usr/include/sys/_types/_id_t.h /usr/include/sys/_types/_pid_t.h \
-  /usr/include/sys/_types/_uid_t.h /usr/include/sys/_types/_clock_t.h \
-  /usr/include/sys/_types/_time_t.h \
-  /usr/include/sys/_types/_useconds_t.h \
-  /usr/include/sys/_types/_suseconds_t.h \
-  /usr/include/sys/_types/_fd_def.h \
-  /usr/include/sys/_types/_fd_setsize.h \
-  /usr/include/sys/_types/_fd_set.h /usr/include/sys/_types/_fd_clr.h \
-  /usr/include/sys/_types/_fd_zero.h /usr/include/sys/_types/_fd_isset.h \
-  /usr/include/sys/_types/_fd_copy.h \
-  /usr/include/sys/_pthread/_pthread_attr_t.h \
-  /usr/include/sys/_pthread/_pthread_cond_t.h \
-  /usr/include/sys/_pthread/_pthread_condattr_t.h \
-  /usr/include/sys/_pthread/_pthread_mutex_t.h \
-  /usr/include/sys/_pthread/_pthread_mutexattr_t.h \
-  /usr/include/sys/_pthread/_pthread_once_t.h \
-  /usr/include/sys/_pthread/_pthread_rwlock_t.h \
-  /usr/include/sys/_pthread/_pthread_rwlockattr_t.h \
-  /usr/include/sys/_pthread/_pthread_t.h \
-  /usr/include/sys/_pthread/_pthread_key_t.h \
-  /usr/include/sys/_types/_fsblkcnt_t.h \
-  /usr/include/sys/_types/_fsfilcnt_t.h \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/stdlib.h \
-  /usr/include/stdlib.h /usr/include/sys/wait.h \
-  /usr/include/sys/signal.h /usr/include/machine/signal.h \
-  /usr/include/i386/signal.h /usr/include/machine/_mcontext.h \
-  /usr/include/i386/_mcontext.h /usr/include/mach/machine/_structs.h \
-  /usr/include/mach/i386/_structs.h \
-  /usr/include/sys/_types/_sigaltstack.h \
-  /usr/include/sys/_types/_ucontext.h \
-  /usr/include/sys/_types/_sigset_t.h /usr/include/sys/resource.h \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/stdint.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/9.0.0/include/stdint.h \
-  /usr/include/stdint.h /usr/include/_types/_uint8_t.h \
-  /usr/include/_types/_uint16_t.h /usr/include/_types/_uint32_t.h \
-  /usr/include/_types/_uint64_t.h /usr/include/_types/_intmax_t.h \
-  /usr/include/_types/_uintmax_t.h /usr/include/sys/_types/_timeval.h \
-  /usr/include/alloca.h /usr/include/sys/_types/_ct_rune_t.h \
-  /usr/include/sys/_types/_rune_t.h /usr/include/sys/_types/_wchar_t.h \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/limits.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/9.0.0/include/limits.h \
-  /usr/include/limits.h /usr/include/machine/limits.h \
-  /usr/include/i386/limits.h /usr/include/i386/_limits.h \
-  /usr/include/sys/syslimits.h ../../src/ADefine.h \
+  ../../src/ADefine.h \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/math.h \
   /usr/include/math.h \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/type_traits \
@@ -86,10 +30,21 @@ WCSTNX.o: ../../src/WCSTNX.cpp \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/__nullptr \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/limits \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/__undef_min_max \
-  ../../src/AMath.h ../../src/WCSTNX.h \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/string \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/string_view \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/__string \
+  ../../src/fits_handler.h \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/vector \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/iosfwd \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/wchar.h \
+  /usr/include/wchar.h /usr/include/sys/_types/_mbstate_t.h \
+  /usr/include/sys/_types/_ct_rune_t.h /usr/include/sys/_types/_rune_t.h \
+  /usr/include/sys/_types/_wchar_t.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/9.0.0/include/stdarg.h \
+  /usr/include/time.h /usr/include/sys/_types/_clock_t.h \
+  /usr/include/sys/_types/_time_t.h /usr/include/sys/_types/_timespec.h \
+  /usr/include/_wctype.h /usr/include/sys/_types/_wint_t.h \
+  /usr/include/_types/_wctype_t.h \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/ctype.h \
+  /usr/include/ctype.h /usr/include/runetype.h \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/__bit_reference \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/algorithm \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/initializer_list \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/cstring \
@@ -100,28 +55,78 @@ WCSTNX.o: ../../src/WCSTNX.cpp \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/typeinfo \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/exception \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/cstdlib \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/stdlib.h \
+  /usr/include/stdlib.h /usr/include/sys/wait.h \
+  /usr/include/sys/_types/_pid_t.h /usr/include/sys/_types/_id_t.h \
+  /usr/include/sys/signal.h /usr/include/sys/appleapiopts.h \
+  /usr/include/machine/signal.h /usr/include/i386/signal.h \
+  /usr/include/machine/_mcontext.h /usr/include/i386/_mcontext.h \
+  /usr/include/mach/machine/_structs.h /usr/include/mach/i386/_structs.h \
+  /usr/include/sys/_pthread/_pthread_attr_t.h \
+  /usr/include/sys/_types/_sigaltstack.h \
+  /usr/include/sys/_types/_ucontext.h \
+  /usr/include/sys/_types/_sigset_t.h /usr/include/sys/_types/_uid_t.h \
+  /usr/include/sys/resource.h \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/stdint.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/9.0.0/include/stdint.h \
+  /usr/include/stdint.h /usr/include/_types/_uint8_t.h \
+  /usr/include/_types/_uint16_t.h /usr/include/_types/_uint32_t.h \
+  /usr/include/_types/_uint64_t.h /usr/include/_types/_intmax_t.h \
+  /usr/include/_types/_uintmax_t.h /usr/include/sys/_types/_timeval.h \
+  /usr/include/machine/endian.h /usr/include/i386/endian.h \
+  /usr/include/sys/_endian.h /usr/include/libkern/_OSByteOrder.h \
+  /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h \
+  /usr/include/sys/_types/_dev_t.h /usr/include/sys/_types/_mode_t.h \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/cstdint \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/new \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/iterator \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/iosfwd \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/wchar.h \
-  /usr/include/wchar.h /usr/include/sys/_types/_mbstate_t.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/9.0.0/include/stdarg.h \
-  /usr/include/time.h /usr/include/sys/_types/_timespec.h \
-  /usr/include/_wctype.h /usr/include/sys/_types/_wint_t.h \
-  /usr/include/_types/_wctype_t.h \
-  /Library/Developer/CommandLineTools/usr/include/c++/v1/ctype.h \
-  /usr/include/ctype.h /usr/include/runetype.h \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/__functional_base \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/__functional_base_03 \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/tuple \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/stdexcept \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/climits \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/limits.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/9.0.0/include/limits.h \
+  /usr/include/limits.h /usr/include/machine/limits.h \
+  /usr/include/i386/limits.h /usr/include/i386/_limits.h \
+  /usr/include/sys/syslimits.h \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/__split_buffer \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/string \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/string_view \
+  /Library/Developer/CommandLineTools/usr/include/c++/v1/__string \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/cstdio \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/cwchar \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/cwctype \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/cctype \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/wctype.h \
-  /usr/include/wctype.h /usr/include/_types/_wctrans_t.h
+  /usr/include/wctype.h /usr/include/_types/_wctrans_t.h \
+  /usr/local/include/longnam.h /usr/local/include/fitsio.h \
+  /usr/include/sys/types.h /usr/include/sys/_types/_u_char.h \
+  /usr/include/sys/_types/_u_short.h /usr/include/sys/_types/_u_int.h \
+  /usr/include/sys/_types/_caddr_t.h /usr/include/sys/_types/_blkcnt_t.h \
+  /usr/include/sys/_types/_blksize_t.h /usr/include/sys/_types/_gid_t.h \
+  /usr/include/sys/_types/_in_addr_t.h \
+  /usr/include/sys/_types/_in_port_t.h /usr/include/sys/_types/_ino_t.h \
+  /usr/include/sys/_types/_ino64_t.h /usr/include/sys/_types/_key_t.h \
+  /usr/include/sys/_types/_nlink_t.h \
+  /usr/include/sys/_types/_useconds_t.h \
+  /usr/include/sys/_types/_suseconds_t.h \
+  /usr/include/sys/_types/_fd_def.h \
+  /usr/include/sys/_types/_fd_setsize.h \
+  /usr/include/sys/_types/_fd_set.h /usr/include/sys/_types/_fd_clr.h \
+  /usr/include/sys/_types/_fd_zero.h /usr/include/sys/_types/_fd_isset.h \
+  /usr/include/sys/_types/_fd_copy.h \
+  /usr/include/sys/_pthread/_pthread_cond_t.h \
+  /usr/include/sys/_pthread/_pthread_condattr_t.h \
+  /usr/include/sys/_pthread/_pthread_mutex_t.h \
+  /usr/include/sys/_pthread/_pthread_mutexattr_t.h \
+  /usr/include/sys/_pthread/_pthread_once_t.h \
+  /usr/include/sys/_pthread/_pthread_rwlock_t.h \
+  /usr/include/sys/_pthread/_pthread_rwlockattr_t.h \
+  /usr/include/sys/_pthread/_pthread_t.h \
+  /usr/include/sys/_pthread/_pthread_key_t.h \
+  /usr/include/sys/_types/_fsblkcnt_t.h \
+  /usr/include/sys/_types/_fsfilcnt_t.h ../../src/WCSTNX.h
 
 /Library/Developer/CommandLineTools/usr/include/c++/v1/stdio.h:
 
@@ -195,105 +200,85 @@ WCSTNX.o: ../../src/WCSTNX.cpp \
 
 /usr/include/strings.h:
 
-/usr/local/include/longnam.h:
+../../src/ADefine.h:
 
-/usr/local/include/fitsio.h:
+/Library/Developer/CommandLineTools/usr/include/c++/v1/math.h:
 
-/usr/include/sys/types.h:
+/usr/include/math.h:
 
-/usr/include/sys/appleapiopts.h:
+/Library/Developer/CommandLineTools/usr/include/c++/v1/type_traits:
 
-/usr/include/machine/endian.h:
+/Library/Developer/CommandLineTools/usr/include/c++/v1/cstddef:
 
-/usr/include/i386/endian.h:
+/Library/Developer/CommandLineTools/usr/lib/clang/9.0.0/include/stddef.h:
 
-/usr/include/sys/_endian.h:
+/Library/Developer/CommandLineTools/usr/include/c++/v1/__nullptr:
 
-/usr/include/libkern/_OSByteOrder.h:
+/Library/Developer/CommandLineTools/usr/include/c++/v1/limits:
 
-/usr/include/libkern/i386/_OSByteOrder.h:
+/Library/Developer/CommandLineTools/usr/include/c++/v1/__undef_min_max:
 
-/usr/include/sys/_types/_u_char.h:
+../../src/fits_handler.h:
 
-/usr/include/sys/_types/_u_short.h:
+/Library/Developer/CommandLineTools/usr/include/c++/v1/vector:
 
-/usr/include/sys/_types/_u_int.h:
+/Library/Developer/CommandLineTools/usr/include/c++/v1/iosfwd:
 
-/usr/include/sys/_types/_caddr_t.h:
+/Library/Developer/CommandLineTools/usr/include/c++/v1/wchar.h:
 
-/usr/include/sys/_types/_dev_t.h:
+/usr/include/wchar.h:
 
-/usr/include/sys/_types/_blkcnt_t.h:
+/usr/include/sys/_types/_mbstate_t.h:
 
-/usr/include/sys/_types/_blksize_t.h:
+/usr/include/sys/_types/_ct_rune_t.h:
 
-/usr/include/sys/_types/_gid_t.h:
+/usr/include/sys/_types/_rune_t.h:
 
-/usr/include/sys/_types/_in_addr_t.h:
+/usr/include/sys/_types/_wchar_t.h:
 
-/usr/include/sys/_types/_in_port_t.h:
+/Library/Developer/CommandLineTools/usr/lib/clang/9.0.0/include/stdarg.h:
 
-/usr/include/sys/_types/_ino_t.h:
-
-/usr/include/sys/_types/_ino64_t.h:
-
-/usr/include/sys/_types/_key_t.h:
-
-/usr/include/sys/_types/_mode_t.h:
-
-/usr/include/sys/_types/_nlink_t.h:
-
-/usr/include/sys/_types/_id_t.h:
-
-/usr/include/sys/_types/_pid_t.h:
-
-/usr/include/sys/_types/_uid_t.h:
+/usr/include/time.h:
 
 /usr/include/sys/_types/_clock_t.h:
 
 /usr/include/sys/_types/_time_t.h:
 
-/usr/include/sys/_types/_useconds_t.h:
+/usr/include/sys/_types/_timespec.h:
 
-/usr/include/sys/_types/_suseconds_t.h:
+/usr/include/_wctype.h:
 
-/usr/include/sys/_types/_fd_def.h:
+/usr/include/sys/_types/_wint_t.h:
 
-/usr/include/sys/_types/_fd_setsize.h:
+/usr/include/_types/_wctype_t.h:
 
-/usr/include/sys/_types/_fd_set.h:
+/Library/Developer/CommandLineTools/usr/include/c++/v1/ctype.h:
 
-/usr/include/sys/_types/_fd_clr.h:
+/usr/include/ctype.h:
 
-/usr/include/sys/_types/_fd_zero.h:
+/usr/include/runetype.h:
 
-/usr/include/sys/_types/_fd_isset.h:
+/Library/Developer/CommandLineTools/usr/include/c++/v1/__bit_reference:
 
-/usr/include/sys/_types/_fd_copy.h:
+/Library/Developer/CommandLineTools/usr/include/c++/v1/algorithm:
 
-/usr/include/sys/_pthread/_pthread_attr_t.h:
+/Library/Developer/CommandLineTools/usr/include/c++/v1/initializer_list:
 
-/usr/include/sys/_pthread/_pthread_cond_t.h:
+/Library/Developer/CommandLineTools/usr/include/c++/v1/cstring:
 
-/usr/include/sys/_pthread/_pthread_condattr_t.h:
+/Library/Developer/CommandLineTools/usr/include/c++/v1/utility:
 
-/usr/include/sys/_pthread/_pthread_mutex_t.h:
+/Library/Developer/CommandLineTools/usr/include/c++/v1/__tuple:
 
-/usr/include/sys/_pthread/_pthread_mutexattr_t.h:
+/Library/Developer/CommandLineTools/usr/include/c++/v1/__debug:
 
-/usr/include/sys/_pthread/_pthread_once_t.h:
+/Library/Developer/CommandLineTools/usr/include/c++/v1/memory:
 
-/usr/include/sys/_pthread/_pthread_rwlock_t.h:
+/Library/Developer/CommandLineTools/usr/include/c++/v1/typeinfo:
 
-/usr/include/sys/_pthread/_pthread_rwlockattr_t.h:
+/Library/Developer/CommandLineTools/usr/include/c++/v1/exception:
 
-/usr/include/sys/_pthread/_pthread_t.h:
-
-/usr/include/sys/_pthread/_pthread_key_t.h:
-
-/usr/include/sys/_types/_fsblkcnt_t.h:
-
-/usr/include/sys/_types/_fsfilcnt_t.h:
+/Library/Developer/CommandLineTools/usr/include/c++/v1/cstdlib:
 
 /Library/Developer/CommandLineTools/usr/include/c++/v1/stdlib.h:
 
@@ -301,7 +286,13 @@ WCSTNX.o: ../../src/WCSTNX.cpp \
 
 /usr/include/sys/wait.h:
 
+/usr/include/sys/_types/_pid_t.h:
+
+/usr/include/sys/_types/_id_t.h:
+
 /usr/include/sys/signal.h:
+
+/usr/include/sys/appleapiopts.h:
 
 /usr/include/machine/signal.h:
 
@@ -315,11 +306,15 @@ WCSTNX.o: ../../src/WCSTNX.cpp \
 
 /usr/include/mach/i386/_structs.h:
 
+/usr/include/sys/_pthread/_pthread_attr_t.h:
+
 /usr/include/sys/_types/_sigaltstack.h:
 
 /usr/include/sys/_types/_ucontext.h:
 
 /usr/include/sys/_types/_sigset_t.h:
+
+/usr/include/sys/_types/_uid_t.h:
 
 /usr/include/sys/resource.h:
 
@@ -343,13 +338,37 @@ WCSTNX.o: ../../src/WCSTNX.cpp \
 
 /usr/include/sys/_types/_timeval.h:
 
+/usr/include/machine/endian.h:
+
+/usr/include/i386/endian.h:
+
+/usr/include/sys/_endian.h:
+
+/usr/include/libkern/_OSByteOrder.h:
+
+/usr/include/libkern/i386/_OSByteOrder.h:
+
 /usr/include/alloca.h:
 
-/usr/include/sys/_types/_ct_rune_t.h:
+/usr/include/sys/_types/_dev_t.h:
 
-/usr/include/sys/_types/_rune_t.h:
+/usr/include/sys/_types/_mode_t.h:
 
-/usr/include/sys/_types/_wchar_t.h:
+/Library/Developer/CommandLineTools/usr/include/c++/v1/cstdint:
+
+/Library/Developer/CommandLineTools/usr/include/c++/v1/new:
+
+/Library/Developer/CommandLineTools/usr/include/c++/v1/iterator:
+
+/Library/Developer/CommandLineTools/usr/include/c++/v1/__functional_base:
+
+/Library/Developer/CommandLineTools/usr/include/c++/v1/__functional_base_03:
+
+/Library/Developer/CommandLineTools/usr/include/c++/v1/tuple:
+
+/Library/Developer/CommandLineTools/usr/include/c++/v1/stdexcept:
+
+/Library/Developer/CommandLineTools/usr/include/c++/v1/climits:
 
 /Library/Developer/CommandLineTools/usr/include/c++/v1/limits.h:
 
@@ -365,93 +384,13 @@ WCSTNX.o: ../../src/WCSTNX.cpp \
 
 /usr/include/sys/syslimits.h:
 
-../../src/ADefine.h:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/math.h:
-
-/usr/include/math.h:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/type_traits:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/cstddef:
-
-/Library/Developer/CommandLineTools/usr/lib/clang/9.0.0/include/stddef.h:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/__nullptr:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/limits:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/__undef_min_max:
-
-../../src/AMath.h:
-
-../../src/WCSTNX.h:
+/Library/Developer/CommandLineTools/usr/include/c++/v1/__split_buffer:
 
 /Library/Developer/CommandLineTools/usr/include/c++/v1/string:
 
 /Library/Developer/CommandLineTools/usr/include/c++/v1/string_view:
 
 /Library/Developer/CommandLineTools/usr/include/c++/v1/__string:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/algorithm:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/initializer_list:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/cstring:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/utility:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/__tuple:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/__debug:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/memory:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/typeinfo:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/exception:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/cstdlib:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/cstdint:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/new:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/iterator:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/iosfwd:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/wchar.h:
-
-/usr/include/wchar.h:
-
-/usr/include/sys/_types/_mbstate_t.h:
-
-/Library/Developer/CommandLineTools/usr/lib/clang/9.0.0/include/stdarg.h:
-
-/usr/include/time.h:
-
-/usr/include/sys/_types/_timespec.h:
-
-/usr/include/_wctype.h:
-
-/usr/include/sys/_types/_wint_t.h:
-
-/usr/include/_types/_wctype_t.h:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/ctype.h:
-
-/usr/include/ctype.h:
-
-/usr/include/runetype.h:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/__functional_base:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/__functional_base_03:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/tuple:
-
-/Library/Developer/CommandLineTools/usr/include/c++/v1/stdexcept:
 
 /Library/Developer/CommandLineTools/usr/include/c++/v1/cstdio:
 
@@ -466,3 +405,77 @@ WCSTNX.o: ../../src/WCSTNX.cpp \
 /usr/include/wctype.h:
 
 /usr/include/_types/_wctrans_t.h:
+
+/usr/local/include/longnam.h:
+
+/usr/local/include/fitsio.h:
+
+/usr/include/sys/types.h:
+
+/usr/include/sys/_types/_u_char.h:
+
+/usr/include/sys/_types/_u_short.h:
+
+/usr/include/sys/_types/_u_int.h:
+
+/usr/include/sys/_types/_caddr_t.h:
+
+/usr/include/sys/_types/_blkcnt_t.h:
+
+/usr/include/sys/_types/_blksize_t.h:
+
+/usr/include/sys/_types/_gid_t.h:
+
+/usr/include/sys/_types/_in_addr_t.h:
+
+/usr/include/sys/_types/_in_port_t.h:
+
+/usr/include/sys/_types/_ino_t.h:
+
+/usr/include/sys/_types/_ino64_t.h:
+
+/usr/include/sys/_types/_key_t.h:
+
+/usr/include/sys/_types/_nlink_t.h:
+
+/usr/include/sys/_types/_useconds_t.h:
+
+/usr/include/sys/_types/_suseconds_t.h:
+
+/usr/include/sys/_types/_fd_def.h:
+
+/usr/include/sys/_types/_fd_setsize.h:
+
+/usr/include/sys/_types/_fd_set.h:
+
+/usr/include/sys/_types/_fd_clr.h:
+
+/usr/include/sys/_types/_fd_zero.h:
+
+/usr/include/sys/_types/_fd_isset.h:
+
+/usr/include/sys/_types/_fd_copy.h:
+
+/usr/include/sys/_pthread/_pthread_cond_t.h:
+
+/usr/include/sys/_pthread/_pthread_condattr_t.h:
+
+/usr/include/sys/_pthread/_pthread_mutex_t.h:
+
+/usr/include/sys/_pthread/_pthread_mutexattr_t.h:
+
+/usr/include/sys/_pthread/_pthread_once_t.h:
+
+/usr/include/sys/_pthread/_pthread_rwlock_t.h:
+
+/usr/include/sys/_pthread/_pthread_rwlockattr_t.h:
+
+/usr/include/sys/_pthread/_pthread_t.h:
+
+/usr/include/sys/_pthread/_pthread_key_t.h:
+
+/usr/include/sys/_types/_fsblkcnt_t.h:
+
+/usr/include/sys/_types/_fsfilcnt_t.h:
+
+../../src/WCSTNX.h:

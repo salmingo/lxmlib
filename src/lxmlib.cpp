@@ -34,7 +34,33 @@ int main(int argc, char **argv) {
 	signals.async_wait(boost::bind(&boost::asio::io_service::stop, &ios));
 
 ///////////////////////////////////////////////////////////////////////////////
-/// 功能测试区
+// 功能测试区
+	if (argc < 3) {
+		printf("Usage:\n\t lxmlib path_of_acc path_of_fits\n");
+//		printf("Usage:\n\t lxmlib path_of_acc x y\n");
+		return -1;
+	}
+	string fileacc  = argv[1];
+	string filefits = argv[2];
+//	double x = atof(argv[2]);
+//	double y = atof(argv[3]);
+//	double ra, dec;
+	WCSTNX wcstnx;
+	if (!wcstnx.LoadText(fileacc.c_str())) {
+		printf("failed to load calibration file\n");
+		return -2;
+	}
+	_gLog.Write("writting file<%s>", filefits.c_str());
+	if (wcstnx.WriteImage(filefits.c_str())) {
+		printf("failed to write fits file\n");
+		return -3;
+	}
+	_gLog.Write("complete");
+
+//	wcstnx.XY2WCS(x, y, ra, dec);
+//	printf("%7.2f %7.2f ==> %9.5f %9.5f\n", x, y, ra * R2D, dec * R2D);
+
+/*
 	if (argc < 4) {
 		printf("Usage:\n\t lxmlib filepath x y\n");
 		return -1;
@@ -85,6 +111,7 @@ int main(int argc, char **argv) {
 	}
 
 	fclose(rslt);
+*/
 //////////////////////////////////////////////////////////////////////////////
 
 	ios.run();

@@ -24,18 +24,14 @@
 	CD1_2   =         7.374228e-05 / Coordinate matrix
 	CD2_2   =       -1.1927219e-06 / Coordinate matrix
 	WAT0_001= 'system=image'       / Coordinate system
-	WAT1_001= 'wtype=tnx axtype=ra lngcor = "3. 4. 4. 2. 500 2500 500 2500 -0.31718'
-	WAT1_002= '56965643079 -0.0150652479325533 -0.3126038394350166 -0.1511955040928'
-	WAT1_003= '311 0.002318100364838772 0.01749134520424022 -0.01082784423020123 -0'
-	WAT1_004= '.1387962673564234 -4.307309762939804E-4 0.009069288008295441 0.00287'
-	WAT1_005= '5265278754504 -0.04487658756007625 -0.1058043162287004 -0.0686214765'
-	WAT1_006= '375767 "
-	WAT2_001= 'wtype=tnx axtype=dec latcor = "3. 4. 4. 2. 500. 2500. 500. 2500. -0.'
-	WAT2_002= '3171856965643079 -0.0150652479325533 -0.3126038394350166 -0.15119550'
-	WAT2_003= '40928311 0.005534819578784082 0.01258790793029932 0.0101678008557533'
-	WAT2_004= '9 0.01541083298696018 0.03531979587941362 0.0150096457430599 -0.1086'
-	WAT2_005= '479352595234 0.0399806086902122 0.02341002785565408 -0.0777380839324'
-	WAT2_006= '4387 "
+	WAT1_001= 'wtype=tnx axtype=ra lngcor = "3. 4. 4. 2. 500 2500 500 2500 0.002318'
+	WAT1_002= '100364838772 0.01749134520424022 -0.01082784423020123 -0.13879626735'
+	WAT1_003= '64234 -4.307309762939804E-4 0.009069288008295441 0.00287526527875450'
+	WAT1_004= '4 -0.04487658756007625 -0.1058043162287004 -0.0686214765375767 "
+	WAT2_001= 'wtype=tnx axtype=dec latcor = "3. 4. 4. 2. 500 2500 500 2500 0.002318'
+	WAT2_002= '100364838772 0.01749134520424022 -0.01082784423020123 -0.13879626735'
+	WAT2_003= '64234 -4.307309762939804E-4 0.009069288008295441 0.00287526527875450'
+	WAT3_004= '4 -0.04487658756007625 -0.1058043162287004 -0.0686214765375767 "
  */
 
 #ifndef WCSTNX_H_
@@ -45,7 +41,7 @@
 #include "ADefine.h"
 
 using std::string;
-using AstroUtil::PT2F;
+using namespace AstroUtil;
 
 class WCSTNX {
 public:
@@ -54,10 +50,10 @@ public:
 
 public:
 	/* 数据结构 */
-	enum {// 平面畸变拟合多项式类型
-		TNX_CHEB = 1,	//< 契比雪夫多项式
-		TNX_LEG,			//< 勒让德多项式
-		TNX_POLY			//< 线性多项式
+	enum {// 畸变修正函数类型
+		TNX_CHEBYSHEV = 1,	//< 契比雪夫
+		TNX_LEGENDRE,		//< 勒让德
+		TNX_LINEAR			//< 线性
 	};
 
 	enum {// 多项式交叉系数类型
@@ -66,6 +62,196 @@ public:
 		TNX_XHALF		//< 半交叉
 	};
 
+	struct wcs_axis {// 单轴wcs坐标拟合参数
+		int function;		//< 函数类型
+		int xorder, yorder;	//< 阶次
+		int xterm;			//< 交叉项类型
+		double xmin, xmax, ymin, ymax;	//< 归一化范围
+		int ncoef;			//< 系数数量
+		double *coef;		//< 系数
+		double *x, *y, *xy;	//< 多项式单项变量存储区
+
+	private:
+		/*!
+		 * @brief 计算交叉项数量
+		 * @return
+		 * 交叉项数量
+		 */
+		int xterm_count() {
+			int order = xorder < yorder ? xorder : yorder;
+			int n;
+
+			if      (xterm == TNX_XNONE) n = xorder + yorder - 1;
+			else if (xterm == TNX_XFULL) n = xorder * yorder;
+			else if (xterm == TNX_XHALF) n = xorder * yorder - order * (order - 1) / 2;
+
+			return n;
+		}
+
+		/*!
+		 * @brief 生成一元线性数组
+		 * @param value  自变量
+		 * @param order  阶次
+		 * @param ptr    输出数组
+		 */
+		void linear_array(double value, int order, double *ptr) {
+			int i;
+
+			ptr[0] = 1.0;
+			for (i = 1; i < order; ++i) ptr[i] = value * ptr[i - 1];
+		}
+
+		/*!
+		 * @brief 生成一元勒让德数组
+		 * @param value  自变量
+		 * @param min    最小值
+		 * @param max    最大值
+		 * @param order  阶次
+		 * @param ptr    输出数组
+		 */
+		void legendre_array(double value, double min, double max, int order, double *ptr) {
+			int i;
+			double norm = (2 * value - (max + min)) / (max - min);
+
+			ptr[0] = 1.0;
+			if (order > 1) ptr[1] = norm;
+			for (i = 2; i < order; ++i) {
+				ptr[i] = ((2 * i - 1) * norm * ptr[i - 1] - (i - 1) * ptr[i - 2]) / i;
+			}
+		}
+
+		/*!
+		 * @brief 生成一元契比雪夫数组
+		 * @param value  自变量
+		 * @param min    最小值
+		 * @param max    最大值
+		 * @param order  阶次
+		 * @param ptr    输出数组
+		 */
+		void chebyshev_array(double value, double min, double max, int order, double *ptr) {
+			int i;
+			double norm = (2 * value - (max + min)) / (max - min);
+
+			ptr[0] = 1.0;
+			if (order > 1) ptr[1] = norm;
+			for (i = 2; i < order; ++i) 	ptr[i] = 2 * norm * ptr[i - 1] - ptr[i - 2];
+		}
+
+		/*!
+		 * @brief 完成x和y单变量多项式后, 合并生成多项式单项
+		 */
+		void polyitem() {
+			double *ptr, t;
+			int maxorder = xorder > yorder ? xorder : yorder;
+			int i, j, imin(0), imax(xorder);
+
+			for (j = 0, ptr = xy; j < yorder; ++j) {
+				if (j) {
+					if (xterm == TNX_XNONE && imax != 1) imax = 1;
+					else if (xterm == TNX_XHALF && (j + xorder) > maxorder) --imax;
+				}
+
+				for (i = imin, t = y[j]; i < imax; ++i, ++ptr) *ptr = x[i] * t;
+			}
+		}
+
+		/*!
+		 * @brief 指定自变量后, 计算多项式对应因变量
+		 * @return
+		 * 因变量
+		 */
+		double polyval() {
+			double sum(0.0);
+			for (int i = 0; i < ncoef; ++i) sum += (coef[i] * xy[i]);
+			return sum;
+		}
+
+	public:
+		wcs_axis() {
+			function = -1;
+			xorder = yorder = -1;
+			xterm = -1;
+			xmin = xmax = ymin = ymax = 0.0;
+			ncoef = 0;
+			coef = NULL;
+			x = y = xy = NULL;
+		}
+
+		void free_array(double **array) {
+			if ((*array) != NULL) {
+				delete [](*array);
+				(*array) = NULL;
+			}
+		}
+
+		void ~wcs_axis() {
+			free(&coef);
+			free_array(&x);
+			free_array(&y);
+			free_array(&xy);
+		}
+
+		/*
+		 * @note set_order()应在set_xterm()之前执行
+		 */
+		void set_order(int xo, int yo) {
+			if (xorder != xo) {
+				xorder = xo;
+				free_array(&x);
+			}
+			if (yorder != yo) {
+				yorder = yo;
+				free_array(&y);
+			}
+
+			if (!x) x = new double[x];
+			if (!y) y = new double[y];
+		}
+
+		/*
+		 * @note set_xterm()应在set_order()之后执行
+		 */
+		void set_xterm(int xt) {
+			if (xterm != xt) xterm = xt;
+			int n = xterm_count();
+			if (n != ncoef) {
+				free_array(&xy);
+				free_array(&coef);
+				ncoef = n;
+			}
+			if (!coef) coef = new double[n];
+			if (!xy)   xy   = new double[n];
+		}
+
+		/*!
+		 * @brief 计算图像坐标(x,y)对应的投影位置
+		 * @param vx X轴坐标
+		 * @param vy Y轴坐标
+		 * @return
+		 * 投影位置, 量纲: 弧度
+		 */
+		double project_forward(double vx, double vy) {
+			if (!(x && y && xy && coef)) return 0.0;
+
+			if (function == TNX_CHEBYSHEV) {
+				chebyshev_array(vx, xmin, xmax, xorder, x);
+				chebyshev_array(vy, ymin, ymax, yorder, y);
+			}
+			else if (function == TNX_LEGENDRE) {
+				legendre_array(vx, xmin, xmax, xorder, x);
+				legendre_array(vy, ymin, ymax, yorder, y);
+			}
+			else if (function == TNX_LINEAR) {
+				linear_array(vx, xorder, x);
+				linear_array(vy, xorder, y);
+			}
+			polyitem();
+
+			return (polyval() * AS2R);
+		}
+	};
+
+/*
 	struct param_surface {// 畸变修正系数
 		int xsurface, ysurface;		//< 多项式类型
 		int xxorder, xyorder;		//< 阶次
@@ -173,23 +359,25 @@ public:
 			if (!ycoef) ycoef = new double[n];
 		}
 	};
-
+*/
 	struct param_tnx {// TNX参数
 		bool valid1, valid2;	//< 参数有效性标志
-		PT2F ref_xymean;		//< 参考点: 平均XY坐标
-		PT2F ref_wcsmean;	//< 参考点: 平均WCS坐标, 量纲: 弧度
-		string pixsystem;	//< 图像像素坐标系名称
-		string coosystem;	//< WCS坐标系名称
-		string projection;	//< 投影模式
+//		PT2F ref_xymean;		//< 参考点: 平均XY坐标
+//		PT2F ref_wcsmean;	//< 参考点: 平均WCS坐标, 量纲: 弧度
+//		string pixsystem;	//< 图像像素坐标系名称
+//		string coosystem;	//< WCS坐标系名称
+//		string projection;	//< 投影模式
 		PT2F ref_xy;			//< 参考点: XY坐标
 		PT2F ref_wcs;		//< 参考点: WCS坐标, 量纲: 弧度
-		string function;		//< 畸变改正函数类型
-		PT2F shift;			//< 投影坐标偏移量
-		PT2F mag;			//< 比例尺, 量纲: 弧度/像素
-		PT2F rotation;		//< 旋转角, 量纲: 弧度
+//		string function;		//< 畸变改正函数类型
+//		PT2F shift;			//< 投影坐标偏移量
+//		PT2F mag;			//< 比例尺, 量纲: 弧度/像素
+//		PT2F rotation;		//< 旋转角, 量纲: 弧度
 		double cd[2][2];		//< 旋转矩阵. 由平均关系获得. 量纲: 弧度/像素
-		param_surface surface1;	//< 一阶投影面拟合系数
-		param_surface surface2;	//< 残差投影面拟合系数
+//		param_surface surface1;	//< 一阶投影面拟合系数
+//		param_surface surface2;	//< 残差投影面拟合系数
+		wcs_axis axes1[2];		//< 一阶投影面修正模型
+		wcs_axis axes2[2];		//< 残差投影面修正模型
 	};
 
 protected:
@@ -203,8 +391,10 @@ public:
 	 * @param filepath FITS文件路径
 	 * @return
 	 * 参数加载结果
+	 *  0: 正确
+	 * -1: 不能打开FITS文件
 	 */
-	bool LoadImage(const char* filepath);
+	int LoadImage(const char* filepath);
 	/*!
 	 * @brief 从文本文件加载WCS参数
 	 * @param filepath 文本文件路径
@@ -216,9 +406,14 @@ public:
 	 * @brief 将LoadText加载的TNX参数写入filepath指代的FITS文件
 	 * @param filepath FITS文件路径
 	 * @return
-	 * 操作结果
+	 * 操作结果.
+	 * 2017-11-15
+	 *   0: 成功
+	 *  -1: 未加载位置定标文件, 位置定标必须为TNX格式
+	 *  -2: 不能打开FITS文件
+	 * 其它: fitsio错误
 	 */
-	bool WriteImage(const char* filepath);
+	int WriteImage(const char* filepath);
 	/*!
 	 * @brief 计算与图像坐标(x,y)对应的WCS坐标(ra,dec)
 	 * @param x   X轴坐标
@@ -291,14 +486,15 @@ protected:
 	 * 多项式和
 	 */
 	double polysum(int n, double* coef, double* item);
-	/*!
-	 * @brief 计算残差修正项
-	 * @param x   输入x坐标
-	 * @param y   输入y坐标
-	 * @param dx  x修正量
-	 * @param dy  y修正量
-	 */
-	void correct(param_surface& surface, double x, double y, double& dx, double& dy);
+//	/*!
+//	 * @brief 计算残差修正项
+//	 * @param x   输入x坐标
+//	 * @param y   输入y坐标
+//	 * @param dx  x修正量
+//	 * @param dy  y修正量
+//	 */
+//	void correct(param_surface& surface, double x, double y, double& dx, double& dy);
+	void correct(wcs_axis wcs[], double x, double y, double &xi, double &eta);
 	/*!
 	 * @brief 图像坐标转换为投影平面平坐标
 	 * @param x    图像X坐标
@@ -307,6 +503,22 @@ protected:
 	 * @param eta  投影eta坐标
 	 */
 	void image_to_plane(double x, double y, double& xi, double& eta);
+	/*!
+	 * @brief 由投影平面坐标转换为赤道坐标
+	 * @param xi   投影xi坐标, 量纲: 弧度
+	 * @param eta  投影eta坐标, 量纲: 弧度
+	 * @param ra   赤经, 量纲: 弧度
+	 * @param dec  赤纬, 量纲: 弧度
+	 */
+	void plane_to_wcs(double xi, double eta, double &ra, double &dec);
+	/*!
+	 * @brief 最大可能保留浮点数精度, 将浮点数转换为字符串
+	 * @param output 输出字符串
+	 * @param value  浮点数
+	 * @return
+	 * 转换后字符串长度
+	 */
+	int output_precision_double(char *output, double value);
 };
 
 #endif /* WCSTNX_H_ */

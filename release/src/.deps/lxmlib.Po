@@ -1543,7 +1543,7 @@ lxmlib.o: ../../src/lxmlib.cpp \
   /usr/local/include/boost/filesystem/fstream.hpp \
   /Library/Developer/CommandLineTools/usr/include/c++/v1/fstream \
   /usr/include/dirent.h /usr/include/sys/dirent.h ../../src/WCSTNX.h \
-  ../../src/ADefine.h
+  ../../src/ADefine.h ../../src/AMath.h
 
 /Library/Developer/CommandLineTools/usr/include/c++/v1/vector:
 
@@ -4810,3 +4810,5 @@ lxmlib.o: ../../src/lxmlib.cpp \
 ../../src/WCSTNX.h:
 
 ../../src/ADefine.h:
+
+../../src/AMath.h:

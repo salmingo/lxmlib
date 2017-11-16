@@ -17,16 +17,13 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include "WCSTNX.h"
+#include "AMath.h"
 
 using std::vector;
 using std::string;
+using namespace AstroUtil;
 
 GLog _gLog(stdout);
-
-int filter_dir(const struct dirent *ent) {
-	if (ent->d_type != DT_REG || ent->d_name[0] == '.') return 0;
-	return 1;
-}
 
 int main(int argc, char **argv) {
 	boost::asio::io_service ios;
@@ -35,24 +32,7 @@ int main(int argc, char **argv) {
 
 ///////////////////////////////////////////////////////////////////////////////
 // 功能测试区
-	if (argc < 4) {
-//		printf("Usage:\n\t lxmlib path_of_acc path_of_fits\n");
-//		printf("Usage:\n\t lxmlib path_of_acc x y\n");
-		printf("Usage:\n\t lxmlib path_of_fits x y\n");
-		return -1;
-	}
-//	string fileacc  = argv[1];
-	string filefits = argv[1];
-	double x = atof(argv[2]);
-	double y = atof(argv[3]);
-	double ra, dec;
-	WCSTNX wcstnx;
-	if (wcstnx.LoadImage(filefits.c_str()))
-		printf("failed to load WCS from file\n");
-	else {
-		wcstnx.XY2WCS(x, y, ra, dec);
-		printf("%7.2f %7.2f ==> %9.5f %9.5f\n", x, y, ra * R2D, dec * R2D);
-	}
+
 //////////////////////////////////////////////////////////////////////////////
 
 	ios.run();

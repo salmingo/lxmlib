@@ -37,12 +37,9 @@ public:
 	typedef boost::signals2::signal<void (const long, const long)> CallbackFunc;
 	// 基于boost::signals2声明插槽类型
 	typedef CallbackFunc::slot_type CBSlot;
-
-protected:
-	// 数据类型
 	typedef boost::unique_lock<boost::mutex> mutex_lock;	//< 互斥锁
 	typedef boost::circular_buffer<char> crcbuff;	//< 循环缓冲区
-	typedef boost::shared_array<char> carray;	//< 字符型数组
+	typedef boost::shared_array<char> charray;	//< 字符型数组
 
 protected:
 	friend class TCPServer;
@@ -55,7 +52,7 @@ protected:
 
 	bool usebuf_;	//< 启用循环缓冲区
 	int bytercv_;	//< 已接收信息长度
-	carray bufrcv_;	//< 单条接收缓冲区
+	charray bufrcv_;	//< 单条接收缓冲区
 	crcbuff crcrcv_;		//< 循环接收缓冲区
 	crcbuff crcsnd_;		//< 循环发送缓冲区
 	boost::mutex mtxrcv_;	//< 接收互斥锁

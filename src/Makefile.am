@@ -1,5 +1,5 @@
 bin_PROGRAMS=lxmlib
-lxmlib_SOURCES= AMath.cpp ATimeSpace.cpp daemon.cpp GLog.cpp IOServiceKeep.cpp \
+lxmlib_SOURCES= AMath.cpp ATimeSpace.cpp daemon.cpp GLog.cpp IOServiceKeep.cpp CameraBase.cpp \
                 MessageQueue.cpp NTPClient.cpp tcpasio.cpp udpasio.cpp SerialComm.cpp \
                 WCSTNX.cpp \
                 lxmlib.cpp

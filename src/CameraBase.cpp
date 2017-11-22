@@ -32,7 +32,7 @@ void CameraBase::Disconnect() {
 		interrupt_thread(thrdExpose_);
 		interrupt_thread(thrdCycle_);
 		disconnect();
-		nfcam_->connected = false;
+		nfcam_->uninit();
 	}
 }
 
@@ -40,7 +40,9 @@ bool CameraBase::Expose(double duration, bool light) {
 	if (nfcam_->connected && nfcam_->mode == CAMMOD_NORMAL && nfcam_->state == CAMSTAT_IDLE) {
 		if (!start_expose(duration, light)) return false;
 		nfcam_->begin_expose(duration);
+		nfcam_->format_tmobs();
 		cvexp_.notify_one();
+
 		return true;
 	}
 	return false;
@@ -54,9 +56,7 @@ void CameraBase::AbortExpose() {
 }
 
 void CameraBase::SetCooler(double coolset, bool onoff) {
-//	if (nfcam_->connected) {
-//		update_cooler(coolset, onoff);
-//	}
+	if (nfcam_->connected) update_cooler(coolset, onoff);
 }
 
 void CameraBase::SetReadPort(uint32_t index) {
@@ -75,8 +75,11 @@ void CameraBase::SetGain(uint32_t index) {
 }
 
 void CameraBase::SetROI(int xstart, int ystart, int width, int height, int xbin, int ybin) {
-	if (nfcam_->connected && nfcam_->state == CAMSTAT_IDLE) {
-
+	if (nfcam_->connected && nfcam_->mode == CAMMOD_NORMAL && nfcam_->state == CAMSTAT_IDLE) {
+		ROI &roi = nfcam_->roi;
+		roi.set_roi(xstart, ystart, width, height, xbin, ybin); // 检验/校正ROI设置
+		update_roi(xstart, ystart, width, height, xbin, ybin);
+		roi.set_roi(xstart, ystart, width, height, xbin, ybin); // 由相机反馈更新设置
 	}
 }
 
@@ -84,6 +87,7 @@ void CameraBase::SetADCOffset(uint16_t offset) {
 	if (nfcam_->connected && nfcam_->mode == CAMMOD_NORMAL && nfcam_->state == CAMSTAT_IDLE) {
 		nfcam_->mode = CAMMOD_CALIBRATE;
 		update_adcoffset(offset);
+		nfcam_->mode = CAMMOD_NORMAL;
 	}
 }
 
@@ -96,10 +100,12 @@ void CameraBase::RegisterExposeProcess(const ExpProcSlot &slot) {
 
 void CameraBase::thread_cycle() {
 	boost::chrono::seconds period(10);
+	double coolget;
 
 	while(1) {
 		boost::this_thread::sleep_for(period);
-		nfcam_->coolerget = sensor_temperature();
+		coolget = sensor_temperature();
+		if (nfcam_->coolget != coolget) nfcam_->coolget = coolget;
 	}
 }
 

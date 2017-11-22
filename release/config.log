@@ -30,8 +30,8 @@ Kernel configured for up to 8 processors.
 Processor type: x86_64h (Intel x86-64h Haswell)
 Processors active: 0 1 2 3 4 5 6 7
 Primary memory available: 16.00 gigabytes
-Default processor set: 409 tasks, 1634 threads, 8 processors
-Load average: 2.12, Mach factor: 5.92
+Default processor set: 415 tasks, 1650 threads, 8 processors
+Load average: 1.35, Mach factor: 6.64
 /bin/machine           = unknown
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
@@ -234,11 +234,29 @@ conftest.c:42:6: note: 'strerror' is a builtin with type 'char *(int)'
 1 warning generated.
 configure:4459: $? = 0
 configure:4459: result: yes
+configure:4459: checking for strcasecmp
+configure:4459: gcc -o conftest -g -O2   conftest.c  >&5
+conftest.c:43:6: warning: incompatible redeclaration of library function 'strcasecmp' [-Wincompatible-library-redeclaration]
+char strcasecmp ();
+     ^
+conftest.c:43:6: note: 'strcasecmp' is a builtin with type 'int (const char *, const char *)'
+1 warning generated.
+configure:4459: $? = 0
+configure:4459: result: yes
+configure:4459: checking for strpbrk
+configure:4459: gcc -o conftest -g -O2   conftest.c  >&5
+conftest.c:44:6: warning: incompatible redeclaration of library function 'strpbrk' [-Wincompatible-library-redeclaration]
+char strpbrk ();
+     ^
+conftest.c:44:6: note: 'strpbrk' is a builtin with type 'char *(const char *, const char *)'
+1 warning generated.
+configure:4459: $? = 0
+configure:4459: result: yes
 configure:4473: checking how to run the C preprocessor
 configure:4504: gcc -E  conftest.c
 configure:4504: $? = 0
 configure:4518: gcc -E  conftest.c
-conftest.c:20:10: fatal error: 'ac_nonexistent.h' file not found
+conftest.c:22:10: fatal error: 'ac_nonexistent.h' file not found
 #include <ac_nonexistent.h>
          ^~~~~~~~~~~~~~~~~~
 1 error generated.
@@ -262,13 +280,15 @@ configure: failed program was:
 | #define HAVE_SOCKET 1
 | #define HAVE_SQRT 1
 | #define HAVE_STRERROR 1
+| #define HAVE_STRCASECMP 1
+| #define HAVE_STRPBRK 1
 | /* end confdefs.h.  */
 | #include <ac_nonexistent.h>
 configure:4543: result: gcc -E
 configure:4563: gcc -E  conftest.c
 configure:4563: $? = 0
 configure:4577: gcc -E  conftest.c
-conftest.c:20:10: fatal error: 'ac_nonexistent.h' file not found
+conftest.c:22:10: fatal error: 'ac_nonexistent.h' file not found
 #include <ac_nonexistent.h>
          ^~~~~~~~~~~~~~~~~~
 1 error generated.
@@ -292,6 +312,8 @@ configure: failed program was:
 | #define HAVE_SOCKET 1
 | #define HAVE_SQRT 1
 | #define HAVE_STRERROR 1
+| #define HAVE_STRCASECMP 1
+| #define HAVE_STRPBRK 1
 | /* end confdefs.h.  */
 | #include <ac_nonexistent.h>
 configure:4606: checking for grep that handles long lines and -e
@@ -390,38 +412,38 @@ configure:4868: checking for unistd.h
 configure:4868: result: yes
 configure:4878: checking for stdbool.h that conforms to C99
 configure:4945: gcc -c -g -O2  conftest.c >&5
-conftest.c:86:24: warning: address of 's' will always evaluate to 'true' [-Wpointer-bool-conversion]
+conftest.c:88:24: warning: address of 's' will always evaluate to 'true' [-Wpointer-bool-conversion]
              bool e = &s;
                   ~    ^
-conftest.c:90:23: warning: address of array 'a' will always evaluate to 'true' [-Wpointer-bool-conversion]
+conftest.c:92:23: warning: address of array 'a' will always evaluate to 'true' [-Wpointer-bool-conversion]
              return (!a + !b + !c + !d + !e + !f + !g + !h + !i + !!j + !k + !!l
                      ~^
-conftest.c:90:28: warning: address of array 'b' will always evaluate to 'true' [-Wpointer-bool-conversion]
+conftest.c:92:28: warning: address of array 'b' will always evaluate to 'true' [-Wpointer-bool-conversion]
              return (!a + !b + !c + !d + !e + !f + !g + !h + !i + !!j + !k + !!l
                           ~^
-conftest.c:90:33: warning: address of array 'c' will always evaluate to 'true' [-Wpointer-bool-conversion]
+conftest.c:92:33: warning: address of array 'c' will always evaluate to 'true' [-Wpointer-bool-conversion]
              return (!a + !b + !c + !d + !e + !f + !g + !h + !i + !!j + !k + !!l
                                ~^
-conftest.c:90:38: warning: address of array 'd' will always evaluate to 'true' [-Wpointer-bool-conversion]
+conftest.c:92:38: warning: address of array 'd' will always evaluate to 'true' [-Wpointer-bool-conversion]
              return (!a + !b + !c + !d + !e + !f + !g + !h + !i + !!j + !k + !!l
                                     ~^
-conftest.c:90:48: warning: address of array 'f' will always evaluate to 'true' [-Wpointer-bool-conversion]
+conftest.c:92:48: warning: address of array 'f' will always evaluate to 'true' [-Wpointer-bool-conversion]
              return (!a + !b + !c + !d + !e + !f + !g + !h + !i + !!j + !k + !!l
                                               ~^
-conftest.c:90:53: warning: address of array 'g' will always evaluate to 'true' [-Wpointer-bool-conversion]
+conftest.c:92:53: warning: address of array 'g' will always evaluate to 'true' [-Wpointer-bool-conversion]
              return (!a + !b + !c + !d + !e + !f + !g + !h + !i + !!j + !k + !!l
                                                    ~^
-conftest.c:90:58: warning: address of array 'h' will always evaluate to 'true' [-Wpointer-bool-conversion]
+conftest.c:92:58: warning: address of array 'h' will always evaluate to 'true' [-Wpointer-bool-conversion]
              return (!a + !b + !c + !d + !e + !f + !g + !h + !i + !!j + !k + !!l
                                                         ~^
-conftest.c:90:63: warning: address of array 'i' will always evaluate to 'true' [-Wpointer-bool-conversion]
+conftest.c:92:63: warning: address of array 'i' will always evaluate to 'true' [-Wpointer-bool-conversion]
              return (!a + !b + !c + !d + !e + !f + !g + !h + !i + !!j + !k + !!l
                                                              ~^
-conftest.c:91:30: warning: address of array 'n' will always evaluate to 'true' [-Wpointer-bool-conversion]
+conftest.c:93:30: warning: address of array 'n' will always evaluate to 'true' [-Wpointer-bool-conversion]
                             ~^
-conftest.c:91:35: warning: address of array 'o' will always evaluate to 'true' [-Wpointer-bool-conversion]
+conftest.c:93:35: warning: address of array 'o' will always evaluate to 'true' [-Wpointer-bool-conversion]
                                  ~^
-conftest.c:91:40: warning: address of array 'p' will always evaluate to 'true' [-Wpointer-bool-conversion]
+conftest.c:93:40: warning: address of array 'p' will always evaluate to 'true' [-Wpointer-bool-conversion]
                                       ~^
 12 warnings generated.
 configure:4945: $? = 0
@@ -430,7 +452,7 @@ configure:4954: checking for _Bool
 configure:4954: gcc -c -g -O2  conftest.c >&5
 configure:4954: $? = 0
 configure:4954: gcc -c -g -O2  conftest.c >&5
-conftest.c:73:20: error: expected expression
+conftest.c:75:20: error: expected expression
 if (sizeof ((_Bool)))
                    ^
 1 error generated.
@@ -454,6 +476,8 @@ configure: failed program was:
 | #define HAVE_SOCKET 1
 | #define HAVE_SQRT 1
 | #define HAVE_STRERROR 1
+| #define HAVE_STRCASECMP 1
+| #define HAVE_STRPBRK 1
 | #define STDC_HEADERS 1
 | #define HAVE_SYS_TYPES_H 1
 | #define HAVE_SYS_STAT_H 1
@@ -518,7 +542,7 @@ configure:4965: checking for pid_t
 configure:4965: gcc -c -g -O2  conftest.c >&5
 configure:4965: $? = 0
 configure:4965: gcc -c -g -O2  conftest.c >&5
-conftest.c:74:20: error: expected expression
+conftest.c:76:20: error: expected expression
 if (sizeof ((pid_t)))
                    ^
 1 error generated.
@@ -542,6 +566,8 @@ configure: failed program was:
 | #define HAVE_SOCKET 1
 | #define HAVE_SQRT 1
 | #define HAVE_STRERROR 1
+| #define HAVE_STRCASECMP 1
+| #define HAVE_STRPBRK 1
 | #define STDC_HEADERS 1
 | #define HAVE_SYS_TYPES_H 1
 | #define HAVE_SYS_STAT_H 1
@@ -605,7 +631,7 @@ configure: failed program was:
 configure:4965: result: yes
 configure:4978: checking vfork.h usability
 configure:4978: gcc -c -g -O2  conftest.c >&5
-conftest.c:71:10: fatal error: 'vfork.h' file not found
+conftest.c:73:10: fatal error: 'vfork.h' file not found
 #include <vfork.h>
          ^~~~~~~~~
 1 error generated.
@@ -629,6 +655,8 @@ configure: failed program was:
 | #define HAVE_SOCKET 1
 | #define HAVE_SQRT 1
 | #define HAVE_STRERROR 1
+| #define HAVE_STRCASECMP 1
+| #define HAVE_STRPBRK 1
 | #define STDC_HEADERS 1
 | #define HAVE_SYS_TYPES_H 1
 | #define HAVE_SYS_STAT_H 1
@@ -685,7 +713,7 @@ configure: failed program was:
 configure:4978: result: no
 configure:4978: checking vfork.h presence
 configure:4978: gcc -E  conftest.c
-conftest.c:38:10: fatal error: 'vfork.h' file not found
+conftest.c:40:10: fatal error: 'vfork.h' file not found
 #include <vfork.h>
          ^~~~~~~~~
 1 error generated.
@@ -709,6 +737,8 @@ configure: failed program was:
 | #define HAVE_SOCKET 1
 | #define HAVE_SQRT 1
 | #define HAVE_STRERROR 1
+| #define HAVE_STRCASECMP 1
+| #define HAVE_STRPBRK 1
 | #define STDC_HEADERS 1
 | #define HAVE_SYS_TYPES_H 1
 | #define HAVE_SYS_STAT_H 1
@@ -738,10 +768,10 @@ configure:4991: $? = 0
 configure:4991: result: yes
 configure:4991: checking for vfork
 configure:4991: gcc -o conftest -g -O2   conftest.c  >&5
-conftest.c:62:6: warning: incompatible redeclaration of library function 'vfork' [-Wincompatible-library-redeclaration]
+conftest.c:64:6: warning: incompatible redeclaration of library function 'vfork' [-Wincompatible-library-redeclaration]
 char vfork ();
      ^
-conftest.c:62:6: note: 'vfork' is a builtin with type 'int (void)'
+conftest.c:64:6: note: 'vfork' is a builtin with type 'int (void)'
 1 warning generated.
 configure:4991: $? = 0
 configure:4991: result: yes
@@ -765,7 +795,7 @@ configure:5256: checking for off_t
 configure:5256: gcc -c -g -O2  conftest.c >&5
 configure:5256: $? = 0
 configure:5256: gcc -c -g -O2  conftest.c >&5
-conftest.c:80:20: error: expected expression
+conftest.c:82:20: error: expected expression
 if (sizeof ((off_t)))
                    ^
 1 error generated.
@@ -789,6 +819,8 @@ configure: failed program was:
 | #define HAVE_SOCKET 1
 | #define HAVE_SQRT 1
 | #define HAVE_STRERROR 1
+| #define HAVE_STRCASECMP 1
+| #define HAVE_STRPBRK 1
 | #define STDC_HEADERS 1
 | #define HAVE_SYS_TYPES_H 1
 | #define HAVE_SYS_STAT_H 1
@@ -862,7 +894,7 @@ configure:5278: checking for size_t
 configure:5278: gcc -c -g -O2  conftest.c >&5
 configure:5278: $? = 0
 configure:5278: gcc -c -g -O2  conftest.c >&5
-conftest.c:80:21: error: expected expression
+conftest.c:82:21: error: expected expression
 if (sizeof ((size_t)))
                     ^
 1 error generated.
@@ -886,6 +918,8 @@ configure: failed program was:
 | #define HAVE_SOCKET 1
 | #define HAVE_SQRT 1
 | #define HAVE_STRERROR 1
+| #define HAVE_STRCASECMP 1
+| #define HAVE_STRPBRK 1
 | #define STDC_HEADERS 1
 | #define HAVE_SYS_TYPES_H 1
 | #define HAVE_SYS_STAT_H 1
@@ -953,17 +987,21 @@ configure: failed program was:
 |   return 0;
 | }
 configure:5278: result: yes
-configure:5289: checking for uint16_t
+configure:5289: checking for uint8_t
 configure:5289: gcc -c -g -O2  conftest.c >&5
 configure:5289: $? = 0
 configure:5289: result: yes
-configure:5301: checking for uint32_t
-configure:5301: gcc -c -g -O2  conftest.c >&5
-configure:5301: $? = 0
-configure:5301: result: yes
-configure:5463: checking that generated files are newer than configure
-configure:5469: result: done
-configure:5496: creating ./config.status
+configure:5303: checking for uint16_t
+configure:5303: gcc -c -g -O2  conftest.c >&5
+configure:5303: $? = 0
+configure:5303: result: yes
+configure:5315: checking for uint32_t
+configure:5315: gcc -c -g -O2  conftest.c >&5
+configure:5315: $? = 0
+configure:5315: result: yes
+configure:5477: checking that generated files are newer than configure
+configure:5483: result: done
+configure:5510: creating ./config.status
 
 ## ---------------------- ##
 ## Running config.status. ##
@@ -992,6 +1030,7 @@ ac_cv_build=x86_64-apple-darwin17.2.0
 ac_cv_c_compiler_gnu=yes
 ac_cv_c_uint16_t=yes
 ac_cv_c_uint32_t=yes
+ac_cv_c_uint8_t=yes
 ac_cv_cxx_compiler_gnu=yes
 ac_cv_env_CCC_set=
 ac_cv_env_CCC_value=
@@ -1028,7 +1067,9 @@ ac_cv_func_pow=yes
 ac_cv_func_select=yes
 ac_cv_func_socket=yes
 ac_cv_func_sqrt=yes
+ac_cv_func_strcasecmp=yes
 ac_cv_func_strerror=yes
+ac_cv_func_strpbrk=yes
 ac_cv_func_vfork=yes
 ac_cv_func_vfork_works=yes
 ac_cv_header_fcntl_h=yes
@@ -1096,7 +1137,7 @@ CXX='g++'
 CXXDEPMODE='depmode=gcc3'
 CXXFLAGS='-g -O2'
 CYGPATH_W='echo'
-DEFS='-DPACKAGE_NAME=\"lxmlib\" -DPACKAGE_TARNAME=\"lxmlib\" -DPACKAGE_VERSION=\"0.1\" -DPACKAGE_STRING=\"lxmlib\ 0.1\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"lxmlib\" -DVERSION=\"0.1\" -DHAVE_FTRUNCATE=1 -DHAVE_GETTIMEOFDAY=1 -DHAVE_MEMSET=1 -DHAVE_MKDIR=1 -DHAVE_POW=1 -DHAVE_SELECT=1 -DHAVE_SOCKET=1 -DHAVE_SQRT=1 -DHAVE_STRERROR=1 -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_FCNTL_H=1 -DHAVE_NETDB_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_SYS_SOCKET_H=1 -DHAVE_SYSLOG_H=1 -DHAVE_UNISTD_H=1 -DHAVE__BOOL=1 -DHAVE_FORK=1 -DHAVE_VFORK=1 -DHAVE_WORKING_VFORK=1 -DHAVE_WORKING_FORK=1 -DHAVE_STDLIB_H=1 -DHAVE_MALLOC=1'
+DEFS='-DPACKAGE_NAME=\"lxmlib\" -DPACKAGE_TARNAME=\"lxmlib\" -DPACKAGE_VERSION=\"0.1\" -DPACKAGE_STRING=\"lxmlib\ 0.1\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"lxmlib\" -DVERSION=\"0.1\" -DHAVE_FTRUNCATE=1 -DHAVE_GETTIMEOFDAY=1 -DHAVE_MEMSET=1 -DHAVE_MKDIR=1 -DHAVE_POW=1 -DHAVE_SELECT=1 -DHAVE_SOCKET=1 -DHAVE_SQRT=1 -DHAVE_STRERROR=1 -DHAVE_STRCASECMP=1 -DHAVE_STRPBRK=1 -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_FCNTL_H=1 -DHAVE_NETDB_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_SYS_SOCKET_H=1 -DHAVE_SYSLOG_H=1 -DHAVE_UNISTD_H=1 -DHAVE__BOOL=1 -DHAVE_FORK=1 -DHAVE_VFORK=1 -DHAVE_WORKING_VFORK=1 -DHAVE_WORKING_FORK=1 -DHAVE_STDLIB_H=1 -DHAVE_MALLOC=1'
 DEPDIR='.deps'
 ECHO_C='\c'
 ECHO_N=''
@@ -1204,6 +1245,8 @@ target_vendor='apple'
 #define HAVE_SOCKET 1
 #define HAVE_SQRT 1
 #define HAVE_STRERROR 1
+#define HAVE_STRCASECMP 1
+#define HAVE_STRPBRK 1
 #define STDC_HEADERS 1
 #define HAVE_SYS_TYPES_H 1
 #define HAVE_SYS_STAT_H 1
@@ -1230,21 +1273,3 @@ target_vendor='apple'
 #define HAVE_MALLOC 1
 
 configure: exit 0
-
-## ---------------------- ##
-## Running config.status. ##
-## ---------------------- ##
-
-This file was extended by lxmlib config.status 0.1, which was
-generated by GNU Autoconf 2.69.  Invocation command line was
-
-  CONFIG_FILES    = 
-  CONFIG_HEADERS  = 
-  CONFIG_LINKS    = 
-  CONFIG_COMMANDS = 
-  $ ./config.status src/Makefile depfiles
-
-on modest
-
-config.status:798: creating src/Makefile
-config.status:955: executing depfiles commands

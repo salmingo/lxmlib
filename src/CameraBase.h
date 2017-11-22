@@ -14,7 +14,7 @@
 #include <boost/signals2.hpp>
 
 using std::string;
-using namespace boost::posix_time;
+using boost::posix_time::ptime;
 
 //////////////////////////////////////////////////////////////////////////////
 enum CAMERA_STATUS {// 相机工作状态
@@ -172,7 +172,7 @@ public:
 		 * @param t 曝光时间
 		 */
 		void begin_expose(double t) {
-			tmobs = microsec_clock::universal_time();
+			tmobs = boost::posix_time::microsec_clock::universal_time();
 			expdur = t;
 			aborted_ = false;
 			ptime::date_type date = tmobs.date();
@@ -184,7 +184,7 @@ public:
 		 * @brief 记录曝光结束状态
 		 */
 		void end_expose() {
-			tmend = microsec_clock::universal_time();
+			tmend = boost::posix_time::microsec_clock::universal_time();
 		}
 
 		/*!
@@ -195,7 +195,8 @@ public:
 		 * 曝光未完成返回true, 否则返回false
 		 */
 		void check_expose(double &left, double &percent) {
-			time_duration td = microsec_clock::universal_time() - tmobs;
+			namespace pt = boost::posix_time;
+			pt::time_duration td = pt::microsec_clock::universal_time() - tmobs;
 
 			double dt = td.total_microseconds() * 1E-6;
 			if ((left = expdur - dt) <= 0.0) {
@@ -211,7 +212,7 @@ public:
 		 * true: 上午; false: 下午
 		 */
 		bool ampm() {
-			ptime now = second_clock::local_time();
+			ptime now = boost::posix_time::second_clock::local_time();
 			return now.time_of_day().hours() < 12;
 		}
 	};
@@ -311,8 +312,6 @@ public:
 	 * @param gateway 网关
 	 */
 	virtual void SetNetwork(const char *ip, const char *mask, const char *gateway) = 0;
-
-public:
 	/*!
 	 * @brief 注册曝光进度回调函数
 	 * @param slot 函数插槽

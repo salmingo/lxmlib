@@ -13,11 +13,7 @@
 #include <boost/asio.hpp>
 #include "GLog.h"
 //#include "globaldef.h"
-#include <boost/filesystem.hpp>
-#include <sys/types.h>
-#include <dirent.h>
-#include "WCSTNX.h"
-#include "AMath.h"
+#include "ATimeSpace.h"
 
 using std::vector;
 using std::string;

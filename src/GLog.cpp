@@ -5,16 +5,14 @@
  */
 
 #include <sys/stat.h>
-#include <sys/types.h>	// Linux需要
+#include <sys/types.h>
 #include <unistd.h>
 #include <stdarg.h>
-#include <string>
 #include <boost/filesystem/path.hpp>
 #include <boost/format.hpp>
-#include "GLog.h"
 #include "globaldef.h"
+#include "GLog.h"
 
-using std::string;
 using namespace boost::posix_time;
 
 GLog::GLog(FILE *out) {

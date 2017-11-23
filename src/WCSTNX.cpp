@@ -5,9 +5,11 @@
  * - 从FITS文件头加载WCS TNX参数项
  * - 从文本文件加载WCS TNX参数项
  * - 计算(x,y)对应的WCS坐标(ra, dec)
+ * - 计算(ra,dec)对应的图像坐标(x,y)
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <strings.h>
 #include "fits_handler.h"
@@ -42,18 +44,22 @@ int WCSTNX::LoadImage(const char* filepath) {
 	fits_read_key(hfits(), TDOUBLE, "CRVAL2", &param_.ref_wcs.y, NULL, &status);
 	fits_read_key(hfits(), TDOUBLE, "CRPIX1", &param_.ref_xy.x,  NULL, &status);
 	fits_read_key(hfits(), TDOUBLE, "CRPIX2", &param_.ref_xy.y,  NULL, &status);
-	fits_read_key(hfits(), TDOUBLE, "CD1_1",  &param_.cd[0][0],  NULL, &status);
-	fits_read_key(hfits(), TDOUBLE, "CD1_2",  &param_.cd[0][1],  NULL, &status);
-	fits_read_key(hfits(), TDOUBLE, "CD2_1",  &param_.cd[1][0],  NULL, &status);
-	fits_read_key(hfits(), TDOUBLE, "CD2_2",  &param_.cd[1][1],  NULL, &status);
+	fits_read_key(hfits(), TDOUBLE, "CD1_1",  &param_.cd[0],     NULL, &status);
+	fits_read_key(hfits(), TDOUBLE, "CD1_2",  &param_.cd[1],     NULL, &status);
+	fits_read_key(hfits(), TDOUBLE, "CD2_1",  &param_.cd[2],     NULL, &status);
+	fits_read_key(hfits(), TDOUBLE, "CD2_2",  &param_.cd[3],     NULL, &status);
 	if (status)
 		return -3;
 	param_.ref_wcs.x *= D2R;
 	param_.ref_wcs.y *= D2R;
+	if (invert_matrix())
+		return -4;
 
+	param_.valid[0] = true;
 	fits_read_key(hfits(), TSTRING, "WAT1_001", value, NULL, &status);
 	fits_read_key(hfits(), TSTRING, "WAT2_001", value, NULL, &status);
-	if (status) return 0; // 无残差修正模型
+	if (status) // 无残差修正模型
+		return 0;
 
 	// 解析残差修正模型
 	for (j = 1; j <= 2; ++j) {
@@ -69,7 +75,7 @@ int WCSTNX::LoadImage(const char* filepath) {
 	param_.valid[1] = !(resolve_tnxaxis(&strcor[0][0], &param_.tnx2[0])
 			|| resolve_tnxaxis(&strcor[1][0], &param_.tnx2[1]));
 
-	return param_.valid[1] ? 0 : -4;
+	return param_.valid[1] ? 0 : -5;
 }
 
 bool WCSTNX::LoadText(const char* filepath) {
@@ -142,10 +148,11 @@ bool WCSTNX::LoadText(const char* filepath) {
 
 	if (param_.valid[0]) {// 计算旋转矩阵
 		wcs_tnx *tnx = &param_.tnx1[0];
-		param_.cd[0][0] = 2 * tnx[0].coef[1] * AS2D / (tnx[0].xmax - tnx[0].xmin);
-		param_.cd[0][1] = 2 * tnx[0].coef[2] * AS2D / (tnx[0].ymax - tnx[0].ymin);
-		param_.cd[1][0] = 2 * tnx[1].coef[1] * AS2D / (tnx[1].xmax - tnx[1].xmin);
-		param_.cd[1][1] = 2 * tnx[1].coef[2] * AS2D / (tnx[1].ymax - tnx[1].ymin);
+		param_.cd[0] = 2 * tnx[0].coef[1] * AS2D / (tnx[0].xmax - tnx[0].xmin);
+		param_.cd[1] = 2 * tnx[0].coef[2] * AS2D / (tnx[0].ymax - tnx[0].ymin);
+		param_.cd[2] = 2 * tnx[1].coef[1] * AS2D / (tnx[1].xmax - tnx[1].xmin);
+		param_.cd[3] = 2 * tnx[1].coef[2] * AS2D / (tnx[1].ymax - tnx[1].ymin);
+		if (invert_matrix()) param_.valid[0] = false;
 	}
 
 	return (param_.valid[0]);
@@ -167,10 +174,10 @@ int WCSTNX::WriteImage(const char* filepath) {
 	double CRVAL2 = param_.ref_wcs.y * R2D;
 	double CRPIX1 = param_.ref_xy.x;
 	double CRPIX2 = param_.ref_xy.y;
-	double CD1_1  = param_.cd[0][0];
-	double CD1_2  = param_.cd[0][1];
-	double CD2_1  = param_.cd[1][0];
-	double CD2_2  = param_.cd[1][1];
+	double CD1_1  = param_.cd[0];
+	double CD1_2  = param_.cd[1];
+	double CD2_1  = param_.cd[2];
+	double CD2_2  = param_.cd[3];
 	int status(0);
 
 	if (param_.valid[1]) {
@@ -247,6 +254,7 @@ int WCSTNX::WriteImage(const char* filepath) {
 }
 
 int WCSTNX::XY2WCS(double x, double y, double& ra, double& dec) {
+	if (!param_.valid[0]) return -1;
 	double xi, eta;
 
 	image_to_plane(x, y, xi, eta);
@@ -259,6 +267,27 @@ int WCSTNX::XY2WCS(double x, double y, double& ra, double& dec) {
 	return 0;
 }
 
+int WCSTNX::WCS2XY(double ra, double dec, double &x, double &y) {
+	if (!param_.valid[0]) return -1;
+	double xi, eta;
+
+	wcs_to_plane(ra, dec, xi, eta);
+	plane_to_image(xi, eta, x, y);
+	if (param_.valid[1]) {
+		double x1, y1, dxi, deta;
+		int cnt(0);
+
+		do {
+			x1 = x, y1 = y;
+			dxi  = param_.tnx2[0].project_reverse(x, y);
+			deta = param_.tnx2[1].project_reverse(x, y);
+			plane_to_image(xi - dxi, eta - deta, x, y);
+		} while(fabs(x1 - x) > 1E-3 && fabs(y1 - y) > 1E-3 && ++cnt < 15);
+	}
+
+	return 0;
+}
+
 WCSTNX::param_tnx *WCSTNX::GetParam() const {
 	return (param_tnx * const) &param_;
 }
@@ -267,25 +296,33 @@ WCSTNX::param_tnx *WCSTNX::GetParam() const {
  * @note 图像坐标转换为投影(中间)坐标
  */
 void WCSTNX::image_to_plane(double x, double y, double& xi, double& eta) {
-	if (param_.valid[0]) {
-		xi  = param_.tnx1[0].project_reverse(x, y);
-		eta = param_.tnx1[1].project_reverse(x, y);
-	}
-	else {
-		double dx(x - param_.ref_xy.x), dy(y - param_.ref_xy.y);
-		xi  = (param_.cd[0][0] * dx + param_.cd[0][1] * dy) * D2R;
-		eta = (param_.cd[1][0] * dx + param_.cd[1][1] * dy) * D2R;
-	}
+	double dx(x - param_.ref_xy.x), dy(y - param_.ref_xy.y);
+	xi  = (param_.cd[0] * dx + param_.cd[1] * dy) * D2R;
+	eta = (param_.cd[2] * dx + param_.cd[3] * dy) * D2R;
 }
 
 /*
  * @note 投影坐标转换为WCS(赤道)坐标
  */
 void WCSTNX::plane_to_wcs(double xi, double eta, double &ra, double &dec) {
-	double A0(param_.ref_wcs.x), D0(param_.ref_wcs.y);
-	double fract = cos(D0) - eta * sin(D0);
-	ra  = reduce(A0 + atan2(xi, fract), A2PI);
-	dec = atan2(((eta * cos(D0) + sin(D0)) * cos(ra - A0)), fract);
+	double ra0(param_.ref_wcs.x), dec0(param_.ref_wcs.y);
+	double fract = cos(dec0) - eta * sin(dec0);
+	ra  = reduce(ra0 + atan2(xi, fract), A2PI);
+	dec = atan2(((eta * cos(dec0) + sin(dec0)) * cos(ra - ra0)), fract);
+}
+
+void WCSTNX::plane_to_image(double xi, double eta, double &x, double &y) {
+	xi  *= R2D;
+	eta *= R2D;
+	x = (param_.ccd[0] * xi + param_.ccd[1] * eta) + param_.ref_xy.x;
+	y = (param_.ccd[2] * xi + param_.ccd[3] * eta) + param_.ref_xy.y;
+}
+
+void WCSTNX::wcs_to_plane(double ra, double dec, double &xi, double &eta) {
+	double ra0(param_.ref_wcs.x), dec0(param_.ref_wcs.y);
+	double fract = sin(dec0) * sin(dec) + cos(dec0) * cos(dec) * cos(ra - ra0);
+	xi  = cos(dec) * sin(ra - ra0) / fract;
+	eta = (cos(dec0) * sin(dec) - sin(dec0) * cos(dec) * cos(ra - ra0)) / fract;
 }
 
 int WCSTNX::output_precision_double(char *output, double value) {
@@ -344,4 +381,112 @@ int WCSTNX::resolve_tnxaxis(char *strcor, wcs_tnx *tnx)  {
 		tnx->coef[i] = atof(pstr);
 
 	return (i == tnx->ncoef) ? 0 : 3;
+}
+
+int WCSTNX::invert_matrix() {
+	int lc;
+	int *le, *lep;
+	double s,t,tq = 0., zr = 1.e-15;
+	double *pa, *pd, *ps, *p, *q;
+	double *q0;
+	int i, j, k, m;
+	int N(2);
+	double *A = param_.ccd;
+
+	memcpy(A, param_.cd, sizeof(double) * 4);
+	le = lep = (int *) malloc(N * sizeof(int));
+	q0 = (double *) malloc(N * sizeof(double));
+
+	for(j = 0, pa = pd = A; j < N ; ++j, ++pa, pd += N + 1) {
+		if( j > 0) {
+			for(i = 0, q = q0, p = pa; i < N; ++i, ++q, p += N) *q = *p;
+			for(i = 1; i < N; ++i) {
+				lc = i < j ? i : j;
+				for(k = 0, p = pa + i * N - j, q = q0,t = 0.; k < lc ;++k, ++p, ++q) t += *p * *q;
+				q0[i] -= t;
+			}
+			for(i = 0, q = q0, p = pa; i < N; ++i, p += N, ++q) *p = *q;
+		}
+
+		s = fabs(*pd);
+		lc = j;
+
+		for(k = j + 1, ps = pd; k < N; ++k) {
+			if((t = fabs(*(ps += N))) > s) {
+				s = t;
+				lc = k;
+			}
+		}
+
+		tq = tq > s ? tq : s;
+		if(s < zr * tq) {
+			free(q0);
+			free(le);
+			return -1;
+		}
+
+		*lep++ = lc;
+		if(lc != j) {
+			for(k = 0, p = A + N * j, q = A + N * lc; k < N; ++k, ++p, ++q) {
+				t = *p;
+				*p = *q;
+				*q = t;
+			}
+		}
+
+		for(k = j + 1, ps = pd, t=1./ *pd; k < N; ++k) *(ps += N) *= t;
+		*pd = t;
+	}
+
+	for(j = 1, pd = ps = A; j < N; ++j) {
+		for(k = 0, pd += N + 1, q = ++ps; k < j; ++k, q += N) *q *= *pd;
+	}
+
+	for(j = 1, pa = A; j < N; ++j) {
+		++pa;
+		for(i = 0, q = q0, p = pa; i < j; ++i, p += N, ++q) *q = *p;
+		for(k = 0; k < j; ++k) {
+			t=0.;
+			for(i = k, p = pa + k * N + k - j, q = q0 + k; i<j; ++i, ++p, ++q) t -= *p * *q;
+			q0[k] = t;
+		}
+		for(i = 0, q = q0, p = pa; i < j; ++i, p += N, ++q) *p = *q;
+	}
+
+	for(j = N - 2, pd = pa = A + N * N - 1; j >= 0; --j) {
+		--pa;
+		pd -= N + 1;
+
+		for(i = 0, m = N - j - 1, q = q0, p = pd + N; i < m; ++i, p += N, ++q) *q = *p;
+		for(k = N - 1, ps = pa; k > j; --k, ps -= N) {
+			t = -(*ps);
+			for(i = j + 1, p = ps, q = q0; i < k; ++i, ++q) t -= *++p * *q;
+			q0[--m] = t;
+		}
+		for(i = 0, m = N - j - 1, q = q0, p = pd + N; i < m; ++i, p += N) *p = *q++;
+	}
+
+	for(k = 0, pa = A; k < N - 1; ++k, ++pa) {
+		for(i = 0, q = q0, p = pa; i < N; ++i, p += N) *q++ = *p;
+		for(j = 0, ps =A; j < N; ++j, ps += N) {
+			if(j > k) { t = 0.;    p = ps + j;     i = j; }
+			else      { t = q0[j]; p = ps + k + 1; i = k + 1; }
+			for(; i < N;) t += *p++ * q0[i++];
+			q0[j] = t;
+		}
+
+		for(i = 0, q = q0, p = pa; i < N; ++i, p += N) *p = *q++;
+	}
+
+	for(j = N - 2, --lep; j >= 0;--j) {
+		for(k = 0, p = A + j, q = A + *(--lep); k < N; ++k, p += N, q += N) {
+			t = *p;
+			*p = *q;
+			*q = t;
+		}
+	}
+
+	free(le);
+	free(q0);
+	return 0;
 }

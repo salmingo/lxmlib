@@ -6,6 +6,7 @@
  * - 从文本文件加载TNX参数项
  * - 将TNX参数项写入FITS文件
  * - 计算(x,y)对应的WCS坐标(ra, dec)
+ * - 计算(ra,dec)对应的图像坐标(x,y)
  */
 
 #ifndef WCSTNX_H_
@@ -225,7 +226,8 @@ public:
 	struct param_tnx {// TNX参数
 		PT2F ref_xy;			//< 参考点: XY坐标
 		PT2F ref_wcs;		//< 参考点: WCS坐标, 量纲: 弧度
-		double cd[2][2];		//< 旋转矩阵. 由平均关系获得. 量纲: 弧度/像素
+		double cd[4];		//< 旋转矩阵. 由平均关系获得. 量纲: 角度/像素
+		double ccd[4];		//< 逆旋转矩阵. cd的逆矩阵. 量纲: 像素/角度
 		bool valid[2];		//< 修正模型有效性
 		wcs_tnx tnx1[2];		//< 一阶投影面修正模型
 		wcs_tnx tnx2[2];		//< 残差投影面修正模型
@@ -246,7 +248,8 @@ public:
 	 * -1: 不能打开FITS文件
 	 * -2: 非TNX标准WCS信息
 	 * -3: 缺少一阶修正模型
-	 * -4: 残差修正模型格式错误
+	 * -4: 旋转矩阵为奇异矩阵
+	 * -5: 残差修正模型格式错误
 	 */
 	int LoadImage(const char* filepath);
 	/*!
@@ -281,6 +284,18 @@ public:
 	 */
 	int XY2WCS(double x, double y, double& ra, double& dec);
 	/*!
+	 * @brief 计算与WCS坐标(ra,dec)对应的图像坐标(x,y)
+	 * @param ra   赤经, 量纲: 弧度
+	 * @param dec  赤纬, 量纲: 弧度
+	 * @param x    X轴坐标
+	 * @param y    Y轴坐标
+	 * @return
+	 * 计算结果
+	 *  0: 正确
+	 * -1: 未加载参数项
+	 */
+	int WCS2XY(double ra, double dec, double &x, double &y);
+	/*!
 	 * @brief 输出参数指针
 	 * @return
 	 * 参数指针
@@ -293,8 +308,8 @@ protected:
 	 * @brief 图像坐标转换为投影平面平坐标
 	 * @param x    图像X坐标
 	 * @param y    图像Y坐标
-	 * @param xi   投影xi坐标
-	 * @param eta  投影eta坐标
+	 * @param xi   投影xi坐标, 量纲: 弧度
+	 * @param eta  投影eta坐标, 量纲: 弧度
 	 */
 	void image_to_plane(double x, double y, double& xi, double& eta);
 	/*!
@@ -305,6 +320,22 @@ protected:
 	 * @param dec  赤纬, 量纲: 弧度
 	 */
 	void plane_to_wcs(double xi, double eta, double &ra, double &dec);
+	/*!
+	 * @brief 投影平面坐标转换为图像坐标
+	 * @param xi  投影xi坐标, 量纲: 弧度
+	 * @param eta 投影eta坐标, 量纲: 弧度
+	 * @param x   图像X坐标
+	 * @param y   图像Y坐标
+	 */
+	void plane_to_image(double xi, double eta, double &x, double &y);
+	/*!
+	 * @brief 由赤道坐标转换为投影平面坐标
+	 * @param ra   赤经, 量纲: 弧度
+	 * @param dec  赤纬, 量纲: 弧度
+	 * @param xi   投影xi坐标, 量纲: 弧度
+	 * @param eta  投影eta坐标, 量纲: 弧度
+	 */
+	void wcs_to_plane(double ra, double dec, double &xi, double &eta);
 	/*!
 	 * @brief 最大可能保留浮点数精度, 将浮点数转换为字符串
 	 * @param output 输出字符串
@@ -321,6 +352,14 @@ protected:
 	 * 解析结果
 	 */
 	int resolve_tnxaxis(char *strcor, wcs_tnx *tnx);
+	/*!
+	 * @brief 计算旋转矩阵逆矩阵
+	 * @return
+	 * 转换结果
+	 *  0: 正确
+	 * -1: 奇异矩阵, 转换失败
+	 */
+	int invert_matrix();
 };
 
 #endif /* WCSTNX_H_ */

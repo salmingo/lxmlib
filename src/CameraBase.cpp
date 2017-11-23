@@ -114,7 +114,7 @@ void CameraBase::thread_expose() {
 	mutex_lock lck(dummy);
 	boost::chrono::milliseconds period;
 	double left, percent;
-	CAMERA_STATUS &state = nfcam_->state;
+	int &state = nfcam_->state;
 
 	while(1) {
 		cvexp_.wait(lck);

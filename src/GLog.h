@@ -11,10 +11,13 @@
 #ifndef GLOG_H_
 #define GLOG_H_
 
+#include <string>
 #include <stdio.h>
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/thread.hpp>
 #include <boost/smart_ptr.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
+
+using std::string;
 
 enum LOG_TYPE {// 日志类型
 	LOG_NORMAL,	// 普通

@@ -434,7 +434,7 @@ protected:
 	 * @param xbin   X轴合并因子
 	 * @param ybin   Y轴合并因子
 	 */
-	void update_roi(int &xstart, int &ystart, int &width, int &height, int &xbin, int &ybin) = 0;
+	virtual void update_roi(int &xstart, int &ystart, int &width, int &height, int &xbin, int &ybin) = 0;
 	/*!
 	 * @brief 设置偏置电压
 	 * @param index 档位

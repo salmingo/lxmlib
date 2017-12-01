@@ -12,45 +12,108 @@
 #include <boost/asio.hpp>
 #include "GLog.h"
 #include "ADefine.h"
-#include "WCSTNX.h"
 
 using std::string;
 using namespace AstroUtil;
 
 GLog _gLog(stdout);
 
+void resolve_ot1(const char *filepath) {
+	/*
+	 * @note 按相机编号分解数据
+	 */
+	const int size(200);
+	char line[size];
+	char *token;
+	char seps[] = " \t,\r";
+	int year, month, day, hour, minute;
+	double second, secs;
+	double ra, dc, mag, x, y;
+	int cid, ocid(-1);
+	int pos, n(0);
+
+	char filename[30];
+	FILE *src = fopen(filepath, "rt");
+	FILE *dst = NULL;
+
+	while (!feof(src)) {
+		if (!fgets(line, size, src)) continue;
+
+		pos = 0;
+		token = strtok(line, seps);
+		while (token) {
+			switch(++pos) {
+			case 1:
+				year = atoi(token);
+				break;
+			case 2:
+				month = atoi(token);
+				break;
+			case 3:
+				day = atoi(token);
+				break;
+			case 4:
+				hour = atoi(token);
+				break;
+			case 5:
+				minute = atoi(token);
+				break;
+			case 6:
+				second = atof(token);
+				break;
+			case 9:
+				ra = atof(token);
+				break;
+			case 10:
+				dc = atof(token);
+				break;
+			case 11:
+				mag = atof(token);
+				if (mag > 99.999) mag = 99.999;
+				break;
+			case 12:
+				x = atof(token);
+				break;
+			case 13:
+				y = atof(token);
+				break;
+			case 14:
+				cid = atoi(token);
+				break;
+			default:
+				break;
+			}
+			token = strtok(NULL, seps);
+		}
+		secs = (hour * 60 + minute) * 60 + second;
+
+		if (cid != ocid) {
+			ocid = cid;
+			if (dst) fclose(dst);
+
+			sprintf(filename, "G%03d.txt", cid);
+			dst = fopen(filename, "a+t");
+
+			printf("cid = %d\n", cid);
+		}
+		fprintf(dst, "%9.3f %7.2f %7.2f %9.5f %9.5f %6.3f\r\n",
+				secs, x, y, ra, dc, mag);
+	}
+	if (dst) fclose(dst);
+
+	fclose(src);
+}
+
 int main(int argc, char **argv) {
-	boost::asio::io_service ios;
-	boost::asio::signal_set signals(ios, SIGINT, SIGTERM);  // interrupt signal
-	signals.async_wait(boost::bind(&boost::asio::io_service::stop, &ios));
+//	boost::asio::io_service ios;
+//	boost::asio::signal_set signals(ios, SIGINT, SIGTERM);  // interrupt signal
+//	signals.async_wait(boost::bind(&boost::asio::io_service::stop, &ios));
 
 ///////////////////////////////////////////////////////////////////////////////
 // 功能测试区
-	if (argc < 4) {
-		printf("Usage:\n");
-		printf("\t lxmlib path_of_acc x y\n");
-		return -1;
-	}
-
-	WCSTNX tnx;
-	if (tnx.LoadText(argv[1])) {
-		printf("invalid caliration file\n");
-		return -2;
-	}
-	double x = atof(argv[2]);
-	double y = atof(argv[3]);
-	double ra, dc;
-
-	tnx.XY2WCS(x, y, ra, dc);
-//	_gLog.Write("(x, y) => (ra, dec) : %7.2f  %7.2f  %9.5f  %9.5f", x, y, ra * R2D, dc * R2D);
-	printf("(x, y) => (ra, dec) : %7.2f  %7.2f  %9.5f  %9.5f\n", x, y, ra * R2D, dc * R2D);
-	tnx.WCS2XY(ra, dc, x, y);
-//	_gLog.Write("(ra, dc) => (x, y) : %9.5f  %9.5f  %7.2f  %7.2f", ra * R2D, dc * R2D, x, y);
-	printf("(ra, dc) => (x, y) : %9.5f  %9.5f  %7.2f  %7.2f\n", ra * R2D, dc * R2D, x, y);
-
+	resolve_ot1(argv[1]);
 //////////////////////////////////////////////////////////////////////////////
-
-	ios.run();
+//	ios.run();
 
 	return 0;
 }

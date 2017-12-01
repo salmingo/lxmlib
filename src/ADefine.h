@@ -6,6 +6,8 @@
 #define ADEFINE_H_
 
 #include <math.h>
+#include <string.h>
+#include <stdlib.h>
 
 namespace AstroUtil {
 ///////////////////////////////////////////////////////////////////////////////
@@ -28,7 +30,7 @@ namespace AstroUtil {
 #define AS2D		2.777777777777777777777778E-4	//< 角秒转换为角度的乘法因子
 #define D2AS		3600.0							//< 角度转换为角秒的乘法因子
 
-// 时间常数
+/// 时间常数
 #define JD2K			2451545.0	//< 历元2000对应的儒略日
 #define MJD0			2400000.5	//< 修正儒略日零点所对应的儒略日
 #define MJD2K		51544.5		//< 历元2000对应的修正儒略日
@@ -47,6 +49,16 @@ namespace AstroUtil {
 #define frac(x)		((x) - floor(x))
 /// 将数值调整到一个周期内
 #define reduce(x, period)	((x) - floor((x) / (period)) * (period))
+/// 内存清零
+#if !defined(BZERO)
+#define BZERO(ptr, bytes)	memset(ptr, 0, bytes)
+#endif
+/// 释放内存
+#define MEMFREE(ptr)			{ if (ptr) { free(ptr); ptr = NULL; } }
+/// 释放数组
+#define ARRAYFREE(array)		{ if (array) { delete []array; array = NULL; } }
+/// 余切
+#define cot(x)		(tan(API * 0.5 - (x)))
 
 /// 浮点型点
 typedef struct POINT2F {
@@ -77,7 +89,41 @@ public:
 		if (dy < 0.0) dy = -dy;
 		return (dx < AEPS && dy < AEPS);
 	}
-}PT2F;
+} PT2F, * PPT2F;
+
+typedef struct POINT3F {
+	double x, y, z;	//< XYZ坐标
+
+public:
+	POINT3F() {
+		x = y = z = 0.0;
+	}
+
+	POINT3F(double _x, double _y, double _z) {
+		x = _x;
+		y = _y;
+		z = _z;
+	}
+
+	POINT3F& operator=(const POINT3F& pt) {
+		if (this != &pt) {
+			x = pt.x;
+			y = pt.y;
+			z = pt.z;
+		}
+		return *this;
+	}
+
+	bool operator==(const POINT3F& pt) {
+		double dx = x - pt.x;
+		double dy = y - pt.y;
+		double dz = z - pt.z;
+		if (dx < 0.0) dx = -dx;
+		if (dy < 0.0) dy = -dy;
+		if (dz < 0.0) dz = -dz;
+		return (dx < AEPS && dy < AEPS && dz < AEPS);
+	}
+} PT3F, * PPT3F;
 ///////////////////////////////////////////////////////////////////////////////
 }
 

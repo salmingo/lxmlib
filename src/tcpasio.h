@@ -41,8 +41,9 @@ public:
 	typedef boost::circular_buffer<char> crcbuff;	//< 循环缓冲区
 	typedef boost::shared_array<char> charray;	//< 字符型数组
 
-protected:
 	friend class TCPServer;
+
+protected:
 	// 成员变量
 	IOServiceKeep keep_;	//< 提供io_service对象
 	tcp::socket   sock_;	//< 套接字
@@ -176,6 +177,10 @@ protected:
 	 * @brief 尝试发送缓冲区数据
 	 */
 	void start_write();
+	/*!
+	 * @brief 服务器端建立网络连接后调用, 启动接收流程
+	 */
+	void start();
 };
 typedef boost::shared_ptr<TCPClient> TcpCPtr;	//< 客户端网络资源访问指针类型
 /*!

@@ -105,15 +105,15 @@ void resolve_ot1(const char *filepath) {
 }
 
 int main(int argc, char **argv) {
-//	boost::asio::io_service ios;
-//	boost::asio::signal_set signals(ios, SIGINT, SIGTERM);  // interrupt signal
-//	signals.async_wait(boost::bind(&boost::asio::io_service::stop, &ios));
+	boost::asio::io_service ios;
+	boost::asio::signal_set signals(ios, SIGINT, SIGTERM);  // interrupt signal
+	signals.async_wait(boost::bind(&boost::asio::io_service::stop, &ios));
 
 ///////////////////////////////////////////////////////////////////////////////
 // 功能测试区
-	resolve_ot1(argv[1]);
+
 //////////////////////////////////////////////////////////////////////////////
-//	ios.run();
+	ios.run();
 
 	return 0;
 }

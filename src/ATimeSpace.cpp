@@ -28,7 +28,7 @@ void ATimeSpace::SetSite(double lgt, double lat, double alt) {// 测站位置
  * 计算修正儒略日. 算法来源: sofa/iauCal2jd
  */
 int ATimeSpace::SetUTC(int iy, int im, int id, double fd) {
-	static const int mdays[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+	static const int mdays[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 	int ly;
 
 	ly = im == 2 && !(iy % 4) && ((iy % 100) || !(iy % 400));

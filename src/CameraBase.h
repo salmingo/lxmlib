@@ -18,17 +18,6 @@ using std::string;
 using boost::posix_time::ptime;
 
 //////////////////////////////////////////////////////////////////////////////
-enum CAMCTL_STATUS {// 相机控制状态
-	CAMCTL_ERROR,		// 错误
-	CAMCTL_IDLE,			// 空闲
-	CAMCTL_EXPOSE,		// 曝光过程中
-	CAMCTL_COMPLETE,		// 已完成曝光
-	CAMCTL_ABORT,		// 已中止曝光
-	CAMCTL_PAUSE,		// 已暂停曝光
-	CAMCTL_WAIT_TIME,	// 等待曝光流传起始时间到达
-	CAMCTL_WAIT_FLAT		// 平场间等待--等待转台重新指向
-};
-
 enum CAMERA_STATUS {// 相机工作状态
 	CAMSTAT_ERROR,		// 错误
 	CAMSTAT_IDLE,		// 空闲
@@ -146,25 +135,25 @@ public:
 		uint32_t		readport;	//< 读出端口档位
 		uint32_t		readrate;	//< 读出速度档位
 		uint32_t		gain;		//< 增益档位
-		double coolset;			//< 制冷温度
+		double coolset;		//< 制冷温度
 
 		bool		connected;	//< 连接标志
 		int		mode;		//< 工作模式
 		int		state;		//< 工作状态. CAMERA_STATUS枚举值
-		int		error;		//< 错误代码. 此时state == CAMERA_ERROR ?
+		int		errcode;		//< 错误代码. 此时state == CAMERA_ERROR ?
 		string	errmsg;		//< 错误描述
 		double	coolget;		//< 芯片温度
 		ROI		roi;			//< 感兴趣区
 		ucharray data;		//< 图像数据存储区
 
-		bool		aborted_;	//< 抛弃当前积分数据
+		bool		aborted;		//< 抛弃当前积分数据
 		double	expdur;		//< 积分时间, 量纲: 秒
 		ptime	tmobs;		//< 曝光起始时间, 用于记录和监测曝光进度
 		ptime	tmend;		//< 曝光结束时间
 		double	jd;			//< 曝光起始时间对应儒略日
 
-		string	dateobs;		//< 曝光起始日期, 仅日期信息, 格式: YYMMDD
-		string	timeobs;		//< 缩略曝光起始时间, 格式: YYMMDDThhmmssss
+		string	datestr;		//< 曝光起始日期, 仅日期信息, 格式: YYMMDD
+		string	timestr;		//< 缩略曝光起始时间, 格式: YYMMDDThhmmssss
 
 	public:
 		/*!
@@ -178,8 +167,7 @@ public:
 			connected = true;
 			mode  = CAMMOD_NORMAL;
 			state = CAMSTAT_IDLE;
-			error = 0;
-			errmsg = "";
+			errcode = 0;
 		}
 
 		/*!
@@ -196,7 +184,7 @@ public:
 		void begin_expose(double t) {
 			tmobs = boost::posix_time::microsec_clock::universal_time();
 			expdur = t;
-			aborted_ = false;
+			aborted = false;
 		}
 
 		/*!
@@ -211,10 +199,10 @@ public:
 			date = tmobs.date();
 			tdt = tmobs.time_of_day();
 			fmtdate % (date.year() - 2000) % date.month() % date.day();
-			dateobs = fmtdate.str();
-			fmttime % dateobs.c_str() % tdt.hours() % tdt.minutes()
+			datestr = fmtdate.str();
+			fmttime % datestr.c_str() % tdt.hours() % tdt.minutes()
 					% (tdt.seconds() + tdt.fractional_seconds() / 10000);
-			timeobs = fmttime.str();
+			timestr = fmttime.str();
 			jd = date.julian_day() + tdt.fractional_seconds() * 1E-6 / 86400.0 - 0.5;
 		}
 

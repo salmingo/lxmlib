@@ -50,7 +50,7 @@ bool CameraBase::Expose(double duration, bool light) {
 
 void CameraBase::AbortExpose() {
 	if (nfcam_->state >= CAMSTAT_EXPOSE) {
-		nfcam_->aborted_ = true;
+		nfcam_->aborted = true;
 		stop_expose();
 	}
 }
@@ -78,6 +78,9 @@ void CameraBase::SetROI(int xstart, int ystart, int width, int height, int xbin,
 	if (nfcam_->connected && nfcam_->mode == CAMMOD_NORMAL && nfcam_->state == CAMSTAT_IDLE) {
 		ROI &roi = nfcam_->roi;
 		roi.set_roi(xstart, ystart, width, height, xbin, ybin); // 检验/校正ROI设置
+		xstart = roi.xstart, ystart = roi.ystart;
+		width  = roi.width,  height = roi.height;
+		xbin   = roi.xbin,   ybin   = roi.ybin;
 		update_roi(xstart, ystart, width, height, xbin, ybin);
 		roi.set_roi(xstart, ystart, width, height, xbin, ybin); // 由相机反馈更新设置
 	}
@@ -135,7 +138,7 @@ void CameraBase::thread_expose() {
 		 * 2) CMAERA_IDLE  : 异常结束, 设备无错误
 		 * 3) CAMERA_ERROR : 异常结束, 设备错误
 		 */
-		if (state == CAMSTAT_IMGRDY && nfcam_->aborted_) state = CAMSTAT_IDLE;
+		if (state == CAMSTAT_IMGRDY && nfcam_->aborted) state = CAMSTAT_IDLE;
 		if (!cbexp_.empty()) cbexp_(state, 0.0, 100.0);
 		if (state == CAMSTAT_IMGRDY) state = CAMSTAT_IDLE;
 	}

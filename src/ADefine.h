@@ -49,14 +49,6 @@ namespace AstroUtil {
 #define frac(x)		((x) - floor(x))
 /// 将数值调整到一个周期内
 #define reduce(x, period)	((x) - floor((x) / (period)) * (period))
-/// 内存清零
-#if !defined(BZERO)
-#define BZERO(ptr, bytes)	memset(ptr, 0, bytes)
-#endif
-/// 释放内存
-#define MEMFREE(ptr)			{ if (ptr) { free(ptr); ptr = NULL; } }
-/// 释放数组
-#define ARRAYFREE(array)		{ if (array) { delete []array; array = NULL; } }
 /// 余切
 #define cot(x)		(tan(API * 0.5 - (x)))
 

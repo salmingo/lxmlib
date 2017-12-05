@@ -39,9 +39,9 @@ void UDPSession::Connect(const char *ip, const uint16_t port) {
 
 void UDPSession::Close() {
 	if (sock_.unique()) {
-		error_code ec;
-		if (sock_->is_open()) sock_->close(ec);
+		if (sock_->is_open()) sock_->close();
 		sock_.reset();
+		connected_ = false;
 	}
 }
 
@@ -76,7 +76,7 @@ const char *UDPSession::BlockRead(int &n) {
 	mutex_lock lck(mtxrcv_);
 	boost::posix_time::milliseconds t(500);
 
-	cndread_.timed_wait(lck, t);
+	cvread_.timed_wait(lck, t);
 	n = bytercv_;
 	return n == 0 ? NULL : bufrcv_.get();
 }
@@ -104,7 +104,7 @@ void UDPSession::handle_connect(const error_code& ec) {
 void UDPSession::handle_read(const error_code& ec, const int n) {
 	if (!ec || ec == error::message_size) {
 		bytercv_ = n;
-		cndread_.notify_one();
+		cvread_.notify_one();
 		if (!cbrcv_.empty()) cbrcv_((const long) this, n);
 		start_read();
 	}

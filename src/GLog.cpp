@@ -43,7 +43,7 @@ bool GLog::valid_file(ptime &t) {
 			boost::format fmt("%s%s.log");
 			fmt % gLogPrefix % to_iso_string(date).c_str();
 			path /= fmt.str();
-			fd_ = fopen(path.c_str(), "a+");
+			fd_ = fopen(path.c_str(), "a+t");
 			fprintf(fd_, "%s\n", string(79, '-').c_str());
 		}
 	}

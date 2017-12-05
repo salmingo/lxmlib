@@ -44,7 +44,7 @@ protected:
 	sockptr sock_;			//< UDP套接口
 	bool connected_;			//< 是否面向连接
 	udp::endpoint remote_;	//< 对应远程端点地址
-	boost::condition_variable cndread_;	//< 阻塞读出时的条件变量
+	boost::condition_variable cvread_;	//< 阻塞读出时的条件变量
 
 	int bytercv_;			//< 收到的字节数
 	CallbackFunc cbconn_;	//< 连接回调函数

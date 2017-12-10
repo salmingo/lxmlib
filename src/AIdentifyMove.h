@@ -3,13 +3,17 @@
  * @version 0.1
  * @date 2017-12-1
  * @note
+ * - 输入单个OT信息
  */
 
 #ifndef AIDENTIFYMOVE_H_
 #define AIDENTIFYMOVE_H_
 
 #include <vector>
+#include <string>
 #include "ADefine.h"
+
+using std::string;
 
 namespace AstroUtil {
 ///////////////////////////////////////////////////////////////////////////////

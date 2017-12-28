@@ -13,7 +13,7 @@
 struct fits_handler {// FITS图像操作接口
 	fitsfile *fitsptr;	//< 基于cfitsio接口的文件操作接口
 	int width, height;	//< 图像宽度和高度
-	float exptime;		//< 曝光时间, 量纲: 秒
+	double exptime;		//< 曝光时间, 量纲: 秒
 
 public:
 	fits_handler() {
@@ -64,7 +64,7 @@ public:
 			fits_get_img_size(fitsptr, naxis, naxes, &status);
 			width = naxes[0];
 			height= naxes[1];
-			fits_read_key_flt(fitsptr, "EXPTIME", &exptime, NULL, &status);
+			fits_read_key_dbl(fitsptr, "EXPTIME", &exptime, NULL, &status);
 		}
 		else fits_create_file(&fitsptr, pathname.c_str(), &status);
 		if (status) close();
@@ -78,7 +78,7 @@ public:
 	 * @return
 	 * 读取结果
 	 */
-	bool loadrow(const int row, float* buff) {
+	bool loadrow_example(const int row, float* buff) {
 		if (!fitsptr) return false;
 		int status(0);
 		fits_read_img(fitsptr, TFLOAT, row * width + 1, width, NULL, buff, NULL, &status);
@@ -92,7 +92,7 @@ public:
 	 * @return
 	 * 读取结果
 	 */
-	bool loadimg(float* buff) {
+	bool loadimg_example(float* buff) {
 		if (!fitsptr) return false;
 		int status(0);
 		fits_read_img(fitsptr, TFLOAT, 1, width * height, NULL, buff, NULL, &status);

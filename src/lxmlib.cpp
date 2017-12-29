@@ -13,6 +13,7 @@
 #include "GLog.h"
 #include "ADefine.h"
 #include "ATimeSpace.h"
+#include "ADIProcess.h"
 
 using std::string;
 using namespace AstroUtil;
@@ -112,10 +113,8 @@ int main(int argc, char **argv) {
 
 ///////////////////////////////////////////////////////////////////////////////
 // 功能测试区
-	srand(time(NULL));
-	for (int i = 0; i < 15; ++i) {
-		printf("%d\n", int(rand() * 10.0 / RAND_MAX + 0.5));
-	}
+	ADIProcess adip;
+
 //////////////////////////////////////////////////////////////////////////////
 	ios.run();
 

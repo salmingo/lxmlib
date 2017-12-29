@@ -9,10 +9,6 @@ AC_CONFIG_HEADERS([config.h])
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
-AC_PROG_AWK
-AC_PROG_INSTALL
-AC_PROG_CPP
-AC_PROG_MKDIR_P
 
 # Checks for libraries.
 # FIXME: Replace `main' with a function in `-lcfitsio':
@@ -21,8 +17,6 @@ AC_CHECK_LIB([cfitsio], [main])
 AC_CHECK_LIB([m], [main])
 # FIXME: Replace `main' with a function in `-lpthread':
 AC_CHECK_LIB([pthread], [main])
-# FIXME: Replace `main' with a function in `-lrt':
-AC_CHECK_LIB([rt], [main])
 
 # Checks for header files.
 AC_CHECK_HEADERS([fcntl.h netdb.h stdlib.h string.h strings.h sys/socket.h syslog.h unistd.h])
@@ -42,7 +36,5 @@ AC_FUNC_MALLOC
 AC_CHECK_FUNCS([ftruncate gettimeofday memset mkdir pow select socket sqrt strcasecmp strerror strpbrk])
 
 AC_CONFIG_FILES([Makefile
-                 release/Makefile
-                 release/src/Makefile
                  src/Makefile])
 AC_OUTPUT

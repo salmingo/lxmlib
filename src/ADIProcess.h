@@ -15,12 +15,26 @@
 #define ADIPROCESS_H_
 
 #include <vector>
+#include <string>
 #include <string.h>
 
 using std::vector;
+using std::string;
 
 namespace AstroUtil {
 ///////////////////////////////////////////////////////////////////////////////
+struct ADIParameter {// 图像处理参数
+
+public:
+	ADIParameter &operator=(const ADIParameter &par) {
+		if (this != &par) {
+
+		}
+
+		return *this;
+	}
+};
+
 class ADIProcess {
 public:
 	ADIProcess();
@@ -59,33 +73,67 @@ public:
 		}
 	};
 
-	struct LIGHT_ZONE {//< 感光区
-		int  n;				//< 数量
+	struct ZONES {//< 区域集合
+		int  n;	//< 数量
 		vector<ZONE> zones;	//< 感光区坐标
 	};
 
-	struct OVERSCAN_ZONE {//< 过扫区: 不感光区
-		int  n;				//< 数量
-		vector<ZONE> zones;	//< 感光区坐标
-	};
-
-	struct Parameter {// 图像处理参数
+	struct Image {//< 图像基本属性
+		bool isvalid;	//< 图像有效性
+		double exptime;	//< 曝光时间
+		int wimg, himg;	//< 图像宽度与高度
+		double *data;	//< 图像数据存储区
 
 	public:
-		Parameter &operator=(const Parameter &par) {
-			if (this != &par) {
+		Image() {
+			isvalid = false;
+			exptime = 0.0;
+			wimg = himg = 0;
+			data = NULL;
+		}
 
+		virtual ~Image() {
+			if (data) free(data);
+		}
+
+		/*!
+		 * @brief 设置图像宽度与高度
+		 */
+		bool SetDimension(int w, int h) {
+			int nold(wimg * himg), nnew(w * h);
+			if (nnew <= 0) return false;
+			if (nold != nnew) {
+				free(data);
+				data = NULL;
 			}
+			wimg = w;
+			himg = h;
+			if (!data) data = (double*) malloc(nnew * sizeof(double));
+			return (data != NULL);
+		}
 
-			return *this;
+		/*!
+		 * @brief 检查图像尺寸是否一致
+		 */
+		bool SameDimension(const Image *img) {
+			if (!img) return false;
+			return (wimg == img->wimg && himg == img->himg);
 		}
 	};
 
+	typedef vector<string> strvec;
+
 protected:
 	/* 成员变量 */
-	LIGHT_ZONE zoneLight_;		//< 感光区
-	OVERSCAN_ZONE zoneOver_;		//< 过扫区
-	Parameter param_;			//< 图像处理参数
+	ZONES zoneLight_;		//< 感光区
+	ZONES zoneOver_;			//< 过扫区
+	ADIParameter param_;		//< 图像处理参数
+	string pathrootCombine_;		//< 参与合并的文件存储目录名
+	strvec filenameCombine_;		//< 参与合并的文件名集合
+	Image imgZero_;		//< 合并后本底
+	Image imgDark_;		//< 合并后暗场
+	Image imgFlat_;		//< 合并后平场
+	Image imgObject_;	//< 待处理图像
 
 public:
 	/* 接口 */
@@ -113,10 +161,103 @@ public:
 	 * @brief 设置图像处理参数
 	 * @param param 图像处理参数
 	 */
-	void SetParameter(Parameter *param);
+	void SetParameter(ADIParameter *param);
+	/*!
+	 * @brief 设置参与合并的FITS文件存储目录
+	 * @param pathroot 目录名称
+	 * @return 初始化结果
+	 */
+	bool InitCombine(const char *pathroot);
+	/*!
+	 * @brief 添加一个参与合并的FITS文件名
+	 * @param filename  文件名
+	 */
+	void AddFileCombine(const char *filename);
+	/*!
+	 * @brief 加载合并后本底
+	 * @param filepath 文件路径
+	 * @return
+	 * 文件加载结果
+	 */
+	bool LoadZero(const char *filepath);
+	/*!
+	 * @brief 加载合并后暗场
+	 * @param filepath 文件路径
+	 * @return
+	 * 文件加载结果
+	 */
+	bool LoadDark(const char *filepath);
+	/*!
+	 * @brief 加载合并后平场
+	 * @param filepath 文件路径
+	 * @return
+	 * 文件加载结果
+	 */
+	bool LoadFlat(const char *filepath);
+	/*!
+	 * @brief 加载待处理图像文件
+	 * @param filepath 文件路径
+	 * @return
+	 * 文件加载结果
+	 */
+	bool LoadImage(const char *filepath);
+	/*!
+	 * @brief 合并本底
+	 * @return 合并结果
+	 */
+	bool ZeroCombine();
+	/*!
+	 * @brief 合并暗场
+	 * @return 合并结果
+	 * @note
+	 * 应已合并本底或加载合并后本底
+	 */
+	bool DarkCombine();
+	/*!
+	 * @brief 合并平场
+	 * @return 合并结果
+	 * @note
+	 * 至少应已合并本底或加载合并后本底
+	 * 已合并暗场或加载合并后暗场
+	 */
+	bool FlatCombine();
+	/*!
+	 * @brief 处理已加载待处理图像
+	 * @return
+	 * 图像处理结果
+	 * 0: 成功
+	 * 1: 未加载图像文件
+	 * 2: 预处理失败
+	 */
+	int ProcessImage();
 
 protected:
 	/* 功能 */
+	/*!
+	 * @brief 添加新的区域设置
+	 * @param zones 区域集合
+	 * @param zone  待加入区域
+	 */
+	void add_zone(vector<ZONE> &zones, const ZONE *zone);
+	/*!
+	 * @brief 加载图像数据
+	 * @param filepath 文件路径
+	 * @param image    图像基本内容
+	 * @return
+	 * 图像加载结果
+	 */
+	bool load_image(const char *filepath, Image &image);
+	/*!
+	 * @brief 预处理
+	 * @return
+	 * 预处理结果
+	 * @note
+	 * - 检查图像尺寸一致性
+	 * - 减本底
+	 * - 减暗场
+	 * - 除平场
+	 */
+	bool pre_process();
 };
 ///////////////////////////////////////////////////////////////////////////////
 } /* namespace AstroUtil */

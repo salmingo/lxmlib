@@ -44,21 +44,25 @@ public:
 	/* 数据类型 */
 	struct ZONE {//< 区域
 		int xs, ys;	//< 起始坐标, 原点(0, 0)
-		int xe, ye;	//< 结束坐标
+		int xe, ye;	//< 结束坐标, 有效区域: [start, end)
 
 	public:
+		ZONE() {
+			xs = ys = 0;
+			xe = ye = 0;
+		}
 		/*!
 		 * @brief 计算区域宽度
 		 */
 		int width() {
-			return (xe - xs + 1);
+			return (xe - xs);
 		}
 
 		/*!
 		 * @brief 计算区域高度
 		 */
 		int height() {
-			return (ye - ys + 1);
+			return (ye - ys);
 		}
 
 		ZONE &operator=(const ZONE &x) {
@@ -71,11 +75,6 @@ public:
 		bool operator==(const ZONE &x) {
 			return (xs == x.xs && ys == x.ys && xe == x.xe && ye == x.ye);
 		}
-	};
-
-	struct ZONES {//< 区域集合
-		int  n;	//< 数量
-		vector<ZONE> zones;	//< 感光区坐标
 	};
 
 	struct Image {//< 图像基本属性
@@ -125,38 +124,22 @@ public:
 
 protected:
 	/* 成员变量 */
-	ZONES zoneLight_;		//< 感光区
-	ZONES zoneOver_;			//< 过扫区
 	ADIParameter param_;		//< 图像处理参数
-	string pathrootCombine_;		//< 参与合并的文件存储目录名
-	strvec filenameCombine_;		//< 参与合并的文件名集合
+	ZONE zoneLight_;		//< 感光区
 	Image imgZero_;		//< 合并后本底
 	Image imgDark_;		//< 合并后暗场
 	Image imgFlat_;		//< 合并后平场
 	Image imgObject_;	//< 待处理图像
+	string pathrootCombine_;		//< 参与合并的文件存储目录名
+	strvec filenameCombine_;		//< 参与合并的文件名集合
 
 public:
 	/* 接口 */
 	/*!
-	 * @brief 设置感光区数量
-	 * @param n 感光区数量
-	 */
-	void SetZoneLightNumber(int n);
-	/*!
-	 * @brief 添加感光区坐标
+	 * @brief 设置感光区坐标
 	 * @param zone 区域坐标
 	 */
-	void AddZoneLight(const ZONE &zone);
-	/*!
-	 * @brief 设置过扫区数量
-	 * @param n 过扫区数量
-	 */
-	void SetZoneOverscanNumber(int n);
-	/*!
-	 * @brief 添加过扫区坐标
-	 * @param zone 区域坐标
-	 */
-	void AddZoneOverscan(const ZONE &zone);
+	void SetZoneLight(const ZONE &zone);
 	/*!
 	 * @brief 设置图像处理参数
 	 * @param param 图像处理参数
@@ -233,12 +216,6 @@ public:
 
 protected:
 	/* 功能 */
-	/*!
-	 * @brief 添加新的区域设置
-	 * @param zones 区域集合
-	 * @param zone  待加入区域
-	 */
-	void add_zone(vector<ZONE> &zones, const ZONE *zone);
 	/*!
 	 * @brief 加载图像数据
 	 * @param filepath 文件路径

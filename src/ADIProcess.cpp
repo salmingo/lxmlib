@@ -15,33 +15,8 @@ ADIProcess::ADIProcess() {
 ADIProcess::~ADIProcess() {
 }
 
-void ADIProcess::SetZoneLightNumber(int n) {
-	zoneLight_.n = n;
-	zoneLight_.zones.clear();
-}
-
-void ADIProcess::add_zone(vector<ZONE> &zones, const ZONE *zone) {
-	vector<ZONE>::iterator it;
-	for (it = zones.begin(); it != zones.end() && !(*it == *zone); ++it);
-	if (it == zones.end()) {
-		ZONE znew = *zone;
-		zones.push_back(znew);
-	}
-}
-
-void ADIProcess::AddZoneLight(const ZONE &zone) {
-	vector<ZONE> &zones = zoneLight_.zones;
-	if (zones.size() < zoneLight_.n) add_zone(zones, &zone);
-}
-
-void ADIProcess::SetZoneOverscanNumber(int n) {
-	zoneOver_.n = n;
-	zoneOver_.zones.clear();
-}
-
-void ADIProcess::AddZoneOverscan(const ZONE &zone) {
-	vector<ZONE> &zones = zoneOver_.zones;
-	if (zones.size() < zoneOver_.n) add_zone(zones, &zone);
+void ADIProcess::SetZoneLight(const ZONE &zone) {
+	zoneLight_ = zone;
 }
 
 void ADIProcess::SetParameter(ADIParameter *param) {
@@ -117,24 +92,43 @@ int ADIProcess::ProcessImage() {
 }
 
 bool ADIProcess::pre_process() {
-	int pixels(imgObject_.wimg * imgObject_.himg), i;
+	int pixels(imgObject_.wimg * imgObject_.himg), w(imgObject_.wimg), i, x, y, xs, xe, ys, ye;
 	double t(imgObject_.exptime);
 	double *ptr = imgObject_.data, *ptr1;
 
+	if ((imgZero_.isvalid && !imgZero_.SameDimension(&imgObject_)) // 与本底不一致
+			|| (imgDark_.isvalid && !imgDark_.SameDimension(&imgObject_)) // 与暗场不一致
+			|| (imgFlat_.isvalid && !imgFlat_.SameDimension(&imgObject_)) // 与平场不一致
+			|| (imgFlat_.isvalid && !imgZero_.isvalid)) { // 无本底, 有平场
+		return false;
+	}
+
 	if (imgZero_.isvalid) {
-		if (!imgZero_.SameDimension(&imgObject_)) return false;
 		for (i = 0, ptr1 = imgZero_.data; i < pixels; ++i, ++ptr1) ptr[i] -= *ptr1;
 	}
 	if (imgDark_.isvalid) {
-		if (!imgDark_.SameDimension(&imgObject_)) return false;
 		for (i = 0, ptr1 = imgDark_.data; i < pixels; ++i, ++ptr1) ptr[i] -= (*ptr1 * t);
 	}
 	if (imgFlat_.isvalid) {
-		if (!imgFlat_.SameDimension(&imgObject_)		// 图像尺寸不一致
-				|| !imgZero_.isvalid)  // 未加载本底
-			return false;
-		for (i = 0, ptr1 = imgFlat_.data; i < pixels; ++i, ++ptr1) {
-			if (*ptr1 > 1E-3) ptr[i] /= (*ptr1);
+		if (!zoneLight_.width()) {// 未定义感光区
+			for (i = 0, ptr1 = imgFlat_.data; i < pixels; ++i, ++ptr1) {
+				if (*ptr1 > 1E-3) ptr[i] /= (*ptr1);
+			}
+		}
+		else {
+			xs = zoneLight_.xs;
+			ys = zoneLight_.ys;
+			xe = zoneLight_.xe;
+			ye = zoneLight_.ye;
+
+			ptr = imgObject_.data + ys * w;
+			ptr1 = imgFlat_.data + ys * w;
+
+			for (y = ys; y < ye; ++y, ptr += w, ptr1 += w) {// 遍历: 行
+				for (x = xs; x < xe; ++x) {// 遍历: 列
+					if (ptr1[x] > 1E-3) ptr[x] /= ptr1[x];
+				}
+			}
 		}
 	}
 

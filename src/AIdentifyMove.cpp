@@ -6,7 +6,7 @@
 
 #include "AIdentifyMove.h"
 
-namespace AstroUtil {
+namespace astro_utility {
 ///////////////////////////////////////////////////////////////////////////////
 AIdentifyMove::AIdentifyMove() {
 

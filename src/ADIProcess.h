@@ -21,7 +21,7 @@
 using std::vector;
 using std::string;
 
-namespace AstroUtil {
+namespace astro_utility {
 ///////////////////////////////////////////////////////////////////////////////
 struct ADIParameter {// 图像处理参数
 

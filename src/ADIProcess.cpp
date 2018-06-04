@@ -7,7 +7,7 @@
 #include "ADIProcess.h"
 #include "fits_handler.h"
 
-using namespace AstroUtil;
+using namespace astro_utility;
 
 ADIProcess::ADIProcess() {
 }

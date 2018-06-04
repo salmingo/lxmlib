@@ -15,7 +15,7 @@
 
 using std::string;
 
-namespace AstroUtil {
+namespace astro_utility {
 ///////////////////////////////////////////////////////////////////////////////
 class AIdentifyMove {
 public:

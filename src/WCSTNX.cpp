@@ -68,7 +68,11 @@ int WCSTNX::LoadImage(const char* filepath) {
 		while(!status) {
 			sprintf(keyword, "WAT%d_%03d", j, ++i);
 			fits_read_key(hfits(), TSTRING, keyword, value, NULL, &status);
-			if (!status) n += sprintf((*ptr) + n, "%s", value);
+			if (!status) {
+				/* 作为字符串读出时, 结尾空格被删除, 需要手动填充, 避免数据被截断 */
+				if (strlen(value) == 68) n += sprintf((*ptr) + n, "%s", value);
+				else n += sprintf((*ptr) + n, "%s ", value);
+			}
 		}
 		status = 0;
 	}
@@ -377,7 +381,7 @@ int WCSTNX::resolve_tnxaxis(char *strcor, wcs_tnx *tnx)  {
 	tnx->set_ordery(yorder);
 	tnx->set_xterm(xterm);
 
-	for (i=0; i < tnx->ncoef && (pstr = strtok_r(NULL, seps, &ptr)) != NULL; ++i)
+	for (i = 0; i < tnx->ncoef && (pstr = strtok_r(NULL, seps, &ptr)) != NULL; ++i)
 		tnx->coef[i] = atof(pstr);
 
 	return (i == tnx->ncoef) ? 0 : 3;

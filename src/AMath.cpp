@@ -12,7 +12,7 @@
 #include "ADefine.h"
 #include "AMath.h"
 
-namespace AstroUtil
+namespace astro_utility
 {
 /*---------------------------------------------------------------------------*/
 ///////////////////////////////////////////////////////////////////////////////
@@ -33,8 +33,8 @@ void Sphere2Cart(double r, double alpha, double beta, double& x, double& y, doub
 void Cart2Sphere(double x, double y, double z, double& r, double& alpha, double& beta)
 {
 	r = sqrt(x * x + y * y + z * z);
-	if (fabs(y) < AEPS && fabs(x) < AEPS) alpha = 0;
-	else if ((alpha = atan2(y, x)) < 0) alpha += A2PI;
+	if (fabs(y) < A_EPS && fabs(x) < A_EPS) alpha = 0;
+	else if ((alpha = atan2(y, x)) < 0) alpha += A_2PI;
 	beta  = atan2(z, sqrt(x * x + y * y));
 }
 
@@ -78,7 +78,7 @@ void RotateForward(double A0, double D0, double A, double D, double& xi, double&
 	 * 再绕Y轴逆时针旋转: (PI90 - beta0), 将矢量V旋转至与Z轴重合
 	 **/
 	RotZ(A0, x, y, z);
-	RotY(API * 0.5 - D0, x, y, z);
+	RotY(A_PI * 0.5 - D0, x, y, z);
 	// 将旋转变换后的直角坐标转换为球坐标, 即以(alpha0, beta0)为极轴的新球坐标系中的位置
 	Cart2Sphere(x, y, z, r, xi, eta);
 }
@@ -95,7 +95,7 @@ void RotateReverse(double A0, double D0, double xi, double eta, double& A, doubl
 	 * 先绕Y轴逆时针旋转: -(PI90 - beta0)
 	 * 再绕Z轴逆时针旋转: -alpha0
 	 **/
-	RotY(-API * 0.5 + D0, x, y, z);
+	RotY(-A_PI * 0.5 + D0, x, y, z);
 	RotZ(-A0, x, y, z);
 	// 将旋转变换后的直角坐标转换为球坐标
 	Cart2Sphere(x, y, z, r, A, D);
@@ -113,7 +113,7 @@ void ProjectForward(double A0, double D0, double A, double D, double &ksi, doubl
 void ProjectReverse(double A0, double D0, double ksi, double eta, double &A, double &D)
 {
 	double fract = cos(D0) - eta * sin(D0);
-	A = reduce(A0 + atan2(ksi, fract), A2PI);
+	A = REDUCE(A0 + atan2(ksi, fract), A_2PI);
 	D = atan2(((eta * cos(D0) + sin(D0)) * cos(A - A0)), fract);
 }
 /*------------------------------- 部分球坐标转换 -------------------------------*/
@@ -366,7 +366,7 @@ void spline(int n, double x[], double y[], double c1, double cn, double c[])
 	int i;
 	double p, qn, sig, un, t1, t2;
 	double* u = (double*) calloc(n, sizeof(double));
-	double limit = 0.99 * AMAX;
+	double limit = 0.99 * A_MAX;
 	if (c1 > limit) {
 		c[0] = 0;
 		u[0] = 0;
@@ -409,7 +409,7 @@ bool splint(int n, double x[], double y[], double c[], double xo, double& yo)
 		else           klo = k;
 	}
 	h = x[khi] - x[klo];
-	if (fabs(h) < AEPS) return false;
+	if (fabs(h) < A_EPS) return false;
 	a = (x[khi] - xo) / h;
 	b = (xo - x[klo]) / h;
 	yo = a * y[klo] + b * y[khi] + ((a * a - 1) * a * c[klo] + (b * b - 1) * b * c[khi]) * h * h / 6;
@@ -425,7 +425,7 @@ void spline2(int nr, int nc, double x1[], double x2[], double y[], double c[])
 
 	for (j = 0; j < nr; ++j) {
 		for (k = 0, i = j * nc; k < nc; ++k, ++i) ytmp[k] = y[i];
-		spline(nc, x2, ytmp, AMAX, AMAX, ctmp);
+		spline(nc, x2, ytmp, A_MAX, A_MAX, ctmp);
 		for (k = 0, i = j * nc; k < nc; ++k, ++i) c[i] = ctmp[k];
 	}
 
@@ -449,7 +449,7 @@ bool splint2(int nr, int nc, double x1[], double x2[], double y[], double c[], d
 		if (!(bret = splint(nc, x2, ytmp, ctmp, x2o, yytmp[j]))) break;
 	}
 	if (bret) {
-		spline(nr, x1, yytmp, AMAX, AMAX, ctmp);
+		spline(nr, x1, yytmp, A_MAX, A_MAX, ctmp);
 		bret = splint(nr, x1, yytmp, ctmp, x1o, yo);
 	}
 
@@ -575,12 +575,12 @@ void Lagrange(int N, double XI[], double YI[], int OD, int M, double XO[], doubl
 /*------------------------------- 部分星等转换 -------------------------------*/
 double Sr2Arcsec(double sr)
 {
-	return (sr * R2S * R2S);
+	return (sr * A_R2S * A_R2S);
 }
 
 double Arcsec2Sr(double sas)
 {
-	return (sas / R2S / R2S);
+	return (sas / A_R2S / A_R2S);
 }
 
 double Mag2Watt(double mag)

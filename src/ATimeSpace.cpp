@@ -326,6 +326,9 @@ void ATimeSpace::Nutation(double t, double& nl, double& no) {
 double ATimeSpace::MeanAnomalySun(double t) {
 	/* 参数来源: IERS 1992, Williams 1991 */
 	double ma = (129596581.0481 + (-0.5532 + (0.000136 - 0.00001149 * t) * t) * t) * t / 3600.0 + 357.52910918;
+	printf ("MA 1 = %f\n", ma);
+	ma = 357.52772 + (35999.05034 - (0.0001603 + 1.0 / 300000.0) * t) * t;
+	printf ("MA 2 = %f\n", ma);
 	ma = REDUCE(ma, 360.0);
 	return (ma * A_D2R);
 }
@@ -339,10 +342,8 @@ double ATimeSpace::MeanAnomalyMoon(double t) {
 
 double ATimeSpace::MeanElongationMoonSun(double t) {
 	/* 参数来源: IERS 1992, Williams 1991 */
-	double me = (1602961601.209 + (-6.3706 + (6.593E-3 - 3.169E-5 * t) * t) * t) * t / 3600.0 + 297.85019547;
-	printf("ME 1 = %f\n", me);
-	me = 297.85036 + (445267.11148 - (0.0019142 - t / 189474) * t) * t;
-	printf("ME 2 = %f\n", me);
+//	double me = (1602961601.209 + (-6.3706 + (6.593E-3 - 3.169E-5 * t) * t) * t) * t / 3600.0 + 297.85019547;
+	double me = 297.85036 + (445267.11148 - (0.0019142 - t / 189474) * t) * t;
 	me = REDUCE(me, 360.0);
 	return (me * A_D2R);
 }

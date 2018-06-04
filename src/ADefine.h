@@ -38,12 +38,17 @@ namespace astro_utility {
 
 // 极限阈值
 #define A_EPS		1E-6			//< 最小值
+#define A_MAX		1E30			//< 最大值
 
 // 计算实数的小数部分
 #define FRAC(x)		((x) - floor(x))
 // 调整到[0, T)周期内
 #define REDUCE(x, T)		((x) - floor((x) / (T)) * (T))
 /*--------------------------------------------------------------------------*/
+typedef struct point2_double {// 浮点型二维点坐标
+	double x, y;
+}PT2F;
+
 }
 
 #endif /* ADEFINE_H_ */

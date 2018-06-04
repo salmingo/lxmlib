@@ -16,7 +16,7 @@
 #include "ADIProcess.h"
 
 using std::string;
-using namespace AstroUtil;
+using namespace astro_utility;
 
 GLog _gLog(stdout);
 
@@ -113,7 +113,7 @@ int main(int argc, char **argv) {
 
 ///////////////////////////////////////////////////////////////////////////////
 // 功能测试区
-	ADIProcess adip;
+	ATimeSpace ats;
 
 //////////////////////////////////////////////////////////////////////////////
 	ios.run();

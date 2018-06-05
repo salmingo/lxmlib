@@ -1,12 +1,12 @@
 /*
   * @file ATimeSpace.cpp 天文常用时空坐标转换
  */
+#include "ADefine.h"
+#include "ATimeSpace.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "ADefine.h"
-#include "ATimeSpace.h"
 
 using namespace astro_utility;
 
@@ -19,8 +19,8 @@ ATimeSpace::~ATimeSpace() {
 }
 
 void ATimeSpace::SetSite(double lgt, double lat, double alt) {// 测站位置
-	lgt_ = lgt * A_D2R;
-	lat_ = lat * A_D2R;
+	lgt_ = lgt * D2R;
+	lat_ = lat * D2R;
 	alt_ = alt;
 }
 
@@ -47,7 +47,7 @@ int ATimeSpace::SetUTC(int iy, int im, int id, double fd) {
 void ATimeSpace::SetEpoch(double t) {
 	int iy, im, id;
 	double fd, mjd;
-	mjd = (t - 2000.0) * 365.25 + A_MJD2K;
+	mjd = (t - 2000.0) * 365.25 + MJD2K;
 	Mjd2Cal(mjd, iy, im, id, fd);
 	SetUTC(iy, im, id, fd);
 }
@@ -55,7 +55,7 @@ void ATimeSpace::SetEpoch(double t) {
 void ATimeSpace::SetJD(double jd) {
 	int iy, im, id;
 	double fd;
-	Mjd2Cal(jd - A_MJD0, iy, im, id, fd);
+	Mjd2Cal(jd - MJD0, iy, im, id, fd);
 	SetUTC(iy, im, id, fd);
 }
 
@@ -67,7 +67,7 @@ void ATimeSpace::SetMJD(double mjd) {
 }
 
 void ATimeSpace::Mjd2Cal(double mjd, int& iy, int& im, int& id, double& fd) {
-	int jdn = int(mjd + A_MJD0 + 0.5);
+	int jdn = int(mjd + MJD0 + 0.5);
 	int A, B, C, D, E, t;
 	A = jdn;
     if (A >= 2299161) {
@@ -85,7 +85,7 @@ void ATimeSpace::Mjd2Cal(double mjd, int& iy, int& im, int& id, double& fd) {
 }
 
 void ATimeSpace::Jd2Cal(double jd, int& iy, int& im, int& id, double& fd) {
-	Mjd2Cal(jd - A_MJD0, iy, im, id, fd);
+	Mjd2Cal(jd - MJD0, iy, im, id, fd);
 }
 
 double ATimeSpace::UTC2TAI(double mjd) {
@@ -108,16 +108,16 @@ double ATimeSpace::UTC2TAI(double mjd) {
 	dleap = dat24 - (dat0 + dlod);
 
 	/* Remove any scaling applied to spread leap into preceding day. */
-	fd *= (A_DAYSEC + dleap) / A_DAYSEC;
+	fd *= (DAYSEC + dleap) / DAYSEC;
 
 	/* Scale from (pre-1972) UTC seconds to SI seconds. */
-	fd *= (A_DAYSEC + dlod) / A_DAYSEC;
+	fd *= (DAYSEC + dlod) / DAYSEC;
 
-	return (ModifiedJulianDay(iy, im, id, fd) + dat0 / A_DAYSEC);
+	return (ModifiedJulianDay(iy, im, id, fd) + dat0 / DAYSEC);
 }
 
 double ATimeSpace::TAI2UT1(double mjd, double dta) {
-	return (mjd + dta / A_DAYSEC);
+	return (mjd + dta / DAYSEC);
 }
 
 double ATimeSpace::UTC2UT1(double mjd, double dut) {
@@ -136,7 +136,7 @@ double ATimeSpace::UTC2UT1(double mjd, double dut) {
 double ATimeSpace::GreenwichMeanSiderealTime(double mjd) {
 	double t  = JulianCentury(mjd);
 	double gmst = 280.46061837 + t * (13185000.77005374225 + t * (3.87933E-4 - t / 38710000.0));
-	return (REDUCE(gmst, 360.0) * A_D2R);
+	return (reduce(gmst, 360.0) * D2R);
 }
 
 double ATimeSpace::GreenwichSiderealTime(double mjd) {
@@ -151,7 +151,7 @@ double ATimeSpace::GreenwichSiderealTime(double mjd) {
 }
 
 double ATimeSpace::LocalMeanSiderealTime(double mjd, double lgt) {
-	return REDUCE(GreenwichMeanSiderealTime(mjd) + lgt, A_2PI);
+	return reduce(GreenwichMeanSiderealTime(mjd) + lgt, A2PI);
 }
 
 double ATimeSpace::LocalSiderealTime(double mjd, double lgt) {
@@ -166,10 +166,8 @@ double ATimeSpace::LocalSiderealTime(double mjd, double lgt) {
 }
 
 double ATimeSpace::MeanObliquity(double t) {
-	double mo;
-	mo = 84381.406 + (-46.836769 + (-1.831E-4 + (2.0034 + (-5.76E-7 - 4.34E-8 * t) * t) * t) * t) * t;
-
-	return (mo * A_AS2R);
+	double mo = 84381.406 + (-46.836769 + (-1.831E-4 + (2.0034 + (-5.76E-7 - 4.34E-8 * t) * t) * t) * t) * t;
+	return (mo * AS2R);
 }
 
 double ATimeSpace::TrueObliquity(double t) {
@@ -182,12 +180,12 @@ void ATimeSpace::Nutation(double t, double& nl, double& no) {
 	double arg, sarg, carg;
 
 	/* Units of 0.1 microarcsecond to radians */
-	static const double U2R = A_AS2R * 1e-7;
+	static const double U2R = AS2R * 1e-7;
 	/* ---------------------------------------- */
 	/* Fixed offsets in lieu of planetary terms */
 	/* ---------------------------------------- */
-	static const double DPPLAN = -0.135E-6 * A_AS2R;
-	static const double DEPLAN =  0.388E-6 * A_AS2R;
+	static const double DPPLAN = -0.135E-6 * AS2R;
+	static const double DEPLAN =  0.388E-6 * AS2R;
 	/* The units for the sine and cosine coefficients are */
 	/* 0.1 microarcsec and the same per Julian century    */
 	static const struct {
@@ -326,55 +324,51 @@ void ATimeSpace::Nutation(double t, double& nl, double& no) {
 double ATimeSpace::MeanAnomalySun(double t) {
 	/* 参数来源: IERS 1992, Williams 1991 */
 	double ma = (129596581.0481 + (-0.5532 + (0.000136 - 0.00001149 * t) * t) * t) * t / 3600.0 + 357.52910918;
-	printf ("MA 1 = %f\n", ma);
-	ma = 357.52772 + (35999.05034 - (0.0001603 + 1.0 / 300000.0) * t) * t;
-	printf ("MA 2 = %f\n", ma);
-	ma = REDUCE(ma, 360.0);
-	return (ma * A_D2R);
+	ma = reduce(ma, 360.0);
+	return (ma * D2R);
 }
 
 double ATimeSpace::MeanAnomalyMoon(double t) {
 	/* 参数来源: IERS 1992, Williams 1991 */
 	double ma = (1717915923.2178 + (31.8792 + (0.051635 - 0.0002447 * t) * t) * t) * t / 3600.0 + 134.96340251;
-	ma = REDUCE(ma, 360.0);
-	return (ma * A_D2R);
+	ma = reduce(ma, 360.0);
+	return (ma * D2R);
 }
 
 double ATimeSpace::MeanElongationMoonSun(double t) {
 	/* 参数来源: IERS 1992, Williams 1991 */
-//	double me = (1602961601.209 + (-6.3706 + (6.593E-3 - 3.169E-5 * t) * t) * t) * t / 3600.0 + 297.85019547;
-	double me = 297.85036 + (445267.11148 - (0.0019142 - t / 189474) * t) * t;
-	me = REDUCE(me, 360.0);
-	return (me * A_D2R);
+	double me = (1602961601.209 + (-6.3706 + (6.593E-3 - 3.169E-5 * t) * t) * t) * t / 3600.0 + 297.85019547;
+	me = reduce(me, 360.0);
+	return (me * D2R);
 }
 
 double ATimeSpace::MeanLongAscNodeMoon(double t) {
 	/* 参数来源: IERS 1992, Williams 1991 */
 	double ml = (-6962890.5432 + (7.4722 + (7.702E-3 - 5.939E-5 * t) * t) * t) * t / 3600.0 + 125.04455501;
-	ml = REDUCE(ml, 360.0);
-	return (ml * A_D2R);
+	ml = reduce(ml, 360.0);
+	return (ml * D2R);
 }
 
 double ATimeSpace::RelLongMoon(double t) {
 	/* 参数来源: IERS 1992, Williams 1991 */
 	double rl = (1739527262.8478 + (-12.7512 + (-1.037E-3 + 4.17E-6 * t) * t) * t) * t / 3600.0 + 93.27209062;
-	rl = REDUCE(rl, 360.0);
-	return (rl * A_D2R);
+	rl = reduce(rl, 360.0);
+	return (rl * D2R);
 }
 
 double ATimeSpace::MeanLongSun(double t) {
 	double mls = 280.46646 + (36000.76983 + 3.032E-4 * t) * t;
-	mls = REDUCE(mls, 360.0);
-	return (mls * A_D2R);
+	mls = reduce(mls, 360.0);
+	return (mls * D2R);
 }
 
 void ATimeSpace::SunPosition(double t, double& ra, double& dec) {
-	double M = REDUCE(125.04 - 1934.136 * t, 360.0) * A_D2R;
-	double l = TrueLongSun(t) - (5.69E-3 + 4.78E-3 * sin(M)) * A_D2R;
-	double eps = MeanObliquity(t) + 2.56E-3 * cos(M) * A_D2R;
+	double M = reduce(125.04 - 1934.136 * t, 360.0) * D2R;
+	double l = TrueLongSun(t) - (5.69E-3 + 4.78E-3 * sin(M)) * D2R;
+	double eps = MeanObliquity(t) + 2.56E-3 * cos(M) * D2R;
 
 	ra = atan2(cos(eps) * sin(l), cos(l));
-	if (ra < 0) ra += A_2PI;
+	if (ra < 0) ra += A2PI;
 	dec = asin(sin(eps) * sin(l));
 }
 
@@ -384,7 +378,7 @@ double ATimeSpace::EccentricityEarth(double t) {
 
 double ATimeSpace::PerihelionLongEarth(double t) {
 	double pl = 102.93735 + (1.71946 + 4.6E-4 * t) * t;
-	return (pl * A_D2R);
+	return (pl * D2R);
 }
 
 double ATimeSpace::CenterSun(double t) {
@@ -392,7 +386,7 @@ double ATimeSpace::CenterSun(double t) {
 	double c = (1.914602 - (4.817E-3 + 1.4E-5 * t) * t) * sin(ma)
 			+ (0.019993 - 1.01E-4 * t) * sin(2 * ma)
 			+ 2.89E-4 * sin(3 * ma);
-	return (c * A_D2R);
+	return (c * D2R);
 }
 
 double ATimeSpace::TrueLongSun(double t) {
@@ -419,12 +413,12 @@ double ATimeSpace::JulianCentury() {
 }
 
 double ATimeSpace::Epoch() {
-	return (2000.0 + (ModifiedJulianDay() - A_MJD2K) / 365.25);
+	return (2000.0 + (ModifiedJulianDay() - MJD2K) / 365.25);
 }
 
 double ATimeSpace::JulianDay() {
 	if (!valid_[ATS_JD]) {
-		values_[ATS_JD] = ModifiedJulianDay() + A_MJD0;
+		values_[ATS_JD] = ModifiedJulianDay() + MJD0;
 		valid_[ATS_JD]  = true;
 	}
 	return values_[ATS_JD];
@@ -432,7 +426,7 @@ double ATimeSpace::JulianDay() {
 
 double ATimeSpace::TAI() {
 	if (!valid_[ATS_TAI]) {
-		values_[ATS_TAI] = ModifiedJulianDay() + DeltaAT() / A_DAYSEC;
+		values_[ATS_TAI] = ModifiedJulianDay() + DeltaAT() / DAYSEC;
 		valid_[ATS_TAI]  = true;
 	}
 	return values_[ATS_TAI];
@@ -442,7 +436,7 @@ double ATimeSpace::GreenwichMeanSiderealTime() {
 	if (!valid_[ATS_GMST]) {
 		double t  = JulianCentury();
 		double gmst = 280.46061837 + t * (13185000.77005374225 + t * (3.87933E-4 - t / 38710000.0));
-		values_[ATS_GMST] = REDUCE(gmst, 360.0) * A_D2R;
+		values_[ATS_GMST] = reduce(gmst, 360.0) * D2R;
 		valid_[ATS_GMST]  = true;
 	}
 
@@ -464,7 +458,7 @@ double ATimeSpace::GreenwichSiderealTime() {
 
 double ATimeSpace::LocalMeanSiderealTime() {
 	if (!valid_[ATS_LMST]) {
-		values_[ATS_LMST] = REDUCE(GreenwichMeanSiderealTime() + lgt_, A_2PI);
+		values_[ATS_LMST] = reduce(GreenwichMeanSiderealTime() + lgt_, A2PI);
 		valid_[ATS_LMST]  = true;
 	}
 
@@ -501,12 +495,12 @@ void ATimeSpace::Nutation(double& nl, double& no) {
 	double t = JulianCentury();
 
 	/* Units of 0.1 microarcsecond to radians */
-	static const double U2R = A_AS2R * 1e-7;
+	static const double U2R = AS2R * 1e-7;
 	/* ---------------------------------------- */
 	/* Fixed offsets in lieu of planetary terms */
 	/* ---------------------------------------- */
-	static const double DPPLAN = -0.135E-6 * A_AS2R;
-	static const double DEPLAN =  0.388E-6 * A_AS2R;
+	static const double DPPLAN = -0.135E-6 * AS2R;
+	static const double DEPLAN =  0.388E-6 * AS2R;
 	/* The units for the sine and cosine coefficients are */
 	/* 0.1 microarcsec and the same per Julian century    */
 	static const struct {
@@ -741,7 +735,7 @@ double ATimeSpace::CenterSun() {
 		double c = (1.914602 - (4.817E-3 + 1.4E-5 * t) * t) * sin(ma)
 				+ (0.019993 - 1.01E-4 * t) * sin(2 * ma)
 				+ 2.89E-4 * sin(3 * ma);
-		values_[ATS_CENTER_SUN] = c * A_D2R;
+		values_[ATS_CENTER_SUN] = c * D2R;
 		valid_[ATS_CENTER_SUN]  = true;
 	}
 
@@ -766,12 +760,12 @@ double ATimeSpace::TrueAnomalySun() {
 
 void ATimeSpace::SunPosition(double& ra, double& dec) {
 	if (!valid_[ATS_POSITION_SUN]) {
-		double M = REDUCE(125.04 - 1934.136 * JulianCentury(), 360.0) * A_D2R;
-		double l = TrueLongSun() - (5.69E-3 + 4.78E-3 * sin(M)) * A_D2R;
-		double eps = MeanObliquity() + 2.56E-3 * cos(M) * A_D2R;
+		double M = reduce(125.04 - 1934.136 * JulianCentury(), 360.0) * D2R;
+		double l = TrueLongSun() - (5.69E-3 + 4.78E-3 * sin(M)) * D2R;
+		double eps = MeanObliquity() + 2.56E-3 * cos(M) * D2R;
 
 		ra = atan2(cos(eps) * sin(l), cos(l));
-		if (ra < 0) ra += A_2PI;
+		if (ra < 0) ra += A2PI;
 
 		values_[ATS_POSITION_SUN_RA]  = ra;
 		values_[ATS_POSITION_SUN_DEC] = asin(sin(eps) * sin(l));
@@ -801,11 +795,11 @@ double ATimeSpace::ModifiedJulianDay(int iy, int im, int id, double fd) {
 }
 
 double ATimeSpace::JulianCentury(double mjd) {
-	return (mjd - A_MJD2K) / 36525;
+	return (mjd - MJD2K) / 36525;
 }
 
 double ATimeSpace::Epoch(double mjd) {
-	return (2000.0 + (mjd - A_MJD2K) / 365.25);
+	return (2000.0 + (mjd - MJD2K) / 365.25);
 }
 
 double ATimeSpace::DeltaAT(int iy, int im, int id, double fd) {
@@ -1048,14 +1042,14 @@ void ATimeSpace::Eq2Horizon(double ha, double dec, double& azi, double& alt) {
 	double slat, clat, cha;
 	azi = atan2(sin(ha), (cha = cos(ha)) * (slat = sin(lat_)) - tan(dec) * (clat = cos(lat_)));
 	alt = asin(slat * sin(dec) + clat * cos(dec) * cha);
-	if (azi < 0) azi += A_2PI;
+	if (azi < 0) azi += A2PI;
 }
 
 void ATimeSpace::Horizon2Eq(double azi, double alt, double& ha, double& dec) {
 	double slat, clat, caz;
 	ha  = atan2(sin(azi), (caz = cos(azi)) * (slat = sin(lat_)) + tan(alt) * (clat = cos(lat_)));
 	dec = asin(slat * sin(alt) - clat * cos(alt) * caz);
-	if (ha < 0) ha += A_2PI;
+	if (ha < 0) ha += A2PI;
 }
 
 // 赤道坐标系转换为黄道坐标系
@@ -1065,7 +1059,7 @@ void ATimeSpace::Eq2Eclip(double ra, double dec, double eo, double &l, double &b
 	double ceo = cos(eo);
 	l = atan2(sra * ceo + tan(dec) * seo, cos(ra));
 	b = asin(sin(dec) * ceo - cos(dec) * sin(eo) * sra);
-	if (l < 0) l += A_2PI;
+	if (l < 0) l += A2PI;
 }
 
 // 黄道坐标系转换为赤道坐标系
@@ -1075,35 +1069,7 @@ void ATimeSpace::Eclip2Eq(double l, double b, double eo, double &ra, double &dec
 	double ceo = cos(eo);
 	ra  = atan2(sl * ceo - tan(b) * seo, cos(l));
 	dec = asin(sin(b) * ceo + cos(b) * seo * sl);
-	if (ra < 0) ra += A_2PI;
-}
-
-void ATimeSpace::Eq2Gal(double ra, double dec, double &l, double &b) {
-	double ra0 = 192.25 * A_D2R;	// B1950, 银极的赤道坐标
-	double dc0 = 27.4 * A_D2R;
-	double sr = sin(ra0 - ra);
-	double cr = cos(ra0 - ra);
-	double sd = sin(dc0);
-	double cd = cos(dc0);
-
-	l = 303 * A_D2R - atan2(sr, cr * sd - tan(dec) * cd);
-	b = asin(sin(dec) * sd + cos(dec) * cd * cr);
-	if (l < 0) l += A_2PI;
-	else if (l >= A_2PI) l -= A_2PI;
-}
-
-void ATimeSpace::Gal2Eq(double l, double b, double &ra, double &dec) {
-	double l0 = 123 * A_D2R;	// B1950, 银经升交点与银赤焦点的距离(33度)
-	double b0 = 27.4 * A_D2R;
-	double sl = sin(l - l0);
-	double cl = cos(l - l0);
-	double sd = sin(b0);
-	double cd = cos(b0);
-
-	ra = 12.25 * A_D2R + atan2(sl, cl * sd - tan(b) * cd);
-	dec = asin(sin(b) * sd + cos(b) * cd * cl);
-	if (ra < 0) ra += A_2PI;
-	else if (ra >= A_2PI) ra -= A_2PI;
+	if (ra < 0) ra += A2PI;
 }
 
 // 由周日运动带来的视觉误差
@@ -1116,8 +1082,8 @@ double ATimeSpace::TrueRefract(double h0, double airp, double temp) {
 	double k = (airp / 1010.0) * (283.0 / (273.0 + temp));
 	double R0;
 
-	h0 *= A_R2D;
-	R0 = 1.02 / tan((h0 + 10.3 / (h0 + 5.11)) * A_D2R) + 1.9279E-3;
+	h0 *= R2D;
+	R0 = 1.02 / tan((h0 + 10.3 / (h0 + 5.11)) * D2R) + 1.9279E-3;
 
 	return (R0 * k);
 }
@@ -1127,8 +1093,8 @@ double ATimeSpace::VisualRefract(double h, double airp, double temp) {
 	double k = (airp / 1010.0) * (283.0 / (273.0 + temp));
 	double R0;
 
-	h *= A_R2D;
-	R0 = 1.0 / tan((h + 7.31 / (h + 4.4)) * A_D2R) + 1.3515E-3;
+	h *= R2D;
+	R0 = 1.0 / tan((h + 7.31 / (h + 4.4)) * D2R) + 1.3515E-3;
 
 	return (R0 * k);
 }
@@ -1140,48 +1106,47 @@ double ATimeSpace::SphereAngle(double l1, double b1, double l2, double b2) {
 
 void ATimeSpace::EqTransfer(double rai, double deci, double& rao, double& deco) {
 	double t = JulianCentury();			// 输出历元与输入历元之间的儒略世纪数
-	double eps0= 84381.407 * A_AS2R;		// J2000对应的黄赤交角
+	double eps0= 84381.406 * AS2R;		// J2000对应的黄赤交角
 	double eps = MeanObliquity();		// 输出历元对应的黄赤交角
 	double nl = NutationLongitude();	// 黄经章动
 	double no = NutationObliquity();	// 交角章动
 	double lsun = MeanLongSun() + CenterSun();	// 太阳真黄经
 	double ec = EccentricityEarth();		// 地球偏心率
 	double pl = PerihelionLongEarth();	// 地球轨道近日点黄经
-	double K = -20.49552 * A_AS2R;
-	double x, y, z, A, B, C, l0, b0, l1, b1, l2, b2;
+	double K = -20.49552 * AS2R;
+	double x, y, z, A, B, C, l, b, dl, db;
 	double syml, sx, cx, sb, cb;
 
-	printf("eps = %f  nl = %f  no = %f\n", eps * A_R2D, nl * A_R2AS, no * A_R2AS);
-	Eq2Eclip(rai, deci, eps0, l0, b0);
+	Eq2Eclip(rai, deci, eps0, l, b);
 	/* 岁差 */
-	x = (47.0029 - (0.03302 - 6E-5 * t) * t) * t * A_AS2R;
-	y = (629554.9824 - (869.8089 - 0.03536 * t) * t) * A_AS2R;
-	z = (5029.0966 + (1.11113 - 6E-6 * t) * t) * t * A_AS2R;
-	A = (cx = cos(x)) * (cb = cos(b0)) * (syml = sin(y - l0)) - (sx = sin(x)) * (sb = sin(b0));
-	B = cb * cos(y - l0);
+	x = ((47.0029 - (0.03302 - 6E-5 * t) * t) * t) * AS2R;
+	y = (629554.9824 - (869.8089 - 0.03536 * t) * t) * AS2R;
+	z = (5029.0966 + (1.11113 - 6E-6 * t) * t) * t * AS2R;
+	A = (cx = cos(x)) * (cb = cos(b)) * (syml = sin(y - l)) - (sx = sin(x)) * (sb = sin(b));
+	B = cb * cos(y - l);
 	C = cx * sb + sx * cb * syml;
-	l1 = y + z - atan2(A, B);
-	b1 = asin(C);
+	l = y + z - atan2(A, B);
+	b = asin(C);
 
 	/* 章动和光行差 */
-	l2 = K * (cos(lsun - l0) - ec * cos(pl - l0)) / cos(b0);
-	b2 = K * sin(b0) * (sin(lsun - l0) - ec * sin(pl - l0));
-//	l += nl + dl;	// nl是章动改正
-//	b += db;
+	dl = K * (cos(lsun - l) - ec * cos(pl - l)) / cos(b);
+	db = K * sin(b) * (sin(lsun - l) - ec * sin(pl - l));
+	l += nl + dl;	// nl是章动改正
+	b += db;
 	/* 黄道坐标转换为赤道坐标 */
-	Eclip2Eq(l1 + nl + l2, b1 + b2, eps + no, rao, deco);
+	Eclip2Eq(l, b, eps + no, rao, deco);
 }
 
 void ATimeSpace::EqReTransfer(double rai, double deci, double& rao, double& deco) {
 	double t = -1 * JulianCentury();	// 输出历元与输入历元之间的儒略世纪数
-	double eps0= 84381.406 * A_AS2R;		// J2000对应的黄赤交角
+	double eps0= 84381.406 * AS2R;		// J2000对应的黄赤交角
 	double eps = MeanObliquity();		// 输出历元对应的黄赤交角
 	double nl = NutationLongitude();	// 黄经章动
 	double no = NutationObliquity();	// 交角章动
 	double lsun = MeanLongSun() + CenterSun();	// 太阳真黄经
 	double ec = EccentricityEarth();		// 地球偏心率
 	double pl = PerihelionLongEarth();	// 地球轨道近日点黄经
-	double K = -20.49552 * A_AS2R;
+	double K = -20.49552 * AS2R;
 	double x, y, z, A, B, C, l0, b0, l, b, dl, db, syml, sx, sb, cx, cb;
 
 	Eq2Eclip(rai, deci, eps + no, l0, b0);	// 当前历元黄道坐标
@@ -1197,9 +1162,9 @@ void ATimeSpace::EqReTransfer(double rai, double deci, double& rao, double& deco
 	b = b0 - db;
 
 	/* 岁差 */
-	x = (47.0029 + (0.03301 + 6E-5 * t) * t) * t * A_AS2R;
-	y = (629554.9824 - (4159.2878 - 1.14649 * t) * t) * A_AS2R;
-	z = (5029.0966 - (1.11113 + 6E-6 * t) * t) * t * A_AS2R;
+	x = (47.0029 + (0.03301 + 6E-5 * t) * t) * t * AS2R;
+	y = (629554.9824 - (4159.2878 - 1.14649 * t) * t) * AS2R;
+	z = (5029.0966 - (1.11113 + 6E-6 * t) * t) * t * AS2R;
 	A = (cx = cos(x)) * (cb = cos(b)) * (syml = sin(y - l)) - (sx = sin(x)) * (sb = sin(b));
 	B = cb * cos(y - l);
 	C = cx * sb + sx * cb * syml;
@@ -1222,7 +1187,7 @@ int ATimeSpace::TimeOfSunAlt(double& sunrise, double& sunset, double alt) {
 	double x, y, ra, dec, m0, m, dm, t0, t, h0, h, azi;
 
 //	h0 = (alt - 0.5667) * D2R; // 减去水平面大气折射, 转换为弧度
-	h0 = alt * A_D2R;
+	h0 = alt * D2R;
 	SunPosition(JulianCentury(jdn), ra, dec);
 	y = sin(h0)  - sin(lat_) * sin(dec);
 	x = cos(lat_) * cos(dec);
@@ -1235,21 +1200,21 @@ int ATimeSpace::TimeOfSunAlt(double& sunrise, double& sunset, double alt) {
 	if (dm <= -1.0) return -1;
 	dm = acos(dm);
 	t0 = GreenwichSiderealTime(jdn);
-	m0 = REDUCE((ra - lgt_ - t0) / A_2PI, 1.0);
+	m0 = reduce((ra - lgt_ - t0) / A2PI, 1.0);
 
-	m = REDUCE(m0 - dm / A_2PI, 1.0);
-	t = t0 + 360.985647 * m * A_D2R;
+	m = reduce(m0 - dm / A2PI, 1.0);
+	t = t0 + 360.985647 * m * D2R;
 	SunPosition(JulianCentury(jdn + m), ra, dec);
 	Eq2Horizon(t + lgt_ - ra, dec, azi, h);
-	m += ((h - h0) / (A_2PI * cos(dec) * cos(lat_) * sin(t + lgt_ - ra)));
-	sunrise = REDUCE(REDUCE(m, 1.0) * 24.0 + lgt_ * A_R2D / 15.0, 24.0);
+	m += ((h - h0) / (A2PI * cos(dec) * cos(lat_) * sin(t + lgt_ - ra)));
+	sunrise = reduce(reduce(m, 1.0) * 24.0 + lgt_ * R2D / 15.0, 24.0);
 
-	m = REDUCE(m0 + dm / A_2PI, 1.0);
-	t = t0 + 360.985647 * m * A_D2R;
+	m = reduce(m0 + dm / A2PI, 1.0);
+	t = t0 + 360.985647 * m * D2R;
 	SunPosition(JulianCentury(jdn + m), ra, dec);
 	Eq2Horizon(t + lgt_ - ra, dec, azi, h);
-	m += (h - h0) / (A_2PI * cos(dec) * cos(lat_) * sin(t + lgt_ - ra));
-	sunset  = REDUCE(REDUCE(m, 1.0) * 24.0 + lgt_ * A_R2D / 15.0, 24.0);
+	m += (h - h0) / (A2PI * cos(dec) * cos(lat_) * sin(t + lgt_ - ra));
+	sunset  = reduce(reduce(m, 1.0) * 24.0 + lgt_ * R2D / 15.0, 24.0);
 
 	return 0;
 }

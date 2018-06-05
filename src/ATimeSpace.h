@@ -321,16 +321,12 @@ public:
 	 * @brief 查看与UTC对应的格林尼治平恒星时
 	 * @return
 	 * 平恒星时, 量纲: 弧度
-	 * @note
-	 * 误差验证: 0.00x秒
 	 */
 	double GreenwichMeanSiderealTime();
 	/*!
 	 * @brief 查看与UTC对应的格林尼治真恒星时
 	 * @return
 	 * 真恒星时, 量纲: 弧度
-	 * @note
-	 * 误差验证: 0.00x秒
 	 */
 	double GreenwichSiderealTime();
 	/*!
@@ -487,22 +483,6 @@ public:
 	 * @param dec 赤纬, 量纲: 弧度
 	 */
 	void Eclip2Eq(double l, double b, double eo, double &ra, double &dec);
-	/*!
-	 * @brief 赤道坐标系(B1950)转换为银道坐标系
-	 * @param ra  赤经, 量纲: 弧度
-	 * @param dec 赤纬, 量纲: 弧度
-	 * @param l   银经, 量纲: 弧度
-	 * @param b   银纬, 量纲: 弧度
-	 */
-	void Eq2Gal(double ra, double dec, double &l, double &b);
-	/*!
-	 * @brief 银道坐标系转换为赤道坐标系(B1950)
-	 * @param ra  赤经, 量纲: 弧度
-	 * @param dec 赤纬, 量纲: 弧度
-	 * @param l   银经, 量纲: 弧度
-	 * @param b   银纬, 量纲: 弧度
-	 */
-	void Gal2Eq(double l, double b, double &ra, double &dec);
 	/*!
 	 * @brief 计算视差角
 	 * @param ha  时角, 量纲: 弧度

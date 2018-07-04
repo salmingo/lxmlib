@@ -86,7 +86,7 @@ public:
 		 */
 		void legendre_array(double value, double min, double max, int order, double *ptr) {
 			int i;
-			double norm = (2 * value - (max + min)) / (max - min);
+			double norm = ((max + min) - 2 * value) / (max - min);
 
 			ptr[0] = 1.0;
 			if (order > 1) ptr[1] = norm;
@@ -105,7 +105,7 @@ public:
 		 */
 		void chebyshev_array(double value, double min, double max, int order, double *ptr) {
 			int i;
-			double norm = (2 * value - (max + min)) / (max - min);
+			double norm = ((max + min) - 2 * value) / (max - min);
 
 			ptr[0] = 1.0;
 			if (order > 1) ptr[1] = norm;

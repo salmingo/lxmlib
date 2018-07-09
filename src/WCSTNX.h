@@ -224,13 +224,15 @@ public:
 	};
 
 	struct param_tnx {// TNX参数
-		PT2F ref_xy;			//< 参考点: XY坐标
+		PT2F ref_xy;		//< 参考点: XY坐标
 		PT2F ref_wcs;		//< 参考点: WCS坐标, 量纲: 弧度
+		PT2F errwcs;		//< 拟合残差
+		PT2F errmid;		//< 参考系拟合残差
 		double cd[4];		//< 旋转矩阵. 由平均关系获得. 量纲: 角度/像素
 		double ccd[4];		//< 逆旋转矩阵. cd的逆矩阵. 量纲: 像素/角度
 		bool valid[2];		//< 修正模型有效性
-		wcs_tnx tnx1[2];		//< 一阶投影面修正模型
-		wcs_tnx tnx2[2];		//< 残差投影面修正模型
+		wcs_tnx tnx1[2];	//< 一阶投影面修正模型
+		wcs_tnx tnx2[2];	//< 残差投影面修正模型
 	};
 
 protected:

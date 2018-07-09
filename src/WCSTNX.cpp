@@ -98,6 +98,10 @@ bool WCSTNX::LoadText(const char* filepath) {
 		else if (!strcmp(token, "ypixref")) param_.ref_xy.y = atof(strtok(NULL, seps));
 		else if (!strcmp(token, "lngref"))  param_.ref_wcs.x = atof(strtok(NULL, seps)) * D2R;
 		else if (!strcmp(token, "latref"))  param_.ref_wcs.y = atof(strtok(NULL, seps)) * D2R;
+		else if (!strcmp(token, "wcsxirms"))  param_.errwcs.x = atof(strtok(NULL, seps));
+		else if (!strcmp(token, "wcsetarms")) param_.errwcs.y = atof(strtok(NULL, seps));
+		else if (!strcmp(token, "xirms"))     param_.errmid.x = atof(strtok(NULL, seps));
+		else if (!strcmp(token, "etarms"))    param_.errmid.y = atof(strtok(NULL, seps));
 		else if (token[0] == 's') {
 			int srfc = !strcmp(token, "surface1") ? 1 : (!strcmp(token, "surface2") ? 2 : 0);
 			if (srfc) {
@@ -229,6 +233,10 @@ int WCSTNX::WriteImage(const char* filepath) {
 	fits_update_key(hfits(), TDOUBLE, "CD1_2",    &CD1_2,  "Coordinate matrix",          &status);
 	fits_update_key(hfits(), TDOUBLE, "CD2_1",    &CD2_1,  "Coordinate matrix",          &status);
 	fits_update_key(hfits(), TDOUBLE, "CD2_2",    &CD2_2,  "Coordinate matrix",          &status);
+	fits_update_key(hfits(), TDOUBLE, "WCSERR_1", &param_.errwcs.x,  "WCS fit error",    &status);
+	fits_update_key(hfits(), TDOUBLE, "WCSERR_2", &param_.errwcs.y,  "WCS fit error",    &status);
+	fits_update_key(hfits(), TDOUBLE, "MIDERR_1", &param_.errmid.x,  "WCS fit error",    &status);
+	fits_update_key(hfits(), TDOUBLE, "MIDERR_2", &param_.errmid.y,  "WCS fit error",    &status);
 	if (param_.valid[1]) {// 畸变改正项
 		char item[70]; // 每行实际可存储数据68字节
 		char keyword[10]; // 关键字
@@ -277,6 +285,7 @@ int WCSTNX::WCS2XY(double ra, double dec, double &x, double &y) {
 
 	wcs_to_plane(ra, dec, xi, eta);
 	plane_to_image(xi, eta, x, y);
+
 	if (param_.valid[1]) {
 		double x1, y1, dxi, deta;
 		int cnt(0);

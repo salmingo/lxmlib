@@ -1,5 +1,8 @@
 /*
- * @file astro_common.h 天文常数及宏定义
+ * @file ADefine.h 天文常数及宏定义
+ * @date 2019-06-21
+ * @version 1.0
+ * @author 卢晓猛
  */
 
 #ifndef ADEFINE_H_
@@ -7,11 +10,13 @@
 
 #include <math.h>
 
-namespace astro_utility {
+namespace AstroUtil {
 /*--------------------------------------------------------------------------*/
 // 平面角转换系数
 #define API		3.141592653589793238462643		//< 圆周率
 #define A2PI	6.283185307179586476925287		//< 2倍圆周率
+#define API45	(API * 0.25)					//< 45度对应的弧度
+#define API90	(API * 0.5)						//< 90度对应的弧度
 #define R2D		5.729577951308232087679815E1	//< 弧度转换为角度
 #define D2R		1.745329251994329576923691E-2	//< 角度转换为弧度
 #define R2AS	2.062648062470963551564734E5	//< 弧度转换为角秒
@@ -31,18 +36,19 @@ namespace astro_utility {
 #define MJD2K		51544.5		//< 历元2000对应的修正儒略日
 #define MJD77		43144.0		//< 1977年1月1日0时对应的修正儒略日
 #define TTMTAI		32.184		//< TTMTAI=TT-TAI
-#define DAYS_JY		365.25		//< 儒略历每年天数
-#define DAYS_JC		36525.0		//< 儒略历每世纪天数
-#define DAYS_JM		365250.0	//< 儒略历每千年天数
+#define DAYSJY		365.25		//< 儒略历每年天数
+#define DAYSJC		36525.0		//< 儒略历每世纪天数
+#define DAYSJM		365250.0	//< 儒略历每千年天数
 #define DAYSEC		86400.0		//< 每日秒数
 
 // 极限阈值
 #define EPS		1E-6			//< 最小值
+#define MAX		1E30			//< 最大值
 
 // 计算实数的小数部分
 #define frac(x)			((x) - floor(x))
 // 调整到[0, T)周期内
-#define reduce(x, T)	((x) - floor((x) / (T)) * (T))
+#define cycmod(x, T)	((x) - floor((x) / (T)) * (T))
 /*--------------------------------------------------------------------------*/
 }
 

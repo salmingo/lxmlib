@@ -8,7 +8,8 @@
  * UTC  -- 协调世界时. Coordinated Universal Time
  * TAI  -- 国际原子时. International Atomic Time
  * UT1  -- 世界时. Universal Time
- * TT   -- 地球动力学时. Terrestrial Dynamic Time/TDT
+ * TT   -- 地球时. Terrestrial Time
+ * TDT  -- 地球动力学事. Terrestrial Dynamic Time
  * TDB  -- 质心动力学时. Barycentric Dynamic Time
  * TCB  -- 质心坐标时. Barycentric Coordinate Time
  * TCG  -- 地心坐标时. Geocentric Coordinate Time
@@ -191,6 +192,10 @@ public:
 	 * @brief 查看历元
 	 */
 	bool Epoch(double & ep);
+	/*!
+	 * @brief 计算对应的贝塞尔历元
+	 */
+	double EpochBessel(double mjd);
 
 	/*---------------- 时间系统 ----------------*/
 public:
@@ -200,6 +205,25 @@ public:
 	 * DAT = TAI-UTC
 	 */
 	bool DeltaAT(double mjd, double &dat);
+	/*!
+	 * @brief 计算UT2-UT1
+	 * @param epb 贝塞尔历元
+	 * @return
+	 * UT2-UT1, 量纲: 秒
+	 */
+	double DeltaUT2(double epb);
+	/*!
+	 * @brief 计算UT1-UTC
+	 * @param mjd 修正儒略日
+	 * @return
+	 * UT1-UTC, 量纲: 秒
+	 * @note
+	 * 计算与实测结果之间有约±3毫秒偏差.
+	 * @note
+	 * - 算法来源: IAU SOFA 20180130
+	 * - 比对数据: https://datacenter.iers.org/data/latestVersion/6_BULLETIN_A_V2013_016.txt
+	 */
+	double DeltaUT1(double mjd);
 	/*!
 	 * @brief 计算与UTC时间对应的TAI(国际原子时)
 	 * @param tai TAI, 以修正儒略日表示

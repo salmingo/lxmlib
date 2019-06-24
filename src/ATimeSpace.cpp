@@ -259,6 +259,11 @@ bool ATimeSpace::Epoch(double & ep) {
 	return true;
 }
 
+double ATimeSpace::EpochBessel(double mjd) {
+	// 36524.68648 = B1900-J2000的天数
+	return 1900.0 + (mjd - MJD2K + 36524.68648) / DAYSBY;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 /*---------------- 时间系统 ----------------*/
 bool ATimeSpace::DeltaAT(double mjd, double &dat) {
@@ -353,6 +358,17 @@ bool ATimeSpace::DeltaAT(double mjd, double &dat) {
 	if (i < NERA1) dat += (values_[NDX_MJD] + fd - drift[i][0]) * drift[i][1];
 
 	return true;
+}
+
+double ATimeSpace::DeltaUT2(double epb) {
+	double t = A2PI * epb;
+	double dut = 0.022 * sin(t) - 0.012 * cos(t) - 0.006 * sin(2 * t) + 0.007 * cos(2 * t);
+	return dut;
+}
+
+double ATimeSpace::DeltaUT1(double mjd) {
+	double dut2 = DeltaUT2(EpochBessel(mjd));
+	return (-0.1507 - 0.00063 * (mjd - 58662) - dut2);
 }
 
 // 计算与UTC对应的TAI的修正儒略日

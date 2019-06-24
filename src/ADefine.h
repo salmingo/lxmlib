@@ -36,6 +36,7 @@ namespace AstroUtil {
 #define MJD2K		51544.5		//< 历元2000对应的修正儒略日
 #define MJD77		43144.0		//< 1977年1月1日0时对应的修正儒略日
 #define TTMTAI		32.184		//< TTMTAI=TT-TAI
+#define DAYSBY		365.242198781	//< 贝塞尔每年天数
 #define DAYSJY		365.25		//< 儒略历每年天数
 #define DAYSJC		36525.0		//< 儒略历每世纪天数
 #define DAYSJM		365250.0	//< 儒略历每千年天数

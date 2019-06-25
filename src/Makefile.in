@@ -104,6 +104,8 @@ PROGRAMS = $(bin_PROGRAMS)
 am_lxmlib_OBJECTS = ATimeSpace.$(OBJEXT) lxmlib.$(OBJEXT)
 lxmlib_OBJECTS = $(am_lxmlib_OBJECTS)
 lxmlib_DEPENDENCIES =
+lxmlib_LINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(lxmlib_LDFLAGS) \
+	$(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -270,7 +272,8 @@ lxmlib_SOURCES = ATimeSpace.cpp lxmlib.cpp
 #lxmlib_LDFLAGS = -L/usr/local/lib
 #BOOST_LIBS = -lboost_system-mt -lboost_thread-mt -lboost_filesystem-mt
 #lxmlib_LDADD = ${BOOST_LIBS} -lm -lpthread -lcfitsio 
-lxmlib_LDADD = -lm
+lxmlib_LDFLAGS = -L../../lib
+lxmlib_LDADD = -lm -lsofa_c
 all: all-am
 
 .SUFFIXES:
@@ -349,7 +352,7 @@ clean-binPROGRAMS:
 
 lxmlib$(EXEEXT): $(lxmlib_OBJECTS) $(lxmlib_DEPENDENCIES) $(EXTRA_lxmlib_DEPENDENCIES) 
 	@rm -f lxmlib$(EXEEXT)
-	$(AM_V_CXXLD)$(CXXLINK) $(lxmlib_OBJECTS) $(lxmlib_LDADD) $(LIBS)
+	$(AM_V_CXXLD)$(lxmlib_LINK) $(lxmlib_OBJECTS) $(lxmlib_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)

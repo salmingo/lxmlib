@@ -45,11 +45,6 @@ namespace AstroUtil {
 // 极限阈值
 #define EPS		1E-6			//< 最小值
 #define MAX		1E30			//< 最大值
-
-// 计算实数的小数部分
-#define frac(x)			((x) - floor(x))
-// 调整到[0, T)周期内
-#define cycmod(x, T)	((x) - floor((x) / (T)) * (T))
 /*--------------------------------------------------------------------------*/
 }
 

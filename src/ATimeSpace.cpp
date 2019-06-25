@@ -7,10 +7,25 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <stdio.h>
 #include "ADefine.h"
 #include "ATimeSpace.h"
 
 namespace AstroUtil {
+double frac(double x) {
+	return x - floor(x);
+}
+
+double cycmod(double x, double T) {
+	double r = fmod(x, T);
+	if (r < 0) r += T;
+	return r;
+}
+
+double crcmod(double x) {
+	return cycmod(x, A2PI);
+}
+
 /*--------------------------------------------------------------------------*/
 ATimeSpace::ATimeSpace() {
 	lon_ = lat_ = alt_ = 0.0;
@@ -163,8 +178,8 @@ double ATimeSpace::cal2mjd(int iy, int im, int id, double fd) {
 		--iy;
 		im += 12;
 	}
-	mjd = int(365.25 * iy) + int(30.6001 * (im + 1)) + id + fd - int(iy / 100)
-			+ int(iy / 400) - 679004;
+	mjd = int(365.25 * iy) + int(30.6001 * (im + 1)) + id - int(iy / 100)
+			+ int(iy / 400) - 679004 + fd;
 
 	return mjd;
 }
@@ -372,9 +387,26 @@ double ATimeSpace::DeltaUT1(double mjd) {
 }
 
 // 计算与UTC对应的TAI的修正儒略日
-bool ATimeSpace::TAI(double tai) {
+bool ATimeSpace::TAI(double &tai) {
 	if (valid_[NDX_TAI]) tai = values_[NDX_TAI];
 	else {
+		int mjd0;
+		double mjd, fd;
+		double dat0, dat12, dat24;
+		double dlod, dleap;
+
+		if (!ModifiedJulianDay(mjd)) return false;
+		mjd0 = int(mjd);
+		fd = mjd - mjd0;
+		if (!DeltaAT(mjd0, dat0)
+			|| !DeltaAT(mjd0 + 0.5, dat12)
+			|| !DeltaAT(mjd0 + 1.0, dat24))
+			return false;
+		dlod = 2.0 * (dat12 - dat0);
+		dleap = dat24 - (dat0 + dlod);
+		fd *= (DAYSEC + dleap) / DAYSEC;
+		fd *= (DAYSEC + dlod) / DAYSEC;
+		tai = mjd0 + fd + dat0 / DAYSEC;
 
 		values_[NDX_TAI] = tai;
 		valid_[NDX_TAI] = true;
@@ -383,14 +415,86 @@ bool ATimeSpace::TAI(double tai) {
 }
 
 // 计算与UTC对应的UT1的修正儒略日
-bool ATimeSpace::UT1(double ut1) {
+bool ATimeSpace::UT1(double &ut1) {
 	if (valid_[NDX_UT1]) ut1 = values_[NDX_UT1];
 	else {
-		double mjd;
-		if (!ModifiedJulianDay(mjd)) return false;
+		double mjd, tai;
+		double dat, dut;
+		if (!ModifiedJulianDay(mjd)
+			|| !TAI(tai)
+			|| !DeltaAT(int(mjd), dat))
+			return false;
+		dut = DeltaUT1(mjd);
+		ut1 = tai + (dut - dat) / DAYSEC;
 
 		values_[NDX_UT1] = ut1;
 		valid_[NDX_UT1] = true;
+	}
+	return true;
+}
+
+bool ATimeSpace::TT(double &tt) {
+	if (valid_[NDX_TT]) tt = values_[NDX_TT];
+	else {
+		double tai;
+		if (!TAI(tai)) return false;
+		tt = tai + TTMTAI / DAYSEC;
+		values_[NDX_TT] = tt;
+		valid_[NDX_TT] = true;
+	}
+	return true;
+}
+
+bool ATimeSpace::GMST(double &gmst) {
+	if (valid_[NDX_GMST]) gmst = values_[NDX_GMST];
+	else {
+		double tt, era, t;
+		if (!TT(tt) || !ERA(era))
+			return false;
+		t = (tt - MJD2K) / DAYSJC;
+		gmst = era +
+				(   0.014506    +
+				(4612.156534    +
+				(   1.3915817   +
+				(  -0.00000044  +
+				(  -0.000029956 +
+				(  -0.0000000368)
+				* t) * t) * t) * t) * t) * AS2R;
+		gmst = crcmod(gmst);
+		values_[NDX_GMST] = gmst;
+		valid_[NDX_GMST] = true;
+	}
+	return true;
+}
+
+bool ATimeSpace::GST(double &gst) {
+	if (valid_[NDX_GST]) gst = values_[NDX_GST];
+	else {
+
+	}
+	return true;
+}
+
+bool ATimeSpace::LMST(double &lmst) {
+	if (valid_[NDX_LMST]) lmst = values_[NDX_LMST];
+	else {
+		double gmst;
+		if (!GMST(gmst)) return false;
+		lmst = crcmod(gmst + lon_);
+		values_[NDX_LMST] = lmst;
+		valid_[NDX_LMST] = true;
+	}
+	return true;
+}
+
+bool ATimeSpace::LST(double &lst) {
+	if (valid_[NDX_LST]) lst = values_[NDX_LST];
+	else {
+		double gst;
+		if (!GMST(gst)) return false;
+		lst = crcmod(gst + lon_);
+		values_[NDX_LST] = lst;
+		valid_[NDX_LST] = true;
 	}
 	return true;
 }
@@ -424,7 +528,7 @@ void ATimeSpace::Cart2Sphere(double x, double y, double z, double &theta,
 	double d2 = x * x + y * y;
 	theta = d2 == 0.0 ? 0.0 : atan2(y, x);
 	phi = z = 0.0 ? 0.0 : atan2(z, sqrt(d2));
-	theta = cycmod(theta, A2PI);
+	theta = crcmod(theta);
 }
 
 void ATimeSpace::AziAlt2Eq(double az, double el, double &ha, double dec) {

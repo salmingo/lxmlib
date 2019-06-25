@@ -15,12 +15,10 @@ AC_PROG_CPP
 AC_PROG_MKDIR_P
 
 # Checks for libraries.
-# FIXME: Replace `main' with a function in `-lcfitsio':
-AC_CHECK_LIB([cfitsio], [main])
 # FIXME: Replace `main' with a function in `-lm':
 AC_CHECK_LIB([m], [main])
-# FIXME: Replace `main' with a function in `-lpthread':
-AC_CHECK_LIB([pthread], [main])
+# FIXME: Replace `main' with a function in `-lsofa_c':
+AC_CHECK_LIB([sofa_c], [main])
 
 # Checks for header files.
 AC_CHECK_HEADERS([stdlib.h string.h])
@@ -29,7 +27,7 @@ AC_CHECK_HEADERS([stdlib.h string.h])
 AC_CHECK_HEADER_STDBOOL
 
 # Checks for library functions.
-AC_CHECK_FUNCS([memset])
+AC_CHECK_FUNCS([memset sqrt])
 
 AC_CONFIG_FILES([Makefile
                  release/Makefile

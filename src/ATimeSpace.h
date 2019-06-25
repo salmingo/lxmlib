@@ -19,6 +19,15 @@
 #define ATIMESPACE_H_
 
 namespace AstroUtil {
+extern "C" {
+// 计算实数的小数部分
+double frac(double x);
+// 调整到[0, T)周期内
+double cycmod(double x, double T);
+// 调整到[0, A2PI)周期内
+double crcmod(double x);
+}
+
 /*--------------------------------------------------------------------------*/
 class ATimeSpace {
 public:
@@ -36,7 +45,9 @@ protected:
 		NDX_UT1,	//< 以修正儒略日表示的与UTC对应的UT1
 		NDX_TT,		//< 以修正儒略日表示的与UTC对应的TT
 		NDX_GMST,	//< 格林威治平恒星时
-		NDX_GAST,	//< 格林威治真恒星时
+		NDX_GST,	//< 格林威治真恒星时
+		NDX_LMST,	//< 本地平恒星时
+		NDX_LST,	//< 本地真恒星时
 		NDX_MAX
 	};
 
@@ -228,12 +239,37 @@ public:
 	 * @brief 计算与UTC时间对应的TAI(国际原子时)
 	 * @param tai TAI, 以修正儒略日表示
 	 */
-	bool TAI(double tai);
+	bool TAI(double &tai);
 	/*!
 	 * @brief 计算与UTC时间对应的UT1
-	 * @param ut1 世界时
+	 * @param ut1 世界时, 修正儒略日
 	 */
-	bool UT1(double ut1);
+	bool UT1(double &ut1);
+	/*!
+	 * @brief 计算与UTC时间对应的TT
+	 * @param tt 地球时/地面时, 修正儒略日
+	 */
+	bool TT(double &tt);
+	/*!
+	 * @brief 计算与输入UTC对应的格林威治平恒星时
+	 * @param gmst 平恒星时, 量纲: 弧度
+	 */
+	bool GMST(double &gmst);
+	/*!
+	 * @brief 计算与输入UTC对应的格林威治视恒星时
+	 * @param gst 视恒星时, 量纲: 弧度
+	 */
+	bool GST(double &gst);
+	/*!
+	 * @brief 计算与输入UTC对应的本地平恒星时
+	 * @param gmst 平恒星时, 量纲: 弧度
+	 */
+	bool LMST(double &lmst);
+	/*!
+	 * @brief 计算与输入UTC对应的本地视恒星时
+	 * @param gst 视恒星时, 量纲: 弧度
+	 */
+	bool LST(double &lst);
 
 public:
 	/*!

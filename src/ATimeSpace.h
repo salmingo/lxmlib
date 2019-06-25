@@ -1,4 +1,4 @@
-/*
+/*!
  * @file ATimeSpace.h 天文时空转换函数接口
  * @date 2019-06-21
  * @version 1.0
@@ -13,12 +13,18 @@
  * TDB  -- 质心动力学时. Barycentric Dynamic Time
  * TCB  -- 质心坐标时. Barycentric Coordinate Time
  * TCG  -- 地心坐标时. Geocentric Coordinate Time
+ *
+ * @note
+ * 基于Eigen的矩阵变换/矢量乘积.
+ * Eigen是线性代数的C++模板库, 在基于CPU的单线程中具有优良性能
+ * http://eigen.tuxfamily.org/dox-devel/
  */
 
 #ifndef ATIMESPACE_H_
 #define ATIMESPACE_H_
 
 namespace AstroUtil {
+/////////////////////////////////////////////////////////////////////////////
 extern "C" {
 // 计算实数的小数部分
 double frac(double x);
@@ -27,7 +33,7 @@ double cycmod(double x, double T);
 // 调整到[0, A2PI)周期内
 double crcmod(double x);
 }
-
+/////////////////////////////////////////////////////////////////////////////
 /*--------------------------------------------------------------------------*/
 class ATimeSpace {
 public:
@@ -330,6 +336,7 @@ public:
 public:
 };
 /*--------------------------------------------------------------------------*/
+/////////////////////////////////////////////////////////////////////////////
 } /* namespace AstroUtil */
 
 #endif /* ATIMESPACE_H_ */

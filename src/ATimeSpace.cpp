@@ -12,19 +12,20 @@
 #include "ATimeSpace.h"
 
 namespace AstroUtil {
-double frac(double x) {
+/////////////////////////////////////////////////////////////////////////////
+double frac(double x) {// 计算x的小数部分
 	return x - floor(x);
 }
 
-double cycmod(double x, double T) {
+double cycmod(double x, double T) {// 将x\T的余数调整到1x正周期内
 	double r = fmod(x, T);
-	if (r < 0) r += T;
-	return r;
+	return r < 0 ? (r + T) : r;
 }
 
-double crcmod(double x) {
+double crcmod(double x) {// 将x\2π的余数调整到[0, 2π)范围内
 	return cycmod(x, A2PI);
 }
+/////////////////////////////////////////////////////////////////////////////
 
 /*--------------------------------------------------------------------------*/
 ATimeSpace::ATimeSpace() {
@@ -382,6 +383,9 @@ double ATimeSpace::DeltaUT2(double epb) {
 }
 
 double ATimeSpace::DeltaUT1(double mjd) {
+	/*
+	 * !!! 错误 !!!
+	 */
 	double dut2 = DeltaUT2(EpochBessel(mjd));
 	return (-0.1507 - 0.00063 * (mjd - 58662) - dut2);
 }

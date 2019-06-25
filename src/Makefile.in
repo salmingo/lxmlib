@@ -101,7 +101,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_lxmlib_OBJECTS = ATimeSpace.$(OBJEXT) lxmlib.$(OBJEXT)
+am_lxmlib_OBJECTS = lxmlib-ATimeSpace.$(OBJEXT) \
+	lxmlib-lxmlib.$(OBJEXT)
 lxmlib_OBJECTS = $(am_lxmlib_OBJECTS)
 lxmlib_DEPENDENCIES =
 lxmlib_LINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(lxmlib_LDFLAGS) \
@@ -121,8 +122,13 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/ATimeSpace.Po ./$(DEPDIR)/lxmlib.Po
+am__depfiles_remade = ./$(DEPDIR)/lxmlib-ATimeSpace.Po \
+	./$(DEPDIR)/lxmlib-lxmlib.Po
 am__mv = mv -f
+AM_V_lt = $(am__v_lt_@AM_V@)
+am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+am__v_lt_0 = --silent
+am__v_lt_1 = 
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 AM_V_CXX = $(am__v_CXX_@AM_V@)
@@ -268,10 +274,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 lxmlib_SOURCES = ATimeSpace.cpp lxmlib.cpp
-
-#lxmlib_LDFLAGS = -L/usr/local/lib
-#BOOST_LIBS = -lboost_system-mt -lboost_thread-mt -lboost_filesystem-mt
-#lxmlib_LDADD = ${BOOST_LIBS} -lm -lpthread -lcfitsio 
+lxmlib_CPPFLAGS = -I../../include
 lxmlib_LDFLAGS = -L../../lib
 lxmlib_LDADD = -lm -lsofa_c
 all: all-am
@@ -360,8 +363,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ATimeSpace.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lxmlib.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lxmlib-ATimeSpace.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lxmlib-lxmlib.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -382,6 +385,34 @@ am--depfiles: $(am__depfiles_remade)
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+
+lxmlib-ATimeSpace.o: ATimeSpace.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lxmlib_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT lxmlib-ATimeSpace.o -MD -MP -MF $(DEPDIR)/lxmlib-ATimeSpace.Tpo -c -o lxmlib-ATimeSpace.o `test -f 'ATimeSpace.cpp' || echo '$(srcdir)/'`ATimeSpace.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/lxmlib-ATimeSpace.Tpo $(DEPDIR)/lxmlib-ATimeSpace.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ATimeSpace.cpp' object='lxmlib-ATimeSpace.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lxmlib_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o lxmlib-ATimeSpace.o `test -f 'ATimeSpace.cpp' || echo '$(srcdir)/'`ATimeSpace.cpp
+
+lxmlib-ATimeSpace.obj: ATimeSpace.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lxmlib_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT lxmlib-ATimeSpace.obj -MD -MP -MF $(DEPDIR)/lxmlib-ATimeSpace.Tpo -c -o lxmlib-ATimeSpace.obj `if test -f 'ATimeSpace.cpp'; then $(CYGPATH_W) 'ATimeSpace.cpp'; else $(CYGPATH_W) '$(srcdir)/ATimeSpace.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/lxmlib-ATimeSpace.Tpo $(DEPDIR)/lxmlib-ATimeSpace.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ATimeSpace.cpp' object='lxmlib-ATimeSpace.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lxmlib_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o lxmlib-ATimeSpace.obj `if test -f 'ATimeSpace.cpp'; then $(CYGPATH_W) 'ATimeSpace.cpp'; else $(CYGPATH_W) '$(srcdir)/ATimeSpace.cpp'; fi`
+
+lxmlib-lxmlib.o: lxmlib.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lxmlib_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT lxmlib-lxmlib.o -MD -MP -MF $(DEPDIR)/lxmlib-lxmlib.Tpo -c -o lxmlib-lxmlib.o `test -f 'lxmlib.cpp' || echo '$(srcdir)/'`lxmlib.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/lxmlib-lxmlib.Tpo $(DEPDIR)/lxmlib-lxmlib.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='lxmlib.cpp' object='lxmlib-lxmlib.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lxmlib_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o lxmlib-lxmlib.o `test -f 'lxmlib.cpp' || echo '$(srcdir)/'`lxmlib.cpp
+
+lxmlib-lxmlib.obj: lxmlib.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lxmlib_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT lxmlib-lxmlib.obj -MD -MP -MF $(DEPDIR)/lxmlib-lxmlib.Tpo -c -o lxmlib-lxmlib.obj `if test -f 'lxmlib.cpp'; then $(CYGPATH_W) 'lxmlib.cpp'; else $(CYGPATH_W) '$(srcdir)/lxmlib.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/lxmlib-lxmlib.Tpo $(DEPDIR)/lxmlib-lxmlib.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='lxmlib.cpp' object='lxmlib-lxmlib.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lxmlib_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o lxmlib-lxmlib.obj `if test -f 'lxmlib.cpp'; then $(CYGPATH_W) 'lxmlib.cpp'; else $(CYGPATH_W) '$(srcdir)/lxmlib.cpp'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -510,8 +541,8 @@ clean: clean-am
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
-		-rm -f ./$(DEPDIR)/ATimeSpace.Po
-	-rm -f ./$(DEPDIR)/lxmlib.Po
+		-rm -f ./$(DEPDIR)/lxmlib-ATimeSpace.Po
+	-rm -f ./$(DEPDIR)/lxmlib-lxmlib.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -557,8 +588,8 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-		-rm -f ./$(DEPDIR)/ATimeSpace.Po
-	-rm -f ./$(DEPDIR)/lxmlib.Po
+		-rm -f ./$(DEPDIR)/lxmlib-ATimeSpace.Po
+	-rm -f ./$(DEPDIR)/lxmlib-lxmlib.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

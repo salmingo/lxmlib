@@ -9,9 +9,9 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <sofa.h>
 #include "ADefine.h"
 #include "ATimeSpace.h"
-#include "include/sofa.h"
 
 using namespace std;
 using namespace AstroUtil;
@@ -19,15 +19,15 @@ using namespace AstroUtil;
 int main(int argc, char **argv) {
 	ATimeSpace ats;
 	int iy, im, id, hh, mm;
-	double fd, ss;
+	double fd, ss, dut;
 	double mjd, jd, tai, ut1, era;
 	double gmst;
 
-	iy = 2019;
+	iy = 2020;
 	im = 6;
-	id = 22;
-	hh = 8;
-	mm = 30;
+	id = 10;
+	hh = 0;
+	mm = 0;
 	ss = 0.0;
 	fd = (hh + (mm + ss / 60.0) / 60.0) / 24.0;
 
@@ -38,6 +38,8 @@ int main(int argc, char **argv) {
 	ats.TAI(tai);
 	ats.UT1(ut1);
 	ats.ERA(era);
+	dut = ats.DeltaUT1(mjd);
+	printf("UT1 - UTC = %f\n", dut);
 	printf("MJD = %.11f\n"
 			"JD = %f\n"
 			"TAI = %.11f\n"
@@ -46,13 +48,14 @@ int main(int argc, char **argv) {
 			mjd, jd, tai, ut1, era * R2D);
 	ats.GMST(gmst);
 	ats.H2HMS(gmst * R2D / 15.0, hh, mm, ss);
-	printf("gmst = %02d:%02d:%09.6f\n", hh, mm, ss);
+	printf("gmst = %02d:%02d:%14.11f\n", hh, mm, ss);
 
 	printf("\nfrom SOFA: \n");
 	double djm0, djm;
 	double tai1, tai2;
 	double dut1, ut11, ut12;
 	double tt1, tt2;
+	double x, y;
 
 	iauCal2jd(iy, im, id, &djm0, &djm);
 	djm += fd;
@@ -67,7 +70,10 @@ int main(int argc, char **argv) {
 	printf("ERA = %.11f\n", era * R2D);
 	gmst = iauGmst06(ut11, ut12, tt1, tt2);
 	ats.H2HMS(gmst * R2D / 15.0, hh, mm, ss);
-	printf("gmst = %02d:%02d:%09.6f\n", hh, mm, ss);
+	printf("gmst = %02d:%02d:%14.11f\n", hh, mm, ss);
+
+	iauXy06(tt1, tt2, &x, &y);
+	printf("CIP: x = %f, y = %f\n", x * R2AS, y * R2AS);
 
 	return 0;
 }

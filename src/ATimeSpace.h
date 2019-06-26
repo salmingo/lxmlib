@@ -15,6 +15,11 @@
  * TCG  -- 地心坐标时. Geocentric Coordinate Time
  *
  * @note
+ * dUT1=UT1-UTC查询地址
+ * https://datacenter.iers.org/availableVersions.php?id=17
+ * |dUT1|<1s
+ *
+ * @note
  * 基于Eigen的矩阵变换/矢量乘积.
  * Eigen是线性代数的C++模板库, 在基于CPU的单线程中具有优良性能
  * http://eigen.tuxfamily.org/dox-devel/
@@ -59,6 +64,7 @@ protected:
 
 protected:
 	double lon_, lat_, alt_;	//< 测站位置. [lon, lat]量纲为弧度, alt量纲为米
+	double dut1_;	//< UT1-UTC, 量纲: 秒
 	bool valid_[NDX_MAX];		//< 数据有效标志
 	double values_[NDX_MAX];	//< 计算结果
 
@@ -100,6 +106,11 @@ public:
 	 * @param ydays  日数
 	 */
 	void SetYDays(int iy, double ydays);
+	/*!
+	 * @brief 设置dUT1=UT1-UTC
+	 * @param dut 时间偏差, 量纲: 秒
+	 */
+	void SetDeltaUT1(double dut);
 
 protected:
 	/*!
@@ -229,18 +240,6 @@ public:
 	 * UT2-UT1, 量纲: 秒
 	 */
 	double DeltaUT2(double epb);
-	/*!
-	 * @brief 计算UT1-UTC
-	 * @param mjd 修正儒略日
-	 * @return
-	 * UT1-UTC, 量纲: 秒
-	 * @note
-	 * 计算与实测结果之间有约±3毫秒偏差.
-	 * @note
-	 * - 算法来源: IAU SOFA 20180130
-	 * - 比对数据: https://datacenter.iers.org/data/latestVersion/6_BULLETIN_A_V2013_016.txt
-	 */
-	double DeltaUT1(double mjd);
 	/*!
 	 * @brief 计算与UTC时间对应的TAI(国际原子时)
 	 * @param tai TAI, 以修正儒略日表示

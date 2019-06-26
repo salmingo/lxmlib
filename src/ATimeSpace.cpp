@@ -30,6 +30,7 @@ double crcmod(double x) {// 将x\2π的余数调整到[0, 2π)范围内
 /*--------------------------------------------------------------------------*/
 ATimeSpace::ATimeSpace() {
 	lon_ = lat_ = alt_ = 0.0;
+	dut1_ = 0.0;
 }
 
 ATimeSpace::~ATimeSpace() {
@@ -47,6 +48,7 @@ void ATimeSpace::SetUTC(int iy, int im, int id, double fd) {
 	if (iy > IYMIN && im >= 1 && im <= 12) {
 		memset(valid_, 0, sizeof(bool) * NDX_MAX);
 		memset(values_, 0, sizeof(double) * NDX_MAX);
+		dut1_ = 0.0;
 		values_[NDX_MJD] = cal2mjd(iy, im, id, fd);
 		valid_[NDX_MJD] = true;
 	}
@@ -55,6 +57,7 @@ void ATimeSpace::SetUTC(int iy, int im, int id, double fd) {
 void ATimeSpace::SetMJD(double mjd) {
 	memset(valid_, 0, sizeof(bool) * NDX_MAX);
 	memset(values_, 0, sizeof(double) * NDX_MAX);
+	dut1_ = 0.0;
 	values_[NDX_MJD] = mjd;
 	valid_[NDX_MJD] = true;
 }
@@ -74,6 +77,9 @@ void ATimeSpace::SetYDays(int iy, double ydays) {
 	SetUTC(iy, im, id, ydays - days);
 }
 
+void ATimeSpace::SetDeltaUT1(double dut) {
+	dut1_ = dut;
+}
 /////////////////////////////////////////////////////////////////////////////
 /* 格式转换 */
 void ATimeSpace::H2HMS(double hour, int&hh, int&mm, double&ss) {
@@ -382,14 +388,6 @@ double ATimeSpace::DeltaUT2(double epb) {
 	return dut;
 }
 
-double ATimeSpace::DeltaUT1(double mjd) {
-	/*
-	 * !!! 错误 !!!
-	 */
-	double dut2 = DeltaUT2(EpochBessel(mjd));
-	return (-0.1507 - 0.00063 * (mjd - 58662) - dut2);
-}
-
 // 计算与UTC对应的TAI的修正儒略日
 bool ATimeSpace::TAI(double &tai) {
 	if (valid_[NDX_TAI]) tai = values_[NDX_TAI];
@@ -423,13 +421,12 @@ bool ATimeSpace::UT1(double &ut1) {
 	if (valid_[NDX_UT1]) ut1 = values_[NDX_UT1];
 	else {
 		double mjd, tai;
-		double dat, dut;
+		double dat;
 		if (!ModifiedJulianDay(mjd)
 			|| !TAI(tai)
 			|| !DeltaAT(int(mjd), dat))
 			return false;
-		dut = DeltaUT1(mjd);
-		ut1 = tai + (dut - dat) / DAYSEC;
+		ut1 = tai + (dut1_ - dat) / DAYSEC;
 
 		values_[NDX_UT1] = ut1;
 		valid_[NDX_UT1] = true;

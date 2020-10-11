@@ -9,8 +9,11 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 using namespace std;
+using namespace boost::posix_time;
 
 int main(int argc, char **argv) {
 

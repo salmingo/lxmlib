@@ -256,7 +256,7 @@ void TcpServer::start_accept() {
 
 void TcpServer::handle_accept(const TcpCPtr client, const error_code& ec) {
 	if (!ec) {
-		cbfunc_(client, this);
+		cbfunc_(client, shared_from_this());
 		client->Start();
 	}
 

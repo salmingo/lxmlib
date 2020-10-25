@@ -171,7 +171,7 @@ void CameraAndor::update_adcoffset(int offset) {
 	}
 }
 
-bool CameraAndor::update_cooler(double coolerset, bool onoff) {
+bool CameraAndor::update_cooler(int coolerset, bool onoff) {
 	int state;
 	if (IsCoolerOn(&state) != DRV_SUCCESS) return false;
 	if (onoff) {// 制冷

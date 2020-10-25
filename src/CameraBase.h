@@ -361,7 +361,7 @@ protected:
 	/*!
 	 * @brief 改变制冷状态和制冷温度
 	 */
-	virtual bool update_cooler(double coolerset, bool onoff) = 0;
+	virtual bool update_cooler(int coolerset, bool onoff) = 0;
 	/*!
 	 * @brief 采集探测器温度
 	 * @param coolerget 探测器温度

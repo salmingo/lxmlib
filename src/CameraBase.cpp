@@ -68,7 +68,7 @@ bool CameraBase::Connect(int index) {
 
 void CameraBase::Disconnect() {
 	if (IsConnected()) {
-		UpdateCooler(0.0, false);	// 停止制冷
+		UpdateCooler(0, false);	// 停止制冷
 		/* 终止曝光并等待曝光结束 */
 		AbortExpose();
 		while (env_work_.state >= CAMERA_EXPOSE)

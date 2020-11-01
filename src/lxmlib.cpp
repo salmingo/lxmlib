@@ -1,4 +1,4 @@
-/*
+/**
  名称 : lxmlib.cpp
  作者 : 卢晓猛
  版本 : 0.1
@@ -10,10 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <boost/date_time/posix_time/posix_time.hpp>
-
-using namespace std;
-using namespace boost::posix_time;
+#include "BuildMatchingShape.h"
 
 int main(int argc, char **argv) {
 

@@ -90,7 +90,9 @@ build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
 bin_PROGRAMS = lxmlib$(EXEEXT)
-@LINUX_TRUE@am__append_1 = -lrt
+@WINDOWS_TRUE@am__append_1 = -DWINDOWS
+@WINDOWS_TRUE@am__append_2 = -DWINDOWS
+@LINUX_TRUE@am__append_3 = -lrt
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -104,6 +106,7 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_lxmlib_OBJECTS = GLog.$(OBJEXT) AsioIOServiceKeep.$(OBJEXT) \
 	MessageQueue.$(OBJEXT) CurlBase.$(OBJEXT) AsioTCP.$(OBJEXT) \
+	AsioUDP.$(OBJEXT) BuildMatchingShape.$(OBJEXT) \
 	lxmlib.$(OBJEXT)
 lxmlib_OBJECTS = $(am_lxmlib_OBJECTS)
 am__DEPENDENCIES_1 =
@@ -126,7 +129,8 @@ DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/AsioIOServiceKeep.Po \
-	./$(DEPDIR)/AsioTCP.Po ./$(DEPDIR)/CurlBase.Po \
+	./$(DEPDIR)/AsioTCP.Po ./$(DEPDIR)/AsioUDP.Po \
+	./$(DEPDIR)/BuildMatchingShape.Po ./$(DEPDIR)/CurlBase.Po \
 	./$(DEPDIR)/GLog.Po ./$(DEPDIR)/MessageQueue.Po \
 	./$(DEPDIR)/lxmlib.Po
 am__mv = mv -f
@@ -274,18 +278,20 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-lxmlib_SOURCES = GLog.cpp AsioIOServiceKeep.cpp MessageQueue.cpp CurlBase.cpp AsioTCP.cpp lxmlib.cpp
-@DEBUG_FALSE@AM_CFLAGS = -O3 -Wall
+lxmlib_SOURCES = GLog.cpp AsioIOServiceKeep.cpp MessageQueue.cpp CurlBase.cpp AsioTCP.cpp AsioUDP.cpp \
+               BuildMatchingShape.cpp lxmlib.cpp
+
+@DEBUG_FALSE@AM_CFLAGS = -O3 -Wall $(am__append_1)
 
 # lxmlib_CPPFLAGS=-I../../include
 # lxmlib_LDFLAGS=-L../../lib
 # lxmlib_LDADD=-lm -lsofa_c
-@DEBUG_TRUE@AM_CFLAGS = -g3 -O0 -Wall -DNDEBUG
-@DEBUG_FALSE@AM_CXXFLAGS = -O3 -Wall
-@DEBUG_TRUE@AM_CXXFLAGS = -g3 -O0 -Wall -DNDEBUG
+@DEBUG_TRUE@AM_CFLAGS = -g3 -O0 -Wall -DNDEBUG $(am__append_1)
+@DEBUG_FALSE@AM_CXXFLAGS = -O3 -Wall $(am__append_2)
+@DEBUG_TRUE@AM_CXXFLAGS = -g3 -O0 -Wall -DNDEBUG $(am__append_2)
 lxmlib_LDFLAGS = -L/usr/local/lib
 BOOST_LIBS = -lboost_thread-mt
-lxmlib_LDADD = ${BOOST_LIBS} -lcurl $(am__append_1)
+lxmlib_LDADD = ${BOOST_LIBS} -lcurl $(am__append_3)
 all: all-am
 
 .SUFFIXES:
@@ -374,6 +380,8 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/AsioIOServiceKeep.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/AsioTCP.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/AsioUDP.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/BuildMatchingShape.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/CurlBase.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GLog.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/MessageQueue.Po@am__quote@ # am--include-marker
@@ -528,6 +536,8 @@ clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/AsioIOServiceKeep.Po
 	-rm -f ./$(DEPDIR)/AsioTCP.Po
+	-rm -f ./$(DEPDIR)/AsioUDP.Po
+	-rm -f ./$(DEPDIR)/BuildMatchingShape.Po
 	-rm -f ./$(DEPDIR)/CurlBase.Po
 	-rm -f ./$(DEPDIR)/GLog.Po
 	-rm -f ./$(DEPDIR)/MessageQueue.Po
@@ -579,6 +589,8 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/AsioIOServiceKeep.Po
 	-rm -f ./$(DEPDIR)/AsioTCP.Po
+	-rm -f ./$(DEPDIR)/AsioUDP.Po
+	-rm -f ./$(DEPDIR)/BuildMatchingShape.Po
 	-rm -f ./$(DEPDIR)/CurlBase.Po
 	-rm -f ./$(DEPDIR)/GLog.Po
 	-rm -f ./$(DEPDIR)/MessageQueue.Po

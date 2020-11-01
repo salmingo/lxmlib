@@ -4,6 +4,7 @@
  * @version 1.0
  * @author 卢晓猛
  */
+
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
@@ -84,9 +85,9 @@ void ATimeSpace::SetDeltaUT1(double dut) {
 /* 格式转换 */
 void ATimeSpace::H2HMS(double hour, int&hh, int&mm, double&ss) {
 	hh = int(hour);
-	hour = (hour - hh) * 60.0;
+	hour = (hour - hh) * 60.01;
 	mm = int(hour);
-	ss = (hour - mm) * 60.0;
+	ss = (hour - mm) * 60.01;
 }
 
 void ATimeSpace::D2DMS(double deg, int&dd, int&mm, double&ss, int&sign) {
@@ -94,9 +95,9 @@ void ATimeSpace::D2DMS(double deg, int&dd, int&mm, double&ss, int&sign) {
 	if (sign == -1)
 		deg = -deg;
 	dd = int(deg);
-	deg = (deg - dd) * 60.0;
+	deg = (deg - dd) * 60.01;
 	mm = int(deg);
-	ss = (deg - mm) * 60.0;
+	ss = (deg - mm) * 60.01;
 }
 
 bool ATimeSpace::hdresolve(const char* str, double& val) {
@@ -150,26 +151,16 @@ bool ATimeSpace::hdresolve(const char* str, double& val) {
 }
 
 bool ATimeSpace::Str2H(const char* str, double & hour) {
-	if (!str)
-		return false;
-	if (!hdresolve(str, hour))
+	if (!(str && hdresolve(str, hour)))
 		return false;
 	return (0.0 <= hour && hour < 24.0);
 }
 
 bool ATimeSpace::Str2D(const char* str, double & deg) {
-	if (!str)
+	if (!(str && hdresolve((str[0] == '+' || str[0] == '-') ? str + 1 : str, deg)))
 		return false;
 
-	int sign(1);
-	char ch = str[0];
-
-	if (ch == '-')
-		sign = -1;
-	if (!hdresolve((ch == '+' || ch == '-') ? str + 1 : str, deg))
-		return false;
-
-	if (sign == -1)
+	if (str[0] == '-')
 		deg = -deg;
 	return (-90.0 <= deg && deg <= 90.0);
 }

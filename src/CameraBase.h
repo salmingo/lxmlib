@@ -418,5 +418,16 @@ protected:
 	 */
 	void interrupt_thread(ThreadPtr& thrd);
 };
+typedef boost::shared_ptr<CameraBase> CameraPtr;
+
+template <class T>
+CameraPtr to_cambase(T camptr) {
+	return boost::static_pointer_cast<CameraBase>(camptr);
+}
+
+template <class T>
+boost::shared_ptr<T> from_cambase(CameraPtr camptr) {
+	return boost::static_pointer_cast<T>(camptr);
+}
 
 #endif /* CAMERABASE_H_ */

@@ -1,5 +1,6 @@
 bin_PROGRAMS=lxmlib
-lxmlib_SOURCES=GLog.cpp AsioIOServiceKeep.cpp MessageQueue.cpp CurlBase.cpp AsioTCP.cpp lxmlib.cpp
+lxmlib_SOURCES=GLog.cpp AsioIOServiceKeep.cpp MessageQueue.cpp CurlBase.cpp AsioTCP.cpp AsioUDP.cpp \
+               BuildMatchingShape.cpp lxmlib.cpp
 
 # lxmlib_CPPFLAGS=-I../../include
 # lxmlib_LDFLAGS=-L../../lib
@@ -10,6 +11,11 @@ if DEBUG
 else
   AM_CFLAGS = -O3 -Wall
   AM_CXXFLAGS = -O3 -Wall
+endif
+
+if WINDOWS
+  AM_CFLAGS += -DWINDOWS
+  AM_CXXFLAGS += -DWINDOWS
 endif
 
 lxmlib_LDFLAGS = -L/usr/local/lib

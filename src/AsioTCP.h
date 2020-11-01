@@ -19,6 +19,7 @@
 #ifndef SRC_ASIOTCP_H_
 #define SRC_ASIOTCP_H_
 
+#include <boost/system/error_code.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/signals2.hpp>
 #include <boost/circular_buffer.hpp>
@@ -38,9 +39,9 @@ public:
 	/*!
 	 * @brief 声明回调函数及插槽
 	 * @param 1 客户端对象
-	 * @param 2 实例指针
+	 * @param 2 错误描述
 	 */
-	using CallbackFunc = boost::signals2::signal<void (const Pointer, const int)>;
+	using CallbackFunc = boost::signals2::signal<void (Pointer, const boost::system::error_code&)>;
 	using CBSlot = CallbackFunc::slot_type;
 	using TCP = boost::asio::ip::tcp;	// boost::ip::tcp类型
 	using CRCBuff = boost::circular_buffer<char>;	// 字符型循环数组
@@ -64,13 +65,14 @@ protected:
 public:
 	TcpClient(bool modeAsync = true);
 	virtual ~TcpClient();
+
 	/*!
 	 * @brief 创建TcpClient::Pointer实例
 	 * @return
 	 * shared_ptr<TcpClient>类型实例指针
 	 */
-	static Pointer Create() {
-		return Pointer(new TcpClient);
+	static Pointer Create(bool modeAsync = true) {
+		return Pointer(new TcpClient(modeAsync));
 	}
 	/*!
 	 * @brief 查看套接字

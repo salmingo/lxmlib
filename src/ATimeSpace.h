@@ -18,11 +18,6 @@
  * dUT1=UT1-UTC查询地址
  * https://datacenter.iers.org/availableVersions.php?id=17
  * |dUT1|<1s
- *
- * @note
- * 基于Eigen的矩阵变换/矢量乘积.
- * Eigen是线性代数的C++模板库, 在基于CPU的单线程中具有优良性能
- * http://eigen.tuxfamily.org/dox-devel/
  */
 
 #ifndef ATIMESPACE_H_

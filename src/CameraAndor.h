@@ -16,6 +16,9 @@
 
 class CameraAndor: public CameraBase {
 public:
+	using Pointer = boost::shared_ptr<CameraAndor>;
+
+public:
 	CameraAndor();
 	~CameraAndor();
 
@@ -24,6 +27,14 @@ public:
 	 * @brief 查看可用的相机数量
 	 */
 	int CameraNumber();
+	/*!
+	 * @brief 创建CameraAndor指针
+	 * @return
+	 * CameraAndor指针
+	 */
+	static Pointer Create() {
+		return Pointer(new CameraAndor);
+	}
 
 protected:
 	/*!

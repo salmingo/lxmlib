@@ -645,6 +645,7 @@ m4trace:configure.ac:65: -1- AC_DEFINE_TRACE_LITERAL([size_t])
 m4trace:configure.ac:65: -1- m4_pattern_allow([^size_t$])
 m4trace:configure.ac:65: -1- AH_OUTPUT([size_t], [/* Define to `unsigned int\' if <sys/types.h> does not define. */
 @%:@undef size_t])
+m4trace:configure.ac:66: -1- AC_TYPE_UINT8_T
 m4trace:configure.ac:66: -1- AC_DEFINE_TRACE_LITERAL([_UINT8_T])
 m4trace:configure.ac:66: -1- m4_pattern_allow([^_UINT8_T$])
 m4trace:configure.ac:66: -1- AH_OUTPUT([_UINT8_T], [/* Define for Solaris 2.5.1 so the uint8_t typedef from <sys/synch.h>,

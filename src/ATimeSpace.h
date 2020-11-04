@@ -1,5 +1,6 @@
 /*!
- * @file ATimeSpace.h 天文时空转换函数接口
+ * @file ATimeSpace.h
+ * @brief 天文时空转换函数接口
  * @date 2019-06-21
  * @version 1.0
  * @author 卢晓猛
@@ -24,15 +25,6 @@
 #define ATIMESPACE_H_
 
 namespace AstroUtil {
-/////////////////////////////////////////////////////////////////////////////
-extern "C" {
-// 计算实数的小数部分
-double frac(double x);
-// 调整到[0, T)周期内
-double cycmod(double x, double T);
-// 调整到[0, A2PI)周期内
-double crcmod(double x);
-}
 /////////////////////////////////////////////////////////////////////////////
 /*--------------------------------------------------------------------------*/
 class ATimeSpace {
@@ -62,6 +54,14 @@ protected:
 	double dut1_;	//< UT1-UTC, 量纲: 秒
 	bool valid_[NDX_MAX];		//< 数据有效标志
 	double values_[NDX_MAX];	//< 计算结果
+
+protected:
+	/*!
+	 * @brief 由字符串解析小时数或角度数
+	 * @note
+	 * 由Str2H()或Str2D()调用
+	 */
+	bool hdresolve(const char* str, double& val);
 
 public:
 	/*---------------- 常规参数 ----------------*/
@@ -106,14 +106,6 @@ public:
 	 * @param dut 时间偏差, 量纲: 秒
 	 */
 	void SetDeltaUT1(double dut);
-
-protected:
-	/*!
-	 * @brief 由字符串解析小时数或角度数
-	 * @note
-	 * 由Str2H()或Str2D()调用
-	 */
-	bool hdresolve(const char* str, double& val);
 
 public:
 	/*---------------- 格式转换 ----------------*/

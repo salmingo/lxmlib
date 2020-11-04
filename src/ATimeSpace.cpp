@@ -1,5 +1,6 @@
-/*
- * @file ATimeSpace.h 天文时空转换函数接口
+/**
+ * @file ATimeSpace.cpp
+ * @brief 天文时空转换函数接口
  * @date 2019-06-21
  * @version 1.0
  * @author 卢晓猛
@@ -14,20 +15,6 @@
 
 namespace AstroUtil {
 /////////////////////////////////////////////////////////////////////////////
-double frac(double x) {// 计算x的小数部分
-	return x - floor(x);
-}
-
-double cycmod(double x, double T) {// 将x\T的余数调整到1x正周期内
-	double r = fmod(x, T);
-	return r < 0 ? (r + T) : r;
-}
-
-double crcmod(double x) {// 将x\2π的余数调整到[0, 2π)范围内
-	return cycmod(x, A2PI);
-}
-/////////////////////////////////////////////////////////////////////////////
-
 /*--------------------------------------------------------------------------*/
 ATimeSpace::ATimeSpace() {
 	lon_ = lat_ = alt_ = 0.0;
@@ -36,6 +23,7 @@ ATimeSpace::ATimeSpace() {
 
 ATimeSpace::~ATimeSpace() {
 }
+
 /////////////////////////////////////////////////////////////////////////////
 /* 设置常规参数 */
 void ATimeSpace::SetSite(double lon, double lat, double alt) {

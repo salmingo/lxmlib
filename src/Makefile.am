@@ -1,6 +1,6 @@
 bin_PROGRAMS=lxmlib
 lxmlib_SOURCES=GLog.cpp AsioIOServiceKeep.cpp MessageQueue.cpp CurlBase.cpp AsioTCP.cpp AsioUDP.cpp \
-               BuildMatchingShape.cpp lxmlib.cpp
+               ATimeSpace.cpp BuildMatchingShape.cpp lxmlib.cpp
 
 # lxmlib_CPPFLAGS=-I../../include
 # lxmlib_LDFLAGS=-L../../lib

@@ -106,8 +106,8 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_lxmlib_OBJECTS = GLog.$(OBJEXT) AsioIOServiceKeep.$(OBJEXT) \
 	MessageQueue.$(OBJEXT) CurlBase.$(OBJEXT) AsioTCP.$(OBJEXT) \
-	AsioUDP.$(OBJEXT) BuildMatchingShape.$(OBJEXT) \
-	lxmlib.$(OBJEXT)
+	AsioUDP.$(OBJEXT) ATimeSpace.$(OBJEXT) \
+	BuildMatchingShape.$(OBJEXT) lxmlib.$(OBJEXT)
 lxmlib_OBJECTS = $(am_lxmlib_OBJECTS)
 am__DEPENDENCIES_1 =
 lxmlib_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
@@ -128,11 +128,11 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/AsioIOServiceKeep.Po \
-	./$(DEPDIR)/AsioTCP.Po ./$(DEPDIR)/AsioUDP.Po \
-	./$(DEPDIR)/BuildMatchingShape.Po ./$(DEPDIR)/CurlBase.Po \
-	./$(DEPDIR)/GLog.Po ./$(DEPDIR)/MessageQueue.Po \
-	./$(DEPDIR)/lxmlib.Po
+am__depfiles_remade = ./$(DEPDIR)/ATimeSpace.Po \
+	./$(DEPDIR)/AsioIOServiceKeep.Po ./$(DEPDIR)/AsioTCP.Po \
+	./$(DEPDIR)/AsioUDP.Po ./$(DEPDIR)/BuildMatchingShape.Po \
+	./$(DEPDIR)/CurlBase.Po ./$(DEPDIR)/GLog.Po \
+	./$(DEPDIR)/MessageQueue.Po ./$(DEPDIR)/lxmlib.Po
 am__mv = mv -f
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -279,7 +279,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 lxmlib_SOURCES = GLog.cpp AsioIOServiceKeep.cpp MessageQueue.cpp CurlBase.cpp AsioTCP.cpp AsioUDP.cpp \
-               BuildMatchingShape.cpp lxmlib.cpp
+               ATimeSpace.cpp BuildMatchingShape.cpp lxmlib.cpp
 
 @DEBUG_FALSE@AM_CFLAGS = -O3 -Wall $(am__append_1)
 
@@ -378,6 +378,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ATimeSpace.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/AsioIOServiceKeep.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/AsioTCP.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/AsioUDP.Po@am__quote@ # am--include-marker
@@ -534,7 +535,8 @@ clean: clean-am
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
-		-rm -f ./$(DEPDIR)/AsioIOServiceKeep.Po
+		-rm -f ./$(DEPDIR)/ATimeSpace.Po
+	-rm -f ./$(DEPDIR)/AsioIOServiceKeep.Po
 	-rm -f ./$(DEPDIR)/AsioTCP.Po
 	-rm -f ./$(DEPDIR)/AsioUDP.Po
 	-rm -f ./$(DEPDIR)/BuildMatchingShape.Po
@@ -587,7 +589,8 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-		-rm -f ./$(DEPDIR)/AsioIOServiceKeep.Po
+		-rm -f ./$(DEPDIR)/ATimeSpace.Po
+	-rm -f ./$(DEPDIR)/AsioIOServiceKeep.Po
 	-rm -f ./$(DEPDIR)/AsioTCP.Po
 	-rm -f ./$(DEPDIR)/AsioUDP.Po
 	-rm -f ./$(DEPDIR)/BuildMatchingShape.Po

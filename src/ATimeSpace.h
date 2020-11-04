@@ -35,9 +35,6 @@ public:
 protected:
 	enum { // 基于历书的计算结果
 		NDX_MJD,	//< 修正儒略日 /UTC
-		NDX_JD,		//< 儒略日 /UTC
-		NDX_JC,		//< 儒略世纪 /UTC
-		NDX_EPOCH,	//< 历元 /UTC
 		NDX_ERA,	//< 与UTC对应的地球旋转角
 		NDX_TAI,	//< 以修正儒略日表示的与UTC对应的TAI
 		NDX_UT1,	//< 以修正儒略日表示的与UTC对应的UT1
@@ -46,22 +43,17 @@ protected:
 		NDX_GST,	//< 格林威治真恒星时
 		NDX_LMST,	//< 本地平恒星时
 		NDX_LST,	//< 本地真恒星时
+		NDX_AB,		//< 周年光行差改正系数
 		NDX_MAX
 	};
 
 protected:
-	double lon_, lat_, alt_;	//< 测站位置. [lon, lat]量纲为弧度, alt量纲为米
-	double dut1_;	//< UT1-UTC, 量纲: 秒
-	bool valid_[NDX_MAX];		//< 数据有效标志
-	double values_[NDX_MAX];	//< 计算结果
-
-protected:
-	/*!
-	 * @brief 由字符串解析小时数或角度数
-	 * @note
-	 * 由Str2H()或Str2D()调用
-	 */
-	bool hdresolve(const char* str, double& val);
+	double lon_, lat_, alt_;	///< 测站位置. [lon, lat]量纲为弧度, alt量纲为米
+	double dut1_;				///< UT1-UTC, 量纲: 秒
+	bool valid_[NDX_MAX];		///< 数据有效标志
+	double values_[NDX_MAX];	///< 计算结果
+	static double coef_aab_[36][6];	///< 周年光行差改正系数
+	double ab_sin_[36], ab_cos_[36];	///< 周年光行差改正系数
 
 public:
 	/*---------------- 常规参数 ----------------*/
@@ -106,6 +98,14 @@ public:
 	 * @param dut 时间偏差, 量纲: 秒
 	 */
 	void SetDeltaUT1(double dut);
+
+protected:
+	/*!
+	 * @brief 由字符串解析小时数或角度数
+	 * @note
+	 * 由Str2H()或Str2D()调用
+	 */
+	bool hdresolve(const char* str, double& val);
 
 public:
 	/*---------------- 格式转换 ----------------*/
@@ -190,23 +190,44 @@ public:
 	/*!
 	 * @brief 查看与历书对应的年日数
 	 */
-	bool GetYDays(int &iy, double &ydays);
+	void GetYDays(double mjd, int &iy, double &ydays);
 	/*!
 	 * @brief 查看修正儒略日
 	 */
-	bool ModifiedJulianDay(double & mjd);
+	double ModifiedJulianDay();
 	/*!
 	 * @brief 查看儒略日
 	 */
-	bool JulianDay(double & jd);
+	double JulianDay();
+	/*!
+	 * @brief 计算与修正儒略日对应的儒略日
+	 * @param mjd  修正儒略日
+	 * @return
+	 * 儒略日
+	 */
+	double JulianDay(double mjd);
 	/*!
 	 * @brief 查看相对J2000.0的儒略世纪
 	 */
-	bool JulianCentury(double &jc);
+	double JulianCentury();
+	/*!
+	 * @brief 计算修正儒略日对应的儒略世纪
+	 * @param mjd  修正儒略日
+	 * @return
+	 * 儒略世纪
+	 */
+	double JulianCentury(double mjd);
 	/*!
 	 * @brief 查看历元
 	 */
-	bool Epoch(double & ep);
+	double Epoch();
+	/*!
+	 * @brief 计算修正儒略日对应的历元
+	 * @param mjd  修正儒略日
+	 * @return
+	 * 历元
+	 */
+	double Epoch(double mjd);
 	/*!
 	 * @brief 计算对应的贝塞尔历元
 	 */
@@ -219,7 +240,7 @@ public:
 	 * @note
 	 * DAT = TAI-UTC
 	 */
-	bool DeltaAT(double mjd, double &dat);
+	double DeltaAT(double mjd);
 	/*!
 	 * @brief 计算UT2-UT1
 	 * @param epb 贝塞尔历元
@@ -231,46 +252,52 @@ public:
 	 * @brief 计算与UTC时间对应的TAI(国际原子时)
 	 * @param tai TAI, 以修正儒略日表示
 	 */
-	bool TAI(double &tai);
+	double TAI();
 	/*!
 	 * @brief 计算与UTC时间对应的UT1
 	 * @param ut1 世界时, 修正儒略日
 	 */
-	bool UT1(double &ut1);
+	double UT1();
 	/*!
 	 * @brief 计算与UTC时间对应的TT
 	 * @param tt 地球时/地面时, 修正儒略日
 	 */
-	bool TT(double &tt);
+	double TT();
 	/*!
 	 * @brief 计算与输入UTC对应的格林威治平恒星时
 	 * @param gmst 平恒星时, 量纲: 弧度
 	 */
-	bool GMST(double &gmst);
+	double GMST();
 	/*!
 	 * @brief 计算与输入UTC对应的格林威治视恒星时
 	 * @param gst 视恒星时, 量纲: 弧度
 	 */
-	bool GST(double &gst);
+	double GST();
 	/*!
 	 * @brief 计算与输入UTC对应的本地平恒星时
 	 * @param gmst 平恒星时, 量纲: 弧度
 	 */
-	bool LMST(double &lmst);
+	double LMST();
 	/*!
 	 * @brief 计算与输入UTC对应的本地视恒星时
 	 * @param gst 视恒星时, 量纲: 弧度
 	 */
-	bool LST(double &lst);
+	double LST();
 
 public:
 	/*!
 	 * @brief 计算地球自转角
 	 * @param era 地球自转角, 量纲: 弧度
 	 */
-	bool ERA(double &era);
+	double ERA();
 
 	/*---------------- 位置/坐标 ----------------*/
+protected:
+	/*!
+	 * @brief 计算周年光行差改正系数
+	 */
+	void calc_aberration_coef();
+
 public:
 	/*!
 	 * @brief 球坐标=>直角坐标
@@ -318,6 +345,14 @@ public:
 	 * 视差角, 量纲: 弧度
 	 */
 	double ParAngle(double ha, double dec);
+	/*!
+	 * @brief 计算周年光行差
+	 * @param ra     赤经, 量纲: 弧度
+	 * @param dec    赤纬, 量纲: 弧度
+	 * @param d_ra   赤经偏差, 量纲: 弧度
+	 * @param d_dec  赤经偏差, 量纲: 弧度
+	 */
+	void AnnualAberration(double ra, double dec, double& d_ra, double& d_dec);
 
 public:
 };

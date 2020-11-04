@@ -16,21 +16,29 @@
 using namespace AstroUtil;
 
 int main(int argc, char **argv) {
-	if (argc < 4) return -1;
-
-	int year = atoi(argv[1]);
-	int month = atoi(argv[2]);
-	int day = atoi(argv[3]);
-	int hour, minute;
-	double second;
 	ATimeSpace ats;
-	char str[30];
+	double ra, dec, d_ra, d_dec;
+	double stepd(30), stepr;
 
-	ats.SetUTC(year, month, day, 0.0);
-	double gmst ;
-	if (ats.GMST(gmst)) {
-		ats.H2HMS(gmst * R2H, hour, minute, second);
-		printf ("%02d:%02d:%06.3f\n", hour, minute, second);
+	ats.SetUTC(2020, 3, 1, 0.0);
+	printf ("MJD = %.6f\n", ats.ModifiedJulianDay());
+	for (dec = 90.0; dec >= -90.0; dec -= stepd) {
+		stepr = stepd / cos(dec * D2R);
+		for (ra = 0.0; ra < 360.0; ra += stepr) {
+			ats.AnnualAberration(ra * D2R, dec * D2R, d_ra, d_dec);
+			printf ("%8.4f %8.4f  %7.2f %7.2f\n", ra, dec, d_ra * R2AS, d_dec * R2AS);
+		}
+	}
+	printf ("\n");
+
+	ats.SetUTC(2020, 9, 1, 0.0);
+	printf ("MJD = %.6f\n", ats.ModifiedJulianDay());
+	for (dec = 90.0; dec >= -90.0; dec -= stepd) {
+		stepr = stepd / cos(dec * D2R);
+		for (ra = 0.0; ra < 360.0; ra += stepr) {
+			ats.AnnualAberration(ra * D2R, dec * D2R, d_ra, d_dec);
+			printf ("%8.4f %8.4f  %7.2f %7.2f\n", ra, dec, d_ra * R2AS, d_dec * R2AS);
+		}
 	}
 
 	return 0;

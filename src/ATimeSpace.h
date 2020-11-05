@@ -19,6 +19,15 @@
  * dUT1=UT1-UTC查询地址
  * https://datacenter.iers.org/availableVersions.php?id=17
  * |dUT1|<1s
+ *
+ * @note
+ * <p>
+ * 平位置=>视位置:
+ * @li 自行
+ * @li 光行差
+ * @li 岁差
+ * @li 章动
+ * </p>
  */
 
 #ifndef ATIMESPACE_H_

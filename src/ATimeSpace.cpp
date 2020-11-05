@@ -625,12 +625,15 @@ double ATimeSpace::ParAngle(double ha, double dec) {
 }
 
 void ATimeSpace::AnnualAberration(double ra, double dec, double& d_ra, double& d_dec) {
-	double c(17314463350.0);
+	double c(17314463350.0);	// 量纲: 10^-8 AU/day
 	double X(0.0), Y(0.0), Z(0.0);
 	double cra  = cos(ra),  sra  = sin(ra);
 	double cdec = cos(dec), sdec = sin(dec);
 
 	calc_aberration_coef();
+	/*
+	 * X, Y, Z量纲: 10^-8 AU/day
+	 */
 	for (int i = 0; i < 36; ++i) {
 		X += (coef_aab_[i][0] * ab_sin_[i] + coef_aab_[i][1] * ab_cos_[i]);
 		Y += (coef_aab_[i][2] * ab_sin_[i] + coef_aab_[i][3] * ab_cos_[i]);

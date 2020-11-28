@@ -10,23 +10,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "ADefine.h"
-#include "ATimeSpace.h"
-
-using namespace AstroUtil;
+#include "AsioUDP.h"
 
 int main(int argc, char **argv) {
-	ATimeSpace ats;
-	double ra, dec, d_ra, d_dec;
+	AsioUDP server;
+	AsioUDP udp;
+	server.Open(3000);
+	udp.Open();
+	udp.WriteTo("192.168.10.12", 3000, "hello", 5);
+	sleep(5);
 
-	ats.SetUTC(2028, 11, 13, 0.2);
-	ra = 41.0540613;
-	dec = 49.2277489;
-	ats.AnnualAberration(ra * D2R, dec * D2R, d_ra, d_dec);
-	printf ("%.7f  %.7f | %7.2f %7.2f\n", d_ra * R2D, d_dec * R2D, d_ra * R2AS, d_dec * R2AS);
-//	double stepd(30), stepr;
-//
-//	ats.SetUTC(2020, 3, 1, 0.0);
+//	ats.SetUTC(2028, 11, 13, 0.2);
+//	ra = 41.0540613;
+//	dec = 49.2277489;
+//	ats.AnnualAberration(ra * D2R, dec * D2R, d_ra, d_dec);
+//	printf ("%.7f  %.7f | %7.2f %7.2f\n", d_ra * R2D, d_dec * R2D, d_ra * R2AS, d_dec * R2AS);
+
+//	double stepd(10), stepr;
+
+//	ats.SetUTC(2020, 11, 20, 0.0);
 //	printf ("MJD = %.6f\n", ats.ModifiedJulianDay());
 //	for (dec = 90.0; dec >= -90.0; dec -= stepd) {
 //		stepr = stepd / cos(dec * D2R);
@@ -36,8 +38,8 @@ int main(int argc, char **argv) {
 //		}
 //	}
 //	printf ("\n");
-//
-//	ats.SetUTC(2020, 9, 1, 0.0);
+
+//	ats.SetUTC(2020, 11, 21, 0.0);
 //	printf ("MJD = %.6f\n", ats.ModifiedJulianDay());
 //	for (dec = 90.0; dec >= -90.0; dec -= stepd) {
 //		stepr = stepd / cos(dec * D2R);

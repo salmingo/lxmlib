@@ -9,6 +9,7 @@
 
 #include <boost/bind/bind.hpp>
 #include "MessageQueue.h"
+#include "GLog.h"
 
 using namespace boost::placeholders;
 using namespace boost::interprocess;
@@ -19,16 +20,18 @@ MessageQueue::MessageQueue()
 }
 
 MessageQueue::~MessageQueue() {
-	Stop();
 }
 
 bool MessageQueue::Start(const char *name) {
 	if (thrd_msg_.unique()) return true;
 
 	try {
+		// 启动消息队列
 		MQ::remove(name);
-		mqptr_.reset(new MQ(create_only, name, szFunc_, sizeof(Message)));
+		mqptr_.reset(new MQ(create_only, name, 1024, sizeof(Message)));
+		register_messages();
 		thrd_msg_.reset(new boost::thread(boost::bind(&MessageQueue::thread_message, this)));
+
 		return true;
 	}
 	catch(interprocess_exception &ex) {
@@ -87,8 +90,7 @@ void MessageQueue::thread_message() {
 
 	do {
 		mqptr_->receive(&msg, szmsg, szrcv, priority);
-		if ((pos = msg.id - MSG_USER) >= 0) {
-			if (pos < szFunc_) (funcs_[pos])(msg.par1, msg.par2);
-		}
+		if ((pos = msg.id - MSG_USER) >= 0 && pos < szFunc_)
+			(funcs_[pos])(msg.par1, msg.par2);
 	} while(msg.id != MSG_QUIT);
 }

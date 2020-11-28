@@ -2,6 +2,7 @@
  * @file AsioTCP.cpp 定义文件, 基于boost::asio实现TCP通信接口
  */
 
+#include <boost/lexical_cast.hpp>
 #include <boost/bind/bind.hpp>
 #include <boost/asio/placeholders.hpp>
 #include "AsioTCP.h"
@@ -34,29 +35,46 @@ TcpClient::TCP::socket& TcpClient::Socket() {
 
 bool TcpClient::Connect(const std::string& host, const uint16_t port) {
 	try {
-		TCP::endpoint end(ip::address::from_string(host), port);
+		TCP::resolver resolver(keep_.GetIOService());
+		TCP::resolver::query query(host, boost::lexical_cast<string>(port));
+		TCP::resolver::iterator itertor = resolver.resolve(query);
 
 		if (mode_async_) {
-			sock_.async_connect(end,
-					boost::bind(&TcpClient::handle_connect, this,
+			sock_.async_connect(*itertor,
+					boost::bind(&TcpClient::handle_connect, shared_from_this(),
 						placeholders::error));
 		}
 		else {
-			sock_.connect(end);
+			sock_.connect(*itertor);
 			sock_.set_option(socket_base::keep_alive(true));
 			start_read();
 		}
+		return true;
 	}
-	catch(error_code &ec) {
+	catch(std::exception& ex) {
 		return false;
 	}
-	return true;
 }
 
-int TcpClient::Close() {
-	error_code ec;
-	if (sock_.is_open()) sock_.close(ec);
-	return ec.value();
+bool TcpClient::ShutDown(int how) {
+	try {
+		sock_.shutdown(how == 0 ? TCP::socket::shutdown_receive
+				: (how == 1 ? TCP::socket::shutdown_send : TCP::socket::shutdown_both));
+		return true;
+	}
+	catch(std::exception& ex) {
+		return false;
+	}
+}
+
+bool TcpClient::Close() {
+	try {
+		sock_.close();
+		return true;
+	}
+	catch(std::exception& ex) {
+		return false;
+	}
 }
 
 bool TcpClient::IsOpen() {
@@ -144,21 +162,24 @@ void TcpClient::Start() {
 }
 
 void TcpClient::RegisterConnect(const CBSlot& slot) {
+	cbconn_.disconnect_all_slots();
 	cbconn_.connect(slot);
 }
 
 void TcpClient::RegisterRead(const CBSlot& slot) {
+	cbread_.disconnect_all_slots();
 	cbread_.connect(slot);
 }
 
 void TcpClient::RegisterWrite(const CBSlot& slot) {
+	cbwrite_.disconnect_all_slots();
 	cbwrite_.connect(slot);
 }
 
 void TcpClient::start_read() {
 	if (sock_.is_open()) {
 		sock_.async_read_some(buffer(buf_read_.get(), TCP_PACK_SIZE),
-				boost::bind(&TcpClient::handle_read, this,
+				boost::bind(&TcpClient::handle_read, shared_from_this(),
 					placeholders::error, placeholders::bytes_transferred));
 	}
 }
@@ -167,7 +188,7 @@ void TcpClient::start_write() {
 	int towrite(crcbuf_write_.size());
 	if (towrite) {
 		sock_.async_write_some(buffer(crcbuf_write_.linearize(), towrite),
-				boost::bind(&TcpClient::handle_write, this,
+				boost::bind(&TcpClient::handle_write, shared_from_this(),
 					placeholders::error, placeholders::bytes_transferred));
 	}
 }
@@ -220,28 +241,24 @@ void TcpServer::RegisterAccept(const CBSlot &slot) {
 	cbfunc_.connect(slot);
 }
 
-int TcpServer::CreateServer(uint16_t port, bool v6) {
-	int code(0);
-
+bool TcpServer::CreateServer(uint16_t port, bool v6) {
 	try {
 		TCP::endpoint endpt(v6 ? TCP::v6() : TCP::v4(), port);
 		accept_.open(endpt.protocol());
 		accept_.bind(endpt);
-		accept_.listen();
+		accept_.listen(TCP::socket::max_listen_connections);
 		start_accept();
+		return true;
 	}
-	catch(error_code &ec) {
-		code = ec.value();
+	catch (std::exception& ex) {
+		return false;
 	}
-	return code;
 }
 
 void TcpServer::start_accept() {
 	if (accept_.is_open()) {
 		TcpCPtr client = TcpClient::Create();
-		accept_.async_accept(client->Socket(),
-				boost::bind(&TcpServer::handle_accept, this,
-						client, placeholders::error));
+		accept_.async_accept(client->Socket(), boost::bind(&TcpServer::handle_accept, this, client, placeholders::error));
 	}
 }
 
@@ -250,7 +267,6 @@ void TcpServer::handle_accept(const TcpCPtr client, const error_code& ec) {
 		cbfunc_(client, shared_from_this());
 		client->Start();
 	}
-
 	start_accept();
 }
 

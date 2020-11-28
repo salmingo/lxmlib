@@ -21,13 +21,16 @@
 
 #include <boost/system/error_code.hpp>
 #include <boost/asio/ip/tcp.hpp>
-#include <boost/signals2.hpp>
+#include <boost/signals2/signal.hpp>
 #include <boost/circular_buffer.hpp>
 #include <boost/smart_ptr/shared_array.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <string.h>
 #include <string>
+#include <vector>
 #include "AsioIOServiceKeep.h"
+
+using namespace boost::system;
 
 /////////////////////////////////////////////////////////////////////
 /*--------------------- 客户端 ---------------------*/
@@ -39,9 +42,9 @@ public:
 	/*!
 	 * @brief 声明回调函数及插槽
 	 * @param 1 客户端对象
-	 * @param 2 错误描述
+	 * @param 2 实例指针
 	 */
-	using CallbackFunc = boost::signals2::signal<void (Pointer, const boost::system::error_code&)>;
+	using CallbackFunc = boost::signals2::signal<void (const Pointer, const error_code&)>;
 	using CBSlot = CallbackFunc::slot_type;
 	using TCP = boost::asio::ip::tcp;	// boost::ip::tcp类型
 	using CRCBuff = boost::circular_buffer<char>;	// 字符型循环数组
@@ -65,14 +68,13 @@ protected:
 public:
 	TcpClient(bool modeAsync = true);
 	virtual ~TcpClient();
-
 	/*!
 	 * @brief 创建TcpClient::Pointer实例
 	 * @return
 	 * shared_ptr<TcpClient>类型实例指针
 	 */
-	static Pointer Create(bool modeAsync = true) {
-		return Pointer(new TcpClient(modeAsync));
+	static Pointer Create() {
+		return Pointer(new TcpClient);
 	}
 	/*!
 	 * @brief 查看套接字
@@ -89,13 +91,18 @@ public:
 	 */
 	bool Connect(const std::string& host, const uint16_t port);
 	/*!
+	 * @brief 关闭在套接口上的操作
+	 * @param how 操作类型. 0: 读; 1: 写; 2: 读写
+	 * @return
+	 * 套接字关闭结果.
+	 */
+	bool ShutDown(int how);
+	/*!
 	 * @brief 关闭套接字
 	 * @return
 	 * 套接字关闭结果.
-	 * 0 -- 成功
-	 * 其它 -- 错误标识
 	 */
-	int Close();
+	bool Close();
 	/*!
 	 * @brief 检查套接字状态
 	 * @return
@@ -184,6 +191,7 @@ protected:
 	void handle_write(const boost::system::error_code& ec, int n);
 };
 using TcpCPtr = TcpClient::Pointer;
+using TcpCVec = std::vector<TcpCPtr> ; ///< 网络连接存储区
 
 /////////////////////////////////////////////////////////////////////
 /*--------------------- 服务器 ---------------------*/
@@ -209,14 +217,16 @@ protected:
 public:
 	TcpServer();
 	virtual ~TcpServer();
+
 	/*!
-	 * @brief 创建TcpServer::Pointer实例
+	 * @brief 创建一个实例
 	 * @return
-	 * shared_ptr<TcpServer>类型实例指针
+	 * 实例指针
 	 */
 	static Pointer Create() {
 		return Pointer(new TcpServer);
 	}
+
 	/*!
 	 * @brief 注册accept回调函数, 处理服务器收到的网络连接请求
 	 * @param slot 函数插槽
@@ -228,10 +238,8 @@ public:
 	 * @param v6   服务类型. true: V6, false: V4
 	 * @return
 	 * TCP网络服务创建结果
-	 * 0 -- 成功
-	 * 其它 -- 错误代码
 	 */
-	int CreateServer(uint16_t port, bool v6 = false);
+	bool CreateServer(uint16_t port, bool v6 = false);
 
 protected:
 	/*!

@@ -5,6 +5,7 @@
  * - 优化消息队列实现方式
  * @date 2020-10-01
  * - 优化
+ * - 面向gtoaes, 将GeneralControl和ObservationSystem的共同特征迁移至此处
  */
 
 #ifndef SRC_MESSAGEQUEUE_H_
@@ -35,26 +36,32 @@ protected:
 		}
 	};
 
-	using CallbackFunc = boost::signals2::signal<void (const long, const long)>;	//< 回调函数
-	using CBSlot = CallbackFunc::slot_type;	//< 回调函数插槽
-	using CBArray = boost::shared_array<CallbackFunc>;	//< 回调函数数组
-	using MQ = boost::interprocess::message_queue;	//< boost消息队列
-	using MQPtr = boost::shared_ptr<MQ>;	//< boost消息队列指针
-	using MtxLck = boost::unique_lock<boost::mutex>;	//< 信号灯互斥锁
-	using ThreadPtr = boost::shared_ptr<boost::thread>;	//< boost线程指针
+	//////////////////////////////////////////////////////////////////////////////
+	using CallbackFunc = boost::signals2::signal<void (const long, const long)>;	///< 消息回调函数
+	using CBSlot = CallbackFunc::slot_type;	///< 回调函数插槽
+	using CBArray = boost::shared_array<CallbackFunc>;	///< 回调函数数组
+	using MQ = boost::interprocess::message_queue;	///< boost消息队列
+	using MQPtr = boost::shared_ptr<MQ>;	///< boost消息队列指针
+	using MtxLck = boost::unique_lock<boost::mutex>;	///< 信号灯互斥锁
+	using ThreadPtr = boost::shared_ptr<boost::thread>;	///< boost线程指针
 
 protected:
 	/* 成员变量 */
+	//////////////////////////////////////////////////////////////////////////////
 	enum {
-		MSG_QUIT = 0,	//< 结束消息队列
-		MSG_USER		//< 用户自定义消息起始编号
+		MSG_QUIT = 0,	///< 结束消息队列
+		MSG_USER		///< 用户自定义消息起始编号
 	};
 
-	const long szFunc_;	//< 自定义回调函数数组长度
-	MQPtr mqptr_;	//< 消息队列
-	CBArray funcs_;	//< 回调函数数组
-	ThreadPtr thrd_msg_;	//< 消息响应线程
-	std::string errmsg_;	//< 错误原因
+	//////////////////////////////////////////////////////////////////////////////
+	/* 消息队列 */
+	const long szFunc_;	///< 自定义回调函数数组长度
+	MQPtr mqptr_;		///< 消息队列
+	CBArray funcs_;		///< 回调函数数组
+	std::string errmsg_;///< 错误原因
+
+	/* 多线程 */
+	ThreadPtr thrd_msg_;		///< 消息响应线程
 
 public:
 	MessageQueue();
@@ -69,7 +76,7 @@ public:
 	/*!
 	 * @brief 停止消息队列监测/响应服务, 并销毁消息队列
 	 */
-	void Stop();
+	virtual void Stop();
 	/*!
 	 * @brief 注册消息及其响应函数
 	 * @param id   消息代码
@@ -98,6 +105,13 @@ public:
 	 * 错误提示
 	 */
 	const char *GetError();
+
+protected:
+	/* 消息响应函数 */
+	/*!
+	 * @brief 注册消息响应函数
+	 */
+	virtual void register_messages() = 0;
 
 protected:
 	/*!

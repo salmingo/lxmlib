@@ -147,5 +147,6 @@ void AsioUDP::handle_read(const error_code& ec, const int n) {
 }
 
 void AsioUDP::handle_write(const error_code& ec, const int n) {
+	printf ("ec = %s\n", ec.message().c_str());
 	cbwrite_(shared_from_this(), ec);
 }
